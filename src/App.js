@@ -1,10 +1,14 @@
-import logo from './logo.svg';
 import './App.css';
+import Footer from './components/Footer.tsx';
+import Header from './components/Header.tsx';
+import TabBar from './components/TabBar.tsx';
 
 function App() {
   return (
     <div className="App">
-      <p>Bailey is stinky</p>
+      <Header />
+      <TabBar />
+      <Footer />
     </div>
   );
 }
