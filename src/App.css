@@ -1,0 +1,28 @@
+/* Variables */
+:root {
+    --base-background : #FFFDFB;
+    --default-text: #727249;
+}
+
+#home-page-image{
+    max-width: 100%;
+    width: 1236px;
+    height: auto;
+}
+
+#header-img{
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+}
+
+.App{
+    padding-left: 100px;
+    padding-right: 100px;
+
+    background-color: var(--base-background);
+}
+
+h1, h2, h3, h4, p {
+    color: var(--default-text);
+}
