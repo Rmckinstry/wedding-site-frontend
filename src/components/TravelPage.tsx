@@ -26,6 +26,9 @@ function TravelPage(){
                             <button>Rental Cars</button>
                         </div>
                     </div>
+                    <div>
+                        {/* divider */}
+                    </div>
                     <div id="lodging-container">
                         <h2 id="lodging-header">Lodging</h2>
                         <div className="lodging-item-container">
@@ -35,7 +38,8 @@ function TravelPage(){
                                 <p>(901) 850-9390</p>
                                 <p>Check-In: Friday, November 14, 2025 | Check-Out: Sunday, November 16, 2025</p>
                             </div>
-                            <p>To receive the “Kail-Mckinstry Wedding Block” rate, use the button below.</p>  
+                            <p>To receive the “Kail-Mckinstry Wedding Block” rate, use the button below.</p>
+                            <button>Block Rate</button>
                         </div>
                     </div>
                 </div>
