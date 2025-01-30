@@ -4,21 +4,51 @@
     --default-text: #727249;
 }
 
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url(./fonts/CormorantGaramond-Regular.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url(./fonts/CormorantGaramond-Medium.ttf) format('truetype');
+    font-weight: 500; /* Medium weight */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url(./fonts/CormorantGaramond-MediumItalic.ttf) format('truetype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url(./fonts/CormorantGaramond-SemiBold.ttf) format('truetype');
+    font-weight: 600; /* semi bold */
+    font-style: normal;
+}
+
 
 /* elements */
 html{
     font-size: 16px;
 }
 
-h1{
-    font-size: 6rem;
-    font-weight: 400;
-    margin: 0px;
-}
-
 h1, h2, h3, h4, p, button {
     color: var(--default-text);
+    font-family: Cormorant Garamond;
 }
+
+h1{
+    font-size: 5rem;
+    font-weight: 500;
+    margin: 0px;
+    letter-spacing: .5rem;
+}
+
+
 
 
 /* IDs */
