@@ -4,6 +4,54 @@
     --default-text: #727249;
 }
 
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url(./fonts/CormorantGaramond-Regular.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url(./fonts/CormorantGaramond-Medium.ttf) format('truetype');
+    font-weight: 500; /* Medium weight */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url(./fonts/CormorantGaramond-MediumItalic.ttf) format('truetype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url(./fonts/CormorantGaramond-SemiBold.ttf) format('truetype');
+    font-weight: 600; /* semi bold */
+    font-style: normal;
+}
+
+
+/* elements */
+html{
+    font-size: 16px;
+}
+
+h1, h2, h3, h4, p, button {
+    color: var(--default-text);
+    font-family: Cormorant Garamond;
+}
+
+h1{
+    font-size: 5rem;
+    font-weight: 500;
+    margin: 0px;
+    letter-spacing: .5rem;
+}
+
+
+
+
+/* IDs */
 #home-page-image{
     max-width: 100%;
     width: 1236px;
@@ -16,6 +64,19 @@
     height: auto;
 }
 
+#header-event-info{
+    font-size: 2.5rem;
+}
+
+#tab-bar-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding-bottom: 50px;
+}
+
+/* classes */
 .App{
     padding-left: 100px;
     padding-right: 100px;
@@ -23,6 +84,6 @@
     background-color: var(--base-background);
 }
 
-h1, h2, h3, h4, p {
-    color: var(--default-text);
+.contain-center{
+    text-align: center;
 }
