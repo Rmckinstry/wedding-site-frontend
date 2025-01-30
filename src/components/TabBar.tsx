@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
-function TabBar ({tabValue, handleChange}){
+function TabBar ({tabValue = 0, handleChange}){
     return(
         <>
-            <div className="tab-bar-container">
-                <Tabs value={tabValue} onChange={handleChange} aria-label="Tab bar">
-                    <Tab label="Home" />
-                    <Tab label="Travel" />
-                    <Tab label="FAQ" />
+            <div id="tab-bar-container">
+                <Tabs 
+                    value={tabValue} 
+                    onChange={handleChange} 
+                    aria-label="Tab bar"
+                >
+                    <Tab label="Home" className="custom-tab" />
+                    <Tab label="Travel" className="custom-tab"/>
+                    <Tab label="FAQ" className="custom-tab"/>
                 </Tabs>
             </div>
         </>

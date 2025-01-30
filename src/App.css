@@ -6,13 +6,17 @@
 
 
 /* elements */
+html{
+    font-size: 16px;
+}
+
 h1{
-    font-size: 96px;
+    font-size: 6rem;
     font-weight: 400;
     margin: 0px;
 }
 
-h1, h2, h3, h4, p {
+h1, h2, h3, h4, p, button {
     color: var(--default-text);
 }
 
@@ -31,9 +35,16 @@ h1, h2, h3, h4, p {
 }
 
 #header-event-info{
-    font-size: 40px;
+    font-size: 2.5rem;
 }
 
+#tab-bar-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding-bottom: 50px;
+}
 
 /* classes */
 .App{
