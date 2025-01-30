@@ -30,13 +30,18 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'Cormorant Upright';
+    src: url(./fonts/CormorantUpright-Regular.ttf) format('truetype');
+}
+
 
 /* elements */
 html{
     font-size: 16px;
 }
 
-h1, h2, h3, h4, p, button {
+h1, h2, h3, h4, p, a {
     color: var(--default-text);
     font-family: Cormorant Garamond, serif;
 }
@@ -46,6 +51,14 @@ h1{
     font-weight: 500;
     margin: 0px;
     letter-spacing: .5rem;
+}
+
+a{
+    text-underline-offset: 9px;
+    text-decoration-thickness: 2px;
+}
+a:hover{
+    transform: scale(1.05);
 }
 
 
@@ -66,7 +79,7 @@ h1{
 }
 
 #home-page-image {
-    max-width: 1236px; /* Maximum width */
+    max-width: 1236px;
     width: 100%;
     height: auto;
     border-radius: .5rem;
@@ -105,11 +118,31 @@ h1{
 
 #footer-text{
     font-weight: 600;
-    font-size: 3.5rem;
+    font-size: 3rem;
 }
 
 #footer-date{
     font-size: 2rem;
+}
+
+#venue-container{
+    margin-bottom: 4.5rem;
+}
+
+#travel-flex-container{
+    /* background-color: palevioletred; */
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+#travel-divider{
+    height: 90%;
+    width: 1px;
+    background-color: var(--default-text);
+    margin: 0 2rem;
+    /* padding-right: 1rem; */
 }
 
 /* classes */
@@ -139,6 +172,65 @@ h1{
 }
 
 .home-footer p{
-    font-size: 3.5rem;
+    font-size: 3rem;
     margin: 0px;
+    letter-spacing: .25rem;
+}
+
+.title{
+    font-size: 3rem;
+    text-decoration: underline;
+    text-decoration-color: var(--default-text) ;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 8px;
+    margin: 0px;
+    padding-bottom: 1rem;
+}
+
+.primary-text{
+    font-size: 2.5rem;
+    font-weight: 500;
+    margin: 0px;
+}
+
+.secondary-text{
+    font-size: 2rem;
+    font-family: Cormorant Upright, serif;
+    margin: 0px;
+}
+
+.info-container{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.btn-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem 0;
+}
+.btn-link{
+    background-color: var(--default-text);
+    color: var(--base-background);
+    font-family: Cormorant Garamond, serif;
+    border-style: none;
+    width: 8rem;
+    height: 3rem;
+    border-radius: 1rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.btn-link:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+    font-weight: 600;
 }
