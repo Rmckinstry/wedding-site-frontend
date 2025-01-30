@@ -5,7 +5,7 @@ import Tab from '@mui/material/Tab';
 function TabBar ({tabValue = 0, handleChange}){
     return(
         <>
-            <div id="tab-bar-container">
+            <div id="tab-bar-container" className="flex-row">
                 <Tabs 
                     value={tabValue} 
                     onChange={handleChange} 
