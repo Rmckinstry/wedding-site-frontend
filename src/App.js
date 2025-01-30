@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './App.css';
 import Footer from './components/Footer.tsx';
 import Header from './components/Header.tsx';
@@ -13,17 +13,27 @@ function App() {
 
   const [tabValue, setTabValue] = useState(0);
 
+  const handleScrollAction = () => {
+    const pageContainer = document.getElementById('page-container');
+    if (pageContainer) {
+      pageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const handleChange = (event, newValue) => {
     if (newValue !== tabValue) {
       setTabValue(newValue);
+      handleScrollAction();
     }
-  }
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
         <Header />
-        <TabBar tabValue={tabValue} handleChange={handleChange} />
+        <div id="tab-bar-container"> {/* Add the container div */}
+          <TabBar tabValue={tabValue} handleChange={handleChange} />
+        </div>
         <div id='page-container'>
           {tabValue === 0 && <HomePage />}
           {tabValue === 1 && <TravelPage />}

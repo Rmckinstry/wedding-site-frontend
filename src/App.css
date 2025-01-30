@@ -63,7 +63,10 @@ a:hover{
 
 
 /* IDs */
-
+#page-container{
+    margin-top: 1rem;
+    padding-top: 50px;
+}
 #header-img{
     max-width: 100%;
     width: 100%;
@@ -74,8 +77,12 @@ a:hover{
     font-size: 2.5rem;
 }
 
-#tab-bar-container{
-    padding-bottom: 3rem;
+#tab-bar-container {
+    position: sticky;
+    top: 0; 
+    z-index: 10;
+    background-color: #FFFDFB;
+    /* padding-bottom: 3rem; */
 }
 
 #home-page-image {
@@ -234,3 +241,4 @@ a:hover{
     transform: scale(1.1);
     font-weight: 600;
 }
+
