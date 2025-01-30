@@ -49,8 +49,6 @@ h1{
 }
 
 
-
-
 /* IDs */
 
 #header-img{
@@ -64,13 +62,14 @@ h1{
 }
 
 #tab-bar-container{
-    padding-bottom: 50px;
+    padding-bottom: 3rem;
 }
 
 #home-page-image {
     max-width: 1236px; /* Maximum width */
     width: 100%;
     height: auto;
+    border-radius: .5rem;
 }
 
 #home-page-info-container{
@@ -78,12 +77,40 @@ h1{
     gap: 2rem;
 }
 
-#divider{
+#divider-vert{
     height: 200px;
     width: 1px;
     background-color: var(--default-text);
 }
 
+#divider-horiz{
+    height: 1px;
+    width: 200px;
+    background-color: var(--default-text);
+}
+
+#footer-img{
+    max-width: 80%;
+    width: 80%;
+    height: auto;
+}
+
+#footer-container{
+    padding-bottom: 1rem;
+}
+
+#footer-info p{
+    margin: 0px;
+}
+
+#footer-text{
+    font-weight: 600;
+    font-size: 3.5rem;
+}
+
+#footer-date{
+    font-size: 2rem;
+}
 
 /* classes */
 .App{
@@ -102,16 +129,13 @@ h1{
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 1rem;
 }
 
 .flex-row{
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.home-footer{
-    gap: 1rem;
 }
 
 .home-footer p{

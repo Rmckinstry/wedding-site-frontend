@@ -29,7 +29,7 @@ function App() {
           {tabValue === 1 && <TravelPage />}
           {tabValue === 2 && <FAQPage />}
         </div>
-        <Footer />
+        <Footer showText={tabValue > 0} />
       </div>
     </ThemeProvider>
   );
