@@ -52,11 +52,6 @@ h1{
 
 
 /* IDs */
-#home-page-image{
-    max-width: 100%;
-    width: 1236px;
-    height: auto;
-}
 
 #header-img{
     max-width: 100%;
@@ -69,12 +64,26 @@ h1{
 }
 
 #tab-bar-container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
     padding-bottom: 50px;
 }
+
+#home-page-image{
+    max-width: 100%;
+    width: 1236px;
+    height: auto;
+}
+
+#home-page-info-container{
+    margin: 3.5rem 0;
+    gap: 2rem;
+}
+
+#divider{
+    height: 200px;
+    width: 1px;
+    background-color: var(--default-text);
+}
+
 
 /* classes */
 .App{
@@ -84,6 +93,28 @@ h1{
     background-color: var(--base-background);
 }
 
-.contain-center{
+.contain-text-center{
     text-align: center;
+}
+
+.flex-col{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-row{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-footer{
+    gap: 1rem;
+}
+
+.home-footer p{
+    font-size: 3.5rem;
+    margin: 0px;
 }

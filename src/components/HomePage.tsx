@@ -4,11 +4,20 @@ import HomeImage from "../assets/italy ring.jpg"
 function HomePage(){
     return(
         <>
-            <div id="home-page-container">
+            <div id="home-page-container" className="flex-col">
                 <img src={HomeImage} alt={"Proposal in Italy"} id="home-page-image" />
-                <div id="home-page-info-container">
-                    <p className="home-page-info">November 15, 2025</p>
-                    <p className="home-page-info">Rossville, TN</p>
+                <div id="home-page-info-container" className="flex-row">
+                    <div className="flex-col home-footer">
+                        <p>November</p>
+                        <p>30, 2025</p>
+                    </div>
+                    <div id="divider">
+                        {/* divider */}
+                    </div>
+                    <div className="flex-col home-footer">
+                        <p>Rossville,</p>
+                        <p>TN</p>
+                    </div>
                 </div>
             </div>
         </>
