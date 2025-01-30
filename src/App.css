@@ -38,7 +38,7 @@ html{
 
 h1, h2, h3, h4, p, button {
     color: var(--default-text);
-    font-family: Cormorant Garamond;
+    font-family: Cormorant Garamond, serif;
 }
 
 h1{
@@ -67,9 +67,9 @@ h1{
     padding-bottom: 50px;
 }
 
-#home-page-image{
-    max-width: 100%;
-    width: 1236px;
+#home-page-image {
+    max-width: 1236px; /* Maximum width */
+    width: 100%;
     height: auto;
 }
 
