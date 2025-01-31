@@ -37,7 +37,7 @@
 
 
 /* elements */
-html{
+html {
     font-size: 16px;
 }
 
@@ -136,7 +136,7 @@ a:hover{
     margin-bottom: 4.5rem;
 }
 
-#travel-flex-container{
+#travel-grid-container{
     /* background-color: palevioletred; */
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -154,9 +154,7 @@ a:hover{
 
 /* classes */
 .App{
-    padding-left: 100px;
-    padding-right: 100px;
-
+    padding: 0 7rem;
     background-color: var(--base-background);
 }
 
@@ -215,6 +213,14 @@ a:hover{
     margin-bottom: 2rem;
 }
 
+.info-container p{
+    text-align: center;
+}
+
+.info-container a{
+    text-align: center;
+}
+
 .btn-container{
     display: flex;
     align-items: center;
@@ -242,3 +248,42 @@ a:hover{
     font-weight: 600;
 }
 
+/* Media Queries */
+
+/* Small devices (phones, 600px and below) */
+@media (max-width: 600px) {
+    html {
+        font-size: 8px;
+    }
+
+    /* change to horiz divider */
+    #travel-divider{
+        height: 1px;
+        width: 90%;
+        margin: 2rem 0;
+    }
+
+    #travel-grid-container{
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Medium devices (tablets, 601px to 900px) */
+@media (min-width: 601px) and (max-width: 900px) {
+    html {
+        font-size: 12px;
+    }
+    /* switch back to vert divider */
+    #travel-divider{
+        height: 90%;
+        width: 1px;
+        margin: 0 2rem;
+    }
+}
+
+/* Large devices (desktops, 901px and above) */
+@media (min-width: 901px) {
+    html {
+        font-size: 16px;
+    }
+}

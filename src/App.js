@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Footer from './components/Footer.tsx';
 import Header from './components/Header.tsx';
