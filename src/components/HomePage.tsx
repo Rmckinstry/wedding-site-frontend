@@ -9,7 +9,7 @@ function HomePage() {
         <div id="home-page-info-container" className="flex-row">
           <div className="flex-col home-footer">
             <p>November</p>
-            <p>30, 2025</p>
+            <p>15, 2025</p>
           </div>
           <div id="divider-vert">{/* divider */}</div>
           <div className="flex-col home-footer">
