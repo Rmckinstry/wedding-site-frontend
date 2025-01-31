@@ -19,7 +19,7 @@ function TravelPage() {
           </div>
         </div>
 
-        <div id="travel-flex-container">
+        <div id="travel-grid-container">
           <div id="transportation-container" className="flex-col">
             <h2 className="title">Transportation</h2>
             <div className="info-container">
@@ -62,8 +62,10 @@ function TravelPage() {
                 </a>
                 <p className="secondary-text">(901) 850-9390</p>
               </div>
-              <p style={{ margin: "0px" }}>To receive the “Kail-Mckinstry Wedding Block” rate, use the button below.</p>
-              <p style={{ margin: "0px" }}>If the block is out of stock, please let us know!</p>
+              <p style={{ margin: "0px", textAlign: "center" }}>
+                To receive the “Kail-Mckinstry Wedding Block” rate, use the button below.
+              </p>
+              <p style={{ margin: "0px", textAlign: "center" }}>If the block is out of stock, please let us know!</p>
               <div className="btn-container">
                 <a
                   href="https://www.marriott.com/event-reservations/reservation-link.mi?id=1736975742584&key=GRP&guestreslink2=true&app=resvlink"
