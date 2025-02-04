@@ -8,9 +8,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 function FAQDesktop({ faq }) {
   return (
     <>
-      <Accordion className="faq-containers">
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2-content" id="panel2-header">
-          <Typography component="span">{faq.question}</Typography>
+      <Accordion className="faq-desktop-container">
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography className="faq-title-desktop" component="span">
+            {faq.question}
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>{faq.answer}</Typography>

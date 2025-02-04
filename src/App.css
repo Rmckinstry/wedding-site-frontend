@@ -156,6 +156,13 @@ a:hover{
     /* padding-right: 1rem; */
 }
 
+#faq-data-mobile-container{
+    display: none;
+}
+
+
+
+
 /* classes */
 .App{
     padding: 0 7rem;
@@ -251,6 +258,24 @@ a:hover{
     transform: scale(1.1);
     font-weight: 600;
 }
+.faq-mobile-container, .faq-desktop-container{
+    margin-bottom: 1rem;
+}
+
+.faq-content-mobile{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.faq-content-mobile p{
+    margin: 0;
+}
+
+.faq-title-mobile{
+    font-weight: 600;
+    font-size: 1.25rem
+}
 
 /* Media Queries */
 
@@ -273,6 +298,12 @@ a:hover{
 
     a{
         text-underline-offset: 4px;
+    }
+    #faq-data-mobile-container{
+        display: block;
+    }
+    #faq-data-desktop-container{
+        display: none;
     }
 }
 

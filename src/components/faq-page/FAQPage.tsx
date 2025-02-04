@@ -6,9 +6,16 @@ import faqData from "../../utility/faqData.js";
 function FAQPage() {
   return (
     <>
-      {faqData.map((faq, index) => (
-        <FAQDesktop faq={faq} />
-      ))}
+      <div id="faq-data-desktop-container">
+        {faqData.map((faq, index) => (
+          <FAQDesktop faq={faq} />
+        ))}
+      </div>
+      <div id="faq-data-mobile-container">
+        {faqData.map((faq, index) => (
+          <FAQDesktop faq={faq} />
+        ))}
+      </div>
     </>
   );
 }
