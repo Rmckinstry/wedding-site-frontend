@@ -5,7 +5,7 @@ import Header from './components/Header.tsx';
 import TabBar from './components/TabBar.tsx';
 import HomePage from './components/HomePage.tsx';
 import TravelPage from './components/TravelPage.tsx';
-import FAQPage from './components/FAQPage.tsx';
+import FAQPage from './components/faq-page/FAQPage.tsx';
 import theme from './theme/theme.tsx';
 import { ThemeProvider } from '@mui/material';
 

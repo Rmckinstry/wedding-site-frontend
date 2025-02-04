@@ -1,5 +1,5 @@
 import React from "react";
-import HomeImage from "../assets/italy ring.jpg";
+import HomeImage from "../assets/italy_ring.jpg";
 
 function HomePage() {
   return (
