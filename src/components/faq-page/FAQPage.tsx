@@ -13,7 +13,7 @@ function FAQPage() {
       </div>
       <div id="faq-data-mobile-container">
         {faqData.map((faq, index) => (
-          <FAQDesktop faq={faq} />
+          <FAQMobile faq={faq} />
         ))}
       </div>
     </>
