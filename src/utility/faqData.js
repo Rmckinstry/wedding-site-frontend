@@ -5,11 +5,6 @@ const faqData = [
     },
 
     {
-        question: "Are kids allowed?",
-        answer: "Yes! Kids are allowed to come and celebrate with us. It will be a late afternoon into early night wedding."
-    },
-
-    {
         question: "Are there any hotel discounts available?",
         answer: "Yes. We have a group block rate with Courtyard Marriott in Collierville. Head over to the Travel tab and use the button. If the block rate is out of stock please let us know and we can get more added."
     },
