@@ -76,6 +76,13 @@ function TravelPage() {
                   Block Rate
                 </a>
               </div>
+              <div>
+                <p>The Courtyard Memphis is located in the Carriage Crossing Outdoor Mall.</p>
+                <p>
+                  The mall has several restaraunts, bars, and shops all in walking distance of the hotel for you to
+                  enjoy.
+                </p>
+              </div>
             </div>
           </div>
         </div>
