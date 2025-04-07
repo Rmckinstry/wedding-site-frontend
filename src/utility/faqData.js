@@ -10,7 +10,7 @@ const faqData = [
     },
     {
         question: "Can I add extra days to the block rate?",
-        answer: "For most cases yes. You would need to let us know and we can contact the hotel manager about it. It is a case by case basis, but the manager has told us it should be fine if a day or two are added."
+        answer: "For most cases yes. You can call the hotel at 901-850-9390 and ask for the sales manager, Ashley. It is a case by case basis, but the manager has told us it should be fine if a day or two are added."
     },
     {
         question: "How do I access the wedding registry?",
