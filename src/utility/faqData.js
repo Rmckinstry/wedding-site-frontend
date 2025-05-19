@@ -1,5 +1,9 @@
 const faqData = [
     {
+        question: "Are kids allowed at the wedding?",
+        answer: "Yes, kids are allowed to help celebrate this special day. We do kindly suggest that all infants and toddlers not be present at the ceremony area so that all of the focus is on the bride and groom. There are several areas around the property that you can use."
+    },    
+    {
         question: "How do I RSVP?",
         answer: "RSVP's will be sent out later in the summer."
     },
@@ -10,7 +14,7 @@ const faqData = [
     },
     {
         question: "Can I add extra days to the block rate?",
-        answer: "For most cases yes. You would need to let us know and we can contact the hotel manager about it. It is a case by case basis, but the manager has told us it should be fine if a day or two are added."
+        answer: "For most cases yes. You can call the hotel at 901-850-9390 and ask for the sales manager, Ashley. It is a case by case basis, but the manager has told us it should be fine if a day or two are added."
     },
     {
         question: "How do I access the wedding registry?",
