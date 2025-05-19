@@ -318,6 +318,12 @@ a:hover{
     #faq-data-desktop-container{
         display: none;
     }
+
+    .App{
+        padding: 0 3rem;
+        background-color: var(--base-background);
+    }
+
 }
 
 /* Medium devices (tablets, 601px to 900px) */
