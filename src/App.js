@@ -6,6 +6,7 @@ import TabBar from './components/TabBar.tsx';
 import HomePage from './components/HomePage.tsx';
 import TravelPage from './components/TravelPage.tsx';
 import FAQPage from './components/faq-page/FAQPage.tsx';
+import Registry from './components/Registry.tsx';
 import theme from './theme/theme.tsx';
 import { ThemeProvider } from '@mui/material';
 
@@ -38,6 +39,7 @@ function App() {
           {tabValue === 0 && <HomePage />}
           {tabValue === 1 && <TravelPage />}
           {tabValue === 2 && <FAQPage />}
+          {tabValue === 3 && <Registry />}
         </div>
         <Footer showText={tabValue > 0} />
       </div>

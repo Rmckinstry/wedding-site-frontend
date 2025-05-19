@@ -57,6 +57,11 @@ h1{
     letter-spacing: .5rem;
 }
 
+h3{
+    font-size: 2rem;
+    margin: 0px;
+}
+
 a{
     text-underline-offset: 9px;
     text-decoration-thickness: 2px;
@@ -65,10 +70,9 @@ a:hover{
     transform: scale(1.05);
 }
 
-
 /* IDs */
 #page-container{
-    margin-top: 1rem;
+    margin: 1rem 0;
     padding-top: 50px;
 }
 #header-img{
@@ -160,7 +164,11 @@ a:hover{
     display: none;
 }
 
-
+#registry-btn{
+    width: 12rem;
+    height: 4rem;
+    text-align: center;
+}
 
 
 /* classes */
@@ -275,6 +283,11 @@ a:hover{
 .faq-title-mobile{
     font-weight: 600;
     font-size: 1.25rem
+}
+
+.registry-text{
+    font-size: 1.5rem;
+    margin-top: 0px;
 }
 
 /* Media Queries */
