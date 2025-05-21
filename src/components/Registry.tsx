@@ -8,7 +8,7 @@ function Registry() {
           <h3>We are using WithJoy as our registry provider.</h3>
           <p className="registry-text">Click the button below to visit our registry portal.</p>
         </div>
-        <div id="registry-btn-container" className="btn-container">
+        <div id="registry-btn-container" className="btn-container contain-text-center">
           <a
             href="https://withjoy.com/bailey-and-ryan-nov-25/registry"
             target="_blank"

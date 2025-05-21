@@ -94,6 +94,11 @@ p{
     font-size: 2.5rem;
 }
 
+#header-info-container{
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
 #tab-bar-container {
     position: sticky;
     top: 0; 
@@ -175,7 +180,6 @@ p{
 #registry-btn{
     width: 12rem;
     height: 4rem;
-    text-align: center;
 }
 
 
@@ -236,14 +240,6 @@ p{
     align-items: center;
     justify-content: center;
     margin-bottom: 2rem;
-}
-
-.info-container p{
-    text-align: center;
-}
-
-.info-container a{
-    text-align: center;
 }
 
 .btn-container{

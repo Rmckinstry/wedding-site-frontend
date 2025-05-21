@@ -6,7 +6,7 @@ function TravelPage() {
       <div id="travel-page-container">
         <div id="venue-container" className="flex-col">
           <h2 className="title">Venue</h2>
-          <div id="venue-info" className="info-container">
+          <div id="venue-info" className="info-container contain-text-center">
             <p className="primary-text">Heartwood Hall</p>
             <a
               href="https://maps.app.goo.gl/YdQgCvsSVR2bzDCv6"
@@ -22,15 +22,15 @@ function TravelPage() {
         <div id="travel-grid-container">
           <div id="transportation-container" className="flex-col">
             <h2 className="title">Transportation</h2>
-            <div className="info-container">
+            <div className="info-container contain-text-center">
               <p className="primary-text">Memphis International Airport</p>
               <p className="secondary-text">(Recommended)</p>
             </div>
-            <div className="info-container">
+            <div className="info-container contain-text-center">
               <p className="primary-text">Nashille International Airport</p>
               <p className="secondary-text">(Note: 3 hour drive to Memphis.)</p>
             </div>
-            <div className="info-container">
+            <div className="info-container contain-text-center">
               <p className="primary-text">Memphis Airport Rental Cars</p>
               <div className="btn-container">
                 <a
@@ -49,9 +49,9 @@ function TravelPage() {
 
           <div id="lodging-container" className="flex-col">
             <h2 className="title">Lodging</h2>
-            <div className="info-container">
+            <div className="info-container contain-text-center">
               <p className="primary-text">Courtyard Memphis Collierville</p>
-              <div className="info-container">
+              <div className="info-container contain-text-center">
                 <a
                   href="https://maps.app.goo.gl/QBmsoeupeWr9yDH87"
                   target="_blank"
