@@ -10,12 +10,10 @@ function FAQDesktop({ faq }) {
     <>
       <Accordion className="faq-desktop-container">
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className="faq-title-desktop" component="span">
-            {faq.question}
-          </Typography>
+          <p className="faq-title-desktop">{faq.question}</p>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>{faq.answer}</Typography>
+          <p className="faq-answer-desktop">{faq.answer}</p>
         </AccordionDetails>
       </Accordion>
     </>

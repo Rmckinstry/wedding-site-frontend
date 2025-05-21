@@ -75,6 +75,10 @@ a:hover{
     transform: scale(1.05);
 }
 
+p{
+    margin: 0;
+}
+
 /* IDs */
 #page-container{
     margin: 1rem 0;
@@ -94,7 +98,7 @@ a:hover{
     position: sticky;
     top: 0; 
     z-index: 10;
-    background-color: #FFFDFB;
+    background-color: var(--base-background);
     /* padding-bottom: 3rem; */
 }
 
@@ -150,7 +154,6 @@ a:hover{
 }
 
 #travel-grid-container{
-    /* background-color: palevioletred; */
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
@@ -270,7 +273,16 @@ a:hover{
     font-weight: 600;
 }
 .faq-mobile-container, .faq-desktop-container{
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+.faq-title-desktop{
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.faq-answer-desktop{
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 .faq-content-mobile{
@@ -285,7 +297,12 @@ a:hover{
 
 .faq-title-mobile{
     font-weight: 600;
-    font-size: 1.25rem
+    font-size: 2rem
+}
+
+.faq-answer-mobile{
+    font-size: 1.5rem;
+    font-weight: 500;
 }
 
 .registry-text{
@@ -324,7 +341,6 @@ a:hover{
 
     .App{
         padding: 0 3rem;
-        background-color: var(--base-background);
     }
 
 }
@@ -345,6 +361,10 @@ a:hover{
     html {
         font-size: 16px;
     }
+
+    #faq-data-desktop-container {
+        padding: 0 10%;
+    }
 }
 
 /* Super-large devices (large monitors, 1921px and above) */
@@ -353,5 +373,9 @@ a:hover{
         max-width: 1920px; /* Limit width for extra-large screens */
         margin-left: auto;
         margin-right: auto;
+    }
+
+    #faq-data-desktop-container {
+        padding: 0 10rem;
     }
 }
