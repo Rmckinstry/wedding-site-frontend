@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, NativeSelect } from "@mui/material";
+import { FormControl, NativeSelect } from "@mui/material";
 
 function MobileSelectNav({ tabValue = 0, handleChange }) {
   return (

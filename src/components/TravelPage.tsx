@@ -62,10 +62,12 @@ function TravelPage() {
                 </a>
                 <p className="secondary-text">(901) 850-9390</p>
               </div>
-              <p style={{ margin: "0px", textAlign: "center" }}>
+              <p className="detail-text" style={{ margin: "0px", textAlign: "center" }}>
                 To receive the “Kail-Mckinstry Wedding Block” rate, use the button below.
               </p>
-              <p style={{ margin: "0px", textAlign: "center" }}>If the block is out of stock, please let us know!</p>
+              <p className="detail-text" style={{ margin: "0px", textAlign: "center" }}>
+                If the block is out of stock, please let us know!
+              </p>
               <div className="btn-container">
                 <a
                   href="https://www.marriott.com/event-reservations/reservation-link.mi?id=1736975742584&key=GRP&guestreslink2=true&app=resvlink"
@@ -77,8 +79,8 @@ function TravelPage() {
                 </a>
               </div>
               <div>
-                <p>The Courtyard Memphis is located in the Carriage Crossing Outdoor Mall.</p>
-                <p>
+                <p className="detail-text">The Courtyard Memphis is located in the Carriage Crossing Outdoor Mall.</p>
+                <p className="detail-text">
                   The mall has several restaraunts, bars, and shops all in walking distance of the hotel for you to
                   enjoy.
                 </p>

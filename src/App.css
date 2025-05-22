@@ -237,6 +237,10 @@ p{
     margin: 0px;
 }
 
+.detail-text{
+    font-size: 1.25rem;
+}
+
 .info-container{
     display: flex;
     flex-direction: column;
