@@ -22,10 +22,19 @@ function App() {
   };
 
   const handleChange = (event, newValue) => {
-    if (newValue !== tabValue) {
-      setTabValue(newValue);
-      handleScrollAction();
+    if (newValue === undefined) {
+      // assume mobile
+      if (event.target.value !== tabValue) {
+        setTabValue(Number(event.target.value));
+        handleScrollAction();
+      }
+    } else {
+      if (newValue !== tabValue) {
+        setTabValue(newValue);
+        handleScrollAction();
+      }
     }
+
   };
 
   return (
