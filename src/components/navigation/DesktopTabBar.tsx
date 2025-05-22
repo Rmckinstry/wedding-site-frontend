@@ -1,11 +1,10 @@
-import React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 
-function TabBar({ tabValue = 0, handleChange }) {
+function DesktopTabBar({ tabValue = 0, handleChange }) {
   return (
     <>
-      <div id="tab-bar-container" className="flex-row">
+      <div className="flex-row">
         <Tabs
           value={tabValue}
           onChange={handleChange}
@@ -24,4 +23,4 @@ function TabBar({ tabValue = 0, handleChange }) {
   );
 }
 
-export default TabBar;
+export default DesktopTabBar;

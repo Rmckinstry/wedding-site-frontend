@@ -16,7 +16,7 @@ function Registry() {
             className="btn-link"
             rel="noreferrer"
           >
-            Bailey & Ryans WithJoy Registy
+            Bailey & Ryans WithJoy Registry
           </a>
         </div>
         <p className="registry-text">

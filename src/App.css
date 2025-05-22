@@ -107,6 +107,10 @@ p{
     /* padding-bottom: 3rem; */
 }
 
+#nav-mobile-container{
+    display: none;
+}
+
 #home-page-image {
     max-width: 1236px;
     width: 100%;
@@ -328,10 +332,10 @@ p{
     a{
         text-underline-offset: 4px;
     }
-    #faq-data-mobile-container{
+    #faq-data-mobile-container, #nav-mobile-container{
         display: block;
     }
-    #faq-data-desktop-container{
+    #faq-data-desktop-container, #nav-desktop-container{
         display: none;
     }
 
