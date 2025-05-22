@@ -99,7 +99,7 @@ p{
     margin-bottom: 2.5rem;
 }
 
-#tab-bar-container {
+#nav-container {
     position: sticky;
     top: 0; 
     z-index: 10;
@@ -332,9 +332,15 @@ p{
     a{
         text-underline-offset: 4px;
     }
-    #faq-data-mobile-container, #nav-mobile-container{
+    #faq-data-mobile-container{
         display: block;
     }
+    
+    #nav-mobile-container{
+        display: block;
+        padding: 0 20%;
+    }
+
     #faq-data-desktop-container, #nav-desktop-container{
         display: none;
     }

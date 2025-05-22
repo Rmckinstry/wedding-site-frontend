@@ -5,9 +5,6 @@ function MobileSelectNav({ tabValue = 0, handleChange }) {
     <>
       <div className="flex-row">
         <FormControl fullWidth>
-          <InputLabel variant="standard" htmlFor="uncontrolled-native">
-            Menu
-          </InputLabel>
           <NativeSelect value={tabValue} onChange={handleChange}>
             <option value={0}>Home</option>
             <option value={1}>Travel</option>

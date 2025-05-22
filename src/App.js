@@ -41,7 +41,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <div className="App">
         <Header />
-        <div id="tab-bar-container"> {/* Add the container div */}
+        <div id="nav-container"> {/* Add the container div */}
           <Navigation tabValue={tabValue} handleChange={handleChange} />
         </div>
         <div id='page-container'>
