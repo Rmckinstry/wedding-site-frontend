@@ -342,7 +342,7 @@ p{
     
     #nav-mobile-container{
         display: block;
-        padding: 0 20%;
+        padding: 1rem 20%;
     }
 
     #faq-data-desktop-container, #nav-desktop-container{
