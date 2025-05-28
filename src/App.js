@@ -9,6 +9,7 @@ import Registry from './components/Registry.tsx';
 import theme from './theme/theme.tsx';
 import { ThemeProvider } from '@mui/material';
 import Navigation from './components/navigation/Navigation.tsx';
+import RSVP from './components/rsvp/RSVP.tsx';
 
 function App() {
 
@@ -47,8 +48,10 @@ function App() {
         <div id='page-container'>
           {tabValue === 0 && <HomePage />}
           {tabValue === 1 && <TravelPage />}
-          {tabValue === 2 && <FAQPage />}
+          {tabValue === 2 && <RSVP />}
           {tabValue === 3 && <Registry />}
+          {tabValue === 4 && <FAQPage />}
+
         </div>
         <Footer showText={tabValue > 0} />
       </div>
