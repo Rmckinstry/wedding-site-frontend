@@ -19,6 +19,12 @@ function Registry() {
             Bailey & Ryans WithJoy Registry
           </a>
         </div>
+
+        <p className="registry-text" style={{ padding: "1rem 15%", textAlign: "center" }}>
+          <strong>Please note: </strong>To ensure items are not duplicated, when you have purchased an item/donated on
+          WithJoy, please make sure to finish the prompt and mark the item as "purchased".
+        </p>
+
         <p className="registry-text">
           We deeply appreciate any gifts purchased or cash funds donated to. Your generosity means the world to us —
           thank you for being part of our celebration!
