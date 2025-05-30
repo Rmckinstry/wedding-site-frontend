@@ -10,7 +10,7 @@ function Registry() {
         </div>
         <div id="registry-btn-container" className="btn-container contain-text-center">
           <a
-            href="https://withjoy.com/bailey-and-ryan-nov-25/registry"
+            href="https://withjoy.com/bailey-and-ryan-nov-15"
             target="_blank"
             id="registry-btn"
             className="btn-link"
