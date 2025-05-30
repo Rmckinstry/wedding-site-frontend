@@ -48,6 +48,24 @@ const theme = createTheme({
         },
       },
     },
+    MuiNativeSelect: {
+      styleOverrides: {
+        root: {
+          color: "var(--default-text)", // Default text color
+          fontSize: "1.25rem",
+          fontFamily: "Cormorant Garamond",
+        },
+      },
+    },
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 601,
+      md: 901,
+      lg: 1921,
+      xl: 2000,
+    },
   },
 });
 

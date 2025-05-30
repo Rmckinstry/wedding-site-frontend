@@ -1,7 +1,7 @@
 /* Variables */
 :root {
     --base-background : #FFFDFB;
-    --default-text: #727249;
+    --default-text: #646440;
 }
 
 body{
@@ -45,7 +45,7 @@ html {
     font-size: 16px;
 }
 
-h1, h2, h3, h4, p, a {
+h1, h2, h3, h4, p, a, select {
     color: var(--default-text);
     font-family: Cormorant Garamond, serif;
 }
@@ -57,6 +57,16 @@ h1{
     letter-spacing: .5rem;
 }
 
+h2{
+    font-size: 3rem;
+    margin: 0px;
+}
+
+h3{
+    font-size: 2rem;
+    margin: 0px;
+}
+
 a{
     text-underline-offset: 9px;
     text-decoration-thickness: 2px;
@@ -65,10 +75,13 @@ a:hover{
     transform: scale(1.05);
 }
 
+p{
+    margin: 0;
+}
 
 /* IDs */
 #page-container{
-    margin-top: 1rem;
+    margin: 1rem 0;
     padding-top: 50px;
 }
 #header-img{
@@ -81,12 +94,21 @@ a:hover{
     font-size: 2.5rem;
 }
 
-#tab-bar-container {
+#header-info-container{
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+#nav-container {
     position: sticky;
     top: 0; 
     z-index: 10;
-    background-color: #FFFDFB;
+    background-color: var(--base-background);
     /* padding-bottom: 3rem; */
+}
+
+#nav-mobile-container{
+    display: none;
 }
 
 #home-page-image {
@@ -141,7 +163,6 @@ a:hover{
 }
 
 #travel-grid-container{
-    /* background-color: palevioletred; */
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
@@ -160,7 +181,10 @@ a:hover{
     display: none;
 }
 
-
+#registry-btn{
+    width: 12rem;
+    height: 4rem;
+}
 
 
 /* classes */
@@ -194,12 +218,10 @@ a:hover{
 }
 
 .title{
-    font-size: 3rem;
     text-decoration: underline;
     text-decoration-color: var(--default-text) ;
     text-decoration-thickness: 3px;
     text-underline-offset: 8px;
-    margin: 0px;
     padding-bottom: 1rem;
 }
 
@@ -215,6 +237,10 @@ a:hover{
     margin: 0px;
 }
 
+.detail-text{
+    font-size: 1.25rem;
+}
+
 .info-container{
     display: flex;
     flex-direction: column;
@@ -222,14 +248,6 @@ a:hover{
     align-items: center;
     justify-content: center;
     margin-bottom: 2rem;
-}
-
-.info-container p{
-    text-align: center;
-}
-
-.info-container a{
-    text-align: center;
 }
 
 .btn-container{
@@ -259,7 +277,16 @@ a:hover{
     font-weight: 600;
 }
 .faq-mobile-container, .faq-desktop-container{
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+.faq-title-desktop{
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.faq-answer-desktop{
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 .faq-content-mobile{
@@ -274,7 +301,17 @@ a:hover{
 
 .faq-title-mobile{
     font-weight: 600;
-    font-size: 1.25rem
+    font-size: 2rem
+}
+
+.faq-answer-mobile{
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.registry-text{
+    font-size: 1.5rem;
+    margin-top: 0px;
 }
 
 /* Media Queries */
@@ -302,9 +339,20 @@ a:hover{
     #faq-data-mobile-container{
         display: block;
     }
-    #faq-data-desktop-container{
+    
+    #nav-mobile-container{
+        display: block;
+        padding: 1rem 20%;
+    }
+
+    #faq-data-desktop-container, #nav-desktop-container{
         display: none;
     }
+
+    .App{
+        padding: 0 3rem;
+    }
+
 }
 
 /* Medium devices (tablets, 601px to 900px) */
@@ -323,6 +371,10 @@ a:hover{
     html {
         font-size: 16px;
     }
+
+    #faq-data-desktop-container {
+        padding: 0 10%;
+    }
 }
 
 /* Super-large devices (large monitors, 1921px and above) */
@@ -331,5 +383,9 @@ a:hover{
         max-width: 1920px; /* Limit width for extra-large screens */
         margin-left: auto;
         margin-right: auto;
+    }
+
+    #faq-data-desktop-container {
+        padding: 0 10rem;
     }
 }
