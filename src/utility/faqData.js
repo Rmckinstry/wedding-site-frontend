@@ -5,7 +5,7 @@ const faqData = [
     },    
     {
         question: "How do I RSVP?",
-        answer: "RSVP's will be sent out later in the summer."
+        answer: "RSVP's will be sent out in July, and you can RSVP on this site when they go out."
     },
 
     {
@@ -18,7 +18,7 @@ const faqData = [
     },
     {
         question: "How do I access the wedding registry?",
-        answer: "You will be able to find the wedding registry on this portal staring in April/May."
+        answer: "Our wedding registry is on WithJoy and now live. You can access it via the 'Registry' tab above or directly: https://withjoy.com/bailey-and-ryan-nov-15"
     },
     {
         question: "What to see in Memphis?",
