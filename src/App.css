@@ -2,6 +2,7 @@
 :root {
     --base-background : #FFFDFB;
     --default-text: #646440;
+    --btn-disabled: #A3A39b
 }
 
 body{
@@ -276,6 +277,15 @@ p{
     transform: scale(1.1);
     font-weight: 600;
 }
+
+.btn-link:disabled{
+    background-color: var(--btn-disabled);
+}
+
+.btn-link:disabled:hover{
+    cursor: not-allowed;
+}
+
 .faq-mobile-container, .faq-desktop-container{
     margin-bottom: 1.5rem;
 }
