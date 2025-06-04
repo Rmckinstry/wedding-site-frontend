@@ -256,6 +256,7 @@ p{
     align-items: center;
     justify-content: center;
     margin: 1rem 0;
+    gap: 1rem;
 }
 .btn-link{
     background-color: var(--default-text);
@@ -270,6 +271,10 @@ p{
     align-items: center;
     justify-content: center;
     text-decoration: none;
+}
+
+.btn-xl{
+    width: 10rem;
 }
 
 .btn-link:hover{

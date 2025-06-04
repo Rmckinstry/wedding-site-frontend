@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import RSVPLookup from "./RSVPLookup.tsx";
 
 function RSVPPage() {
+  // tracks the selected guest that is accessing the portal
   const [selectedGuest, setSelectedGuest] = useState(null);
 
   const handleGuestSelect = (data) => {
