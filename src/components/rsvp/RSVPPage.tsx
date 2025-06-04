@@ -4,10 +4,11 @@ import RSVPLookup from "./RSVPLookup.tsx";
 
 function RSVPPage() {
   // tracks the selected guest that is accessing the portal
-  const [selectedGuest, setSelectedGuest] = useState(null);
+  const [selectedGroupData, setSelectedGroupData] = useState(null);
 
-  const handleGuestSelect = (data) => {
-    setSelectedGuest(data);
+  const handleGroupSelect = (data) => {
+    setSelectedGroupData(data);
+    console.log(data);
   };
 
   const queryClient = useQueryClient();
@@ -30,8 +31,8 @@ function RSVPPage() {
   return (
     <>
       <div className="rsvp-page-container">
-        {selectedGuest === null && <RSVPLookup data={data} handleGuestSelect={handleGuestSelect} />}
-        {selectedGuest !== null && <p>{selectedGuest["name"]}</p>}
+        {selectedGroupData === null && <RSVPLookup data={data} handleGroupSelect={handleGroupSelect} />}
+        {/* {selectedGuest !== null && <p>{selectedGuest["name"]}</p>} */}
       </div>
     </>
   );
