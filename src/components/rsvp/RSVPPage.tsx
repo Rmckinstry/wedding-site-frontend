@@ -1,9 +1,13 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { TextField, Autocomplete } from "@mui/material";
-function RSVP() {
+import RSVPLookup from "./RSVPLookup.tsx";
+
+function RSVPPage() {
   const [selectedGuest, setSelectedGuest] = useState(null);
-  const [inputValue, setInputValue] = useState("");
+
+  const handleGuestSelect = (data) => {
+    setSelectedGuest(data);
+  };
 
   const queryClient = useQueryClient();
 
@@ -16,7 +20,7 @@ function RSVP() {
   });
 
   if (isPending) {
-    return <p>Loading Data...</p>;
+    return <p>Loading RSVP Portal...</p>;
   }
 
   if (isError) {
@@ -25,30 +29,11 @@ function RSVP() {
   return (
     <>
       <div className="rsvp-page-container">
-        <p>Lookup your name to access your / your groups RSVP Guest Portal.</p>
-        <Autocomplete
-          options={data}
-          getOptionLabel={(option: any) => option.name}
-          value={selectedGuest}
-          onChange={(event: any, newValue: any) => {
-            setSelectedGuest(newValue);
-          }}
-          inputValue={inputValue}
-          onInputChange={(event, newInputValue) => {
-            setInputValue(newInputValue);
-          }}
-          disablePortal
-          sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Enter Guest Name" />}
-        />
-        <div className="btn-container">
-          <button disabled={!selectedGuest} className="btn-link" onClick={() => console.log(selectedGuest)}>
-            FIND YOUR RSVP
-          </button>
-        </div>
+        {selectedGuest === null && <RSVPLookup data={data} handleGuestSelect={handleGuestSelect} />}
+        {selectedGuest !== null && <p>{selectedGuest["name"]}</p>}
       </div>
     </>
   );
 }
 
-export default RSVP;
+export default RSVPPage;
