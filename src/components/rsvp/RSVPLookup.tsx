@@ -14,7 +14,7 @@ function RSVPConfirmation({ guest, handleConfirmation }) {
   });
 
   if (isPending) {
-    return <p>Loading Guest Information...</p>;
+    return <p>Loading Guests Information...</p>;
   }
 
   if (isError) {
