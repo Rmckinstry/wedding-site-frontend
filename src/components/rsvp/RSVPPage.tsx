@@ -1,6 +1,7 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import RSVPLookup from "./RSVPLookup.tsx";
+import RSVPPortal from "./RSVPPortal.tsx";
 
 function RSVPPage() {
   // tracks the selected guest that is accessing the portal
@@ -10,8 +11,6 @@ function RSVPPage() {
     setSelectedGroupData(data);
     console.log(data);
   };
-
-  const queryClient = useQueryClient();
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["allGuests"],
@@ -32,7 +31,7 @@ function RSVPPage() {
     <>
       <div className="rsvp-page-container">
         {selectedGroupData === null && <RSVPLookup data={data} handleGroupSelect={handleGroupSelect} />}
-        {/* {selectedGuest !== null && <p>{selectedGuest["name"]}</p>} */}
+        {selectedGroupData !== null && <RSVPPortal groupData={selectedGroupData} />}
       </div>
     </>
   );

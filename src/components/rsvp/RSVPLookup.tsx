@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { TextField, Autocomplete } from "@mui/material";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 function RSVPConfirmation({ guest, handleConfirmation }) {
-  const queryClient = useQueryClient();
-
   const { isPending, isError, data, error } = useQuery({
     queryKey: ["groupInfo"],
     queryFn: async () => {
