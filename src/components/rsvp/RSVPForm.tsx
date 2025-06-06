@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Stepper, Step, StepLabel } from "@mui/material";
+import { Stepper, Step, StepLabel, RadioGroup, Radio, FormControl, FormControlLabel, FormLabel } from "@mui/material";
 
 type RSVP = {
   guestId: number;
-  attendance: boolean | null;
+  attendance: boolean | "";
   spotify: string[];
 };
 
@@ -40,7 +40,7 @@ function RSVPForm({ groupData }: RSVPFormProps) {
     if (groupData && groupData.guests) {
       const newRsvps: RSVP[] = groupData.guests.map((guest) => ({
         guestId: guest.guest_id,
-        attendance: null,
+        attendance: "",
         spotify: [""],
       }));
       setRsvps(newRsvps);
@@ -68,6 +68,12 @@ function RSVPForm({ groupData }: RSVPFormProps) {
 
   const handleSubmit = () => {};
 
+  const handleAttendanceChange = (guestId: number, value: boolean) => {
+    setRsvps((prev) => prev.map((rsvp) => (rsvp.guestId === guestId ? { ...rsvp, attendance: value } : rsvp)));
+  };
+
+  const isFormValid = rsvps.every((rsvp) => rsvp.attendance !== "");
+
   return (
     <>
       <div id="rsvp-form-controller">
@@ -89,21 +95,59 @@ function RSVPForm({ groupData }: RSVPFormProps) {
               {/* Guest RSVP Question */}
               {activeStep === 0 && (
                 <div>
-                  <button onClick={handleNext}>Next</button>
+                  {rsvps.map((rsvp) => {
+                    const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
+                    return (
+                      <FormControl key={`rsvp-guest-${rsvp.guestId}`}>
+                        <FormLabel>{guest?.name}</FormLabel>
+                        <RadioGroup
+                          name={`rsvp-${rsvp.guestId}-group`}
+                          value={rsvp.attendance}
+                          onChange={(e) =>
+                            handleAttendanceChange(rsvp.guestId, e.target.value === "true" ? true : false)
+                          }
+                        >
+                          <FormControlLabel value={true} control={<Radio />} label="Attending" />
+                          <FormControlLabel value={false} control={<Radio />} label="Not Attending" />
+                        </RadioGroup>
+                      </FormControl>
+                    );
+                  })}
+                  <div className="btn-container">
+                    <button disabled={!isFormValid} className="btn-link" onClick={handleNext}>
+                      Next
+                    </button>
+                  </div>
                 </div>
               )}
               {activeStep === 1 && (
                 <div>
-                  <button onClick={handleBack}>Back</button>
-                  <button onClick={handleNext}>Next</button>
+                  <div className="btn-container">
+                    <button className="btn-link" onClick={handleBack}>
+                      Back
+                    </button>
+                    <button className="btn-link" onClick={handleNext}>
+                      Next
+                    </button>
+                  </div>
+
                   {/* Song Requests Card */}
                 </div>
               )}
               {activeStep === 2 && (
                 <div>
-                  <button onClick={handleBack}>Back</button>
-                  <button onClick={handleReset}>Reset</button>
-                  <button onClick={handleSubmit}>Submit RSVP</button>
+                  <div className="btn-container">
+                    <button className="btn-link" onClick={handleBack}>
+                      Back
+                    </button>
+                    <button className="btn-link" onClick={handleReset}>
+                      Reset
+                    </button>
+                    <button className="btn-link" onClick={handleSubmit}>
+                      Submit RSVP
+                    </button>
+                  </div>
+
                   {/* Confirmation Card */}
                 </div>
               )}
