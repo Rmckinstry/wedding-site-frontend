@@ -26,7 +26,7 @@ function RSVPConfirmation({ guest, handleConfirmation }) {
       <div>
         <p>Guests:</p>
         {data["guests"].map((guest) => (
-          <p>{guest.name}</p>
+          <p key={guest.id}>{guest.name}</p>
         ))}
       </div>
       <div className="btn-container">

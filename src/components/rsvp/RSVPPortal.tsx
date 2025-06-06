@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import RSVPForm from "./RSVPForm";
+import RSVPForm from "./RSVPForm.tsx";
 
 function RSVPPortal({ groupData }) {
   //check if rsvp has been submitted already logic HERE
