@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Stepper, Step, StepLabel, RadioGroup, Radio, FormControl, FormControlLabel, FormLabel } from "@mui/material";
+import {
+  Stepper,
+  Step,
+  StepLabel,
+  RadioGroup,
+  Radio,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  TextField,
+} from "@mui/material";
 
 type RSVP = {
   guestId: number;
@@ -41,7 +51,7 @@ function RSVPForm({ groupData }: RSVPFormProps) {
       const newRsvps: RSVP[] = groupData.guests.map((guest) => ({
         guestId: guest.guest_id,
         attendance: "",
-        spotify: [""],
+        spotify: Array(guest.song_requests).fill(""),
       }));
       setRsvps(newRsvps);
       console.log(newRsvps);
@@ -122,6 +132,20 @@ function RSVPForm({ groupData }: RSVPFormProps) {
               )}
               {activeStep === 1 && (
                 <div>
+                  {rsvps.map((rsvp) => {
+                    const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
+                    return (
+                      <FormControl key={`rsvp-guest-${rsvp.guestId}`}>
+                        <FormLabel>{guest?.name}</FormLabel>
+                        {rsvp.spotify.map((request) => (
+                          <div className="song-request-container">
+                            <TextField id="song-request-title" label="Song Title" />
+                            <TextField id="song-request-author" label="Song Author" />
+                          </div>
+                        ))}
+                      </FormControl>
+                    );
+                  })}
                   <div className="btn-container">
                     <button className="btn-link" onClick={handleBack}>
                       Back
