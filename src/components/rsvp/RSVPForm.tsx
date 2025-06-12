@@ -78,7 +78,17 @@ function RSVPForm({ groupData }: RSVPFormProps) {
   const handleSubmit = () => {};
 
   const handleAttendanceChange = (guestId: number, value: boolean) => {
-    setRsvps((prev) => prev.map((rsvp) => (rsvp.guestId === guestId ? { ...rsvp, attendance: value } : rsvp)));
+    setRsvps((prev) =>
+      prev.map((rsvp) =>
+        rsvp.guestId === guestId
+          ? {
+              ...rsvp,
+              attendance: value,
+              spotify: !value ? Array(rsvp.spotify.length).fill("") : rsvp.spotify,
+            }
+          : rsvp
+      )
+    );
   };
 
   const handleSongRequestChange = (guestId, index, key: string, value: string) => {
@@ -130,7 +140,7 @@ function RSVPForm({ groupData }: RSVPFormProps) {
             <div>
               {/* Guest RSVP Question */}
               {activeStep === 0 && (
-                <div>
+                <div id="rsvp-card-container">
                   {rsvps.map((rsvp) => {
                     const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
                     return (
@@ -158,7 +168,7 @@ function RSVPForm({ groupData }: RSVPFormProps) {
               )}
               {activeStep === 1 && (
                 // song request card
-                <div>
+                <div id="song-request-card-container">
                   {rsvps
                     .filter((rsvp) => rsvp.attendance === true)
                     .map((rsvp) => {
@@ -206,7 +216,32 @@ function RSVPForm({ groupData }: RSVPFormProps) {
                 </div>
               )}
               {activeStep === 2 && (
-                <div>
+                //Confirmation card
+                <div id="confirmation-card-container">
+                  <p>Please confirm that all information shown below is correct, if not please go back and edit it.</p>
+
+                  <div>
+                    <p>Group Name: {groupData.group_name}</p>
+                  </div>
+                  {rsvps.map((rsvp) => {
+                    const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
+                    return (
+                      <div>
+                        <p>Name: {guest?.name}</p>
+                        <p>Attending: {rsvp.attendance ? "Yes" : "No"}</p>
+                        {rsvp.attendance && (
+                          <div>
+                            <p>Requested Songs</p>
+                            {rsvp.spotify
+                              .filter((song) => song !== "")
+                              .map((song) => (
+                                <p>{song}</p>
+                              ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                   <div className="btn-container">
                     <button className="btn-link" onClick={handleBack}>
                       Back
@@ -218,8 +253,6 @@ function RSVPForm({ groupData }: RSVPFormProps) {
                       Submit RSVP
                     </button>
                   </div>
-
-                  {/* Confirmation Card */}
                 </div>
               )}
             </div>
