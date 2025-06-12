@@ -17,6 +17,12 @@ type RSVP = {
   spotify: string[];
 };
 
+type SubmitData = {
+  guestId: number;
+  attendance: boolean | "";
+  spotify: string;
+};
+
 type GroupData = {
   group_name: string;
   guests: Guest[];
@@ -75,7 +81,44 @@ function RSVPForm({ groupData }: RSVPFormProps) {
     setActiveStep(0);
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    const submitData: SubmitData[] = rsvps.map((rsvp: RSVP) => {
+      // Convert attendance to boolean
+      const attendance = typeof rsvp.attendance === "string" ? rsvp.attendance !== "" : rsvp.attendance;
+
+      const songString: string = rsvp.spotify.reduce((acc, song) => {
+        return acc.length === 0 ? song : acc + "," + song;
+      }, "");
+
+      console.log(songString);
+      return {
+        attendance,
+        guestId: rsvp.guestId,
+        spotify: songString,
+      };
+    });
+
+    console.log({ rsvpList: submitData });
+
+    try {
+      const response = await fetch("https://wedding-site-backend-76nm.onrender.com/rsvps", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ rsvpList: submitData }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Response from server:", result);
+    } catch (error) {
+      console.error("Error submitting RSVP:", error);
+    }
+  };
 
   const handleAttendanceChange = (guestId: number, value: boolean) => {
     setRsvps((prev) =>
