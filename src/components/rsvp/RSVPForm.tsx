@@ -51,6 +51,10 @@ function RSVPForm({ groupData }: RSVPFormProps) {
   const [activeStep, setActiveStep] = useState(0);
   const [rsvps, setRsvps] = useState<RSVP[]>([]);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState(null);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+
   // Memoize resetRSVPs
   const resetRSVPs = useCallback(() => {
     if (groupData && groupData.guests) {
@@ -79,9 +83,13 @@ function RSVPForm({ groupData }: RSVPFormProps) {
   const handleReset = () => {
     resetRSVPs();
     setActiveStep(0);
+    setError(null);
+    setIsLoading(false);
+    setIsSubmitted(false);
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const submitData: SubmitData[] = rsvps.map((rsvp: RSVP) => {
       // Convert attendance to boolean
       const attendance = typeof rsvp.attendance === "string" ? rsvp.attendance !== "" : rsvp.attendance;
@@ -115,8 +123,12 @@ function RSVPForm({ groupData }: RSVPFormProps) {
 
       const result = await response.json();
       console.log("Response from server:", result);
+      setIsLoading(false);
+      setIsSubmitted(true);
     } catch (error) {
       console.error("Error submitting RSVP:", error);
+      setIsLoading(false);
+      setError(error);
     }
   };
 
@@ -177,8 +189,28 @@ function RSVPForm({ groupData }: RSVPFormProps) {
               );
             })}
           </Stepper>
-          {activeStep === steps.length ? (
-            <div>{/* submitting div and also rsvp confirmation here */}</div>
+          {isLoading || error || isSubmitted ? (
+            <div>
+              {isLoading && (
+                <div>
+                  <p>Submitting RSVPs. Please wait...</p>
+                </div>
+              )}
+              {error && (
+                <div>
+                  <p>We ran into an error while submitting your RSVP. Please try again later.</p>
+                </div>
+              )}
+              {isSubmitted && (
+                <div>
+                  <p>Your RSVPs were succesfully submitted. Thank you!</p>
+                  <p>
+                    Better message here (about visiting the portal to edit certain things and show message about
+                    registry)
+                  </p>
+                </div>
+              )}
+            </div>
           ) : (
             <div>
               {/* Guest RSVP Question */}
