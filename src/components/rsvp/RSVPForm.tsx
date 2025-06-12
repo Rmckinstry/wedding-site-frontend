@@ -54,7 +54,6 @@ function RSVPForm({ groupData }: RSVPFormProps) {
         spotify: Array(guest.song_requests).fill(""),
       }));
       setRsvps(newRsvps);
-      console.log(newRsvps);
     }
   }, [groupData, setRsvps]);
 
@@ -81,6 +80,33 @@ function RSVPForm({ groupData }: RSVPFormProps) {
   const handleAttendanceChange = (guestId: number, value: boolean) => {
     setRsvps((prev) => prev.map((rsvp) => (rsvp.guestId === guestId ? { ...rsvp, attendance: value } : rsvp)));
   };
+
+  const handleSongRequestChange = (guestId, index, key: string, value: string) => {
+    setRsvps((prev) =>
+      prev.map((rsvp) => {
+        if (rsvp.guestId !== guestId) return rsvp;
+        const newSpotify = [...rsvp.spotify];
+        // Split current song request, handling empty or malformed cases
+        let currentTitle = "";
+        let currentArtist = "";
+        if (newSpotify[index] && newSpotify[index].includes(" - ")) {
+          [currentTitle, currentArtist] = newSpotify[index].split(" - ");
+        }
+        // Update the relevant field
+        const updatedTitle = key === "title" ? value : currentTitle;
+        const updatedArtist = key === "artist" ? value : currentArtist;
+        // Only concatenate if at least one field is non-empty
+        newSpotify[index] = updatedTitle || updatedArtist ? `${updatedTitle || ""} - ${updatedArtist || ""}` : "";
+        return { ...rsvp, spotify: newSpotify };
+      })
+    );
+  };
+
+  //for debugging
+  useEffect(() => {
+    console.log("New RSVP");
+    console.log(rsvps);
+  }, [rsvps]);
 
   const isFormValid = rsvps.every((rsvp) => rsvp.attendance !== "");
 
@@ -131,21 +157,44 @@ function RSVPForm({ groupData }: RSVPFormProps) {
                 </div>
               )}
               {activeStep === 1 && (
+                // song request card
                 <div>
-                  {rsvps.map((rsvp) => {
-                    const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
-                    return (
-                      <FormControl key={`rsvp-guest-${rsvp.guestId}`}>
-                        <FormLabel>{guest?.name}</FormLabel>
-                        {rsvp.spotify.map((request) => (
-                          <div className="song-request-container">
-                            <TextField id="song-request-title" label="Song Title" />
-                            <TextField id="song-request-author" label="Song Author" />
-                          </div>
-                        ))}
-                      </FormControl>
-                    );
-                  })}
+                  {rsvps
+                    .filter((rsvp) => rsvp.attendance === true)
+                    .map((rsvp) => {
+                      const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
+                      return (
+                        <div key={`song-container-${rsvp.guestId}-guest`}>
+                          <p>{rsvp.attendance}</p>
+                          <FormControl key={`rsvp-guest-${rsvp.guestId}`}>
+                            <FormLabel>{guest?.name}</FormLabel>
+                            {rsvp.spotify.map((request, index) => {
+                              const [title, artist] = request ? request.split(" - ") : ["", ""];
+                              return (
+                                <div className="song-request-container">
+                                  <TextField
+                                    onChange={(e) =>
+                                      handleSongRequestChange(rsvp.guestId, index, "title", e.target.value)
+                                    }
+                                    value={title || ""}
+                                    id="song-request-title"
+                                    label="Song Title"
+                                  />
+                                  <TextField
+                                    onChange={(e) =>
+                                      handleSongRequestChange(rsvp.guestId, index, "artist", e.target.value)
+                                    }
+                                    value={artist || ""}
+                                    id="song-request-author"
+                                    label="Song Author"
+                                  />
+                                </div>
+                              );
+                            })}
+                          </FormControl>
+                        </div>
+                      );
+                    })}
                   <div className="btn-container">
                     <button className="btn-link" onClick={handleBack}>
                       Back
@@ -154,8 +203,6 @@ function RSVPForm({ groupData }: RSVPFormProps) {
                       Next
                     </button>
                   </div>
-
-                  {/* Song Requests Card */}
                 </div>
               )}
               {activeStep === 2 && (

@@ -9,7 +9,6 @@ function RSVPPage() {
 
   const handleGroupSelect = (data) => {
     setSelectedGroupData(data);
-    console.log(data);
   };
 
   const { isPending, isError, data, error } = useQuery({
