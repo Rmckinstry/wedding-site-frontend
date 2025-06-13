@@ -241,6 +241,17 @@ function RSVPForm({ groupData }: RSVPFormProps) {
                       </div>
                     );
                   })}
+                  {rsvps.some(
+                    (rsvp) =>
+                      rsvp.attendance === true &&
+                      groupData.guests.find((guest) => guest.guest_id === rsvp.guestId)?.has_dependents
+                  ) && (
+                    <p>
+                      Note: One or more guests can bring children or dependents. Children/dependents{" "}
+                      <strong style={{ textDecoration: "underline" }}>have to be added</strong> after submitting the
+                      RSVP.
+                    </p>
+                  )}
                   <div className="btn-container">
                     <button disabled={!isFormValid} className="btn-link" onClick={handleNext}>
                       Next
@@ -321,9 +332,27 @@ function RSVPForm({ groupData }: RSVPFormProps) {
                               ))}
                           </div>
                         )}
+                        {rsvp.attendance && guest?.plus_one_allowed && (
+                          <p>
+                            <strong>NOTE:</strong> {guest.name} has a plus one available. Plus ones can be added{" "}
+                            <strong style={{ textDecoration: "underline" }}>after the RSVP is submitted</strong> by
+                            entering your name again in the RSVP portal.
+                          </p>
+                        )}
                       </div>
                     );
                   })}
+                  {rsvps.some(
+                    (rsvp) =>
+                      rsvp.attendance === true &&
+                      groupData.guests.find((guest) => guest.guest_id === rsvp.guestId)?.has_dependents
+                  ) && (
+                    <p>
+                      Note: One or more guests can bring children or dependents. Children/dependents{" "}
+                      <strong style={{ textDecoration: "underline" }}>have to be added</strong> after submitting the
+                      RSVP.
+                    </p>
+                  )}
                   <div className="btn-container">
                     <button className="btn-link" onClick={handleBack}>
                       Back
