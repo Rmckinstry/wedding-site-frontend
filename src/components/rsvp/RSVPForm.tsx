@@ -10,8 +10,10 @@ import {
   FormLabel,
   TextField,
 } from "@mui/material";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Guest, GroupData } from "../../utility/types";
 
-type RSVP = {
+type RSVPPost = {
   guestId: number;
   attendance: boolean | "";
   spotify: string[];
@@ -23,33 +25,11 @@ type SubmitData = {
   spotify: string;
 };
 
-type GroupData = {
-  group_name: string;
-  guests: Guest[];
-};
-
-type Guest = {
-  added_by_guest_id: null;
-  additional_guest_type: null;
-  email: string;
-  group_id: number;
-  group_name: string;
-  guest_id: number;
-  has_dependents: boolean;
-  name: string;
-  plus_one_allowed: boolean;
-  song_requests: number;
-};
-
-type RSVPFormProps = {
-  groupData: GroupData;
-};
-
 const steps = ["Guests", "Song Requests", "Confirmation"];
 
-function RSVPForm({ groupData }: RSVPFormProps) {
+function RSVPForm({ groupData }: { groupData: GroupData }) {
   const [activeStep, setActiveStep] = useState(0);
-  const [rsvps, setRsvps] = useState<RSVP[]>([]);
+  const [rsvps, setRsvps] = useState<RSVPPost[]>([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState(null);
@@ -58,7 +38,7 @@ function RSVPForm({ groupData }: RSVPFormProps) {
   // Memoize resetRSVPs
   const resetRSVPs = useCallback(() => {
     if (groupData && groupData.guests) {
-      const newRsvps: RSVP[] = groupData.guests.map((guest) => ({
+      const newRsvps: RSVPPost[] = groupData.guests.map((guest) => ({
         guestId: guest.guest_id,
         attendance: "",
         spotify: Array(guest.song_requests).fill(""),
@@ -90,7 +70,7 @@ function RSVPForm({ groupData }: RSVPFormProps) {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    const submitData: SubmitData[] = rsvps.map((rsvp: RSVP) => {
+    const submitData: SubmitData[] = rsvps.map((rsvp: RSVPPost) => {
       // Convert attendance to boolean
       const attendance = typeof rsvp.attendance === "string" ? rsvp.attendance !== "" : rsvp.attendance;
 
@@ -174,7 +154,7 @@ function RSVPForm({ groupData }: RSVPFormProps) {
 
   return (
     <>
-      <div id="rsvp-form-controller">
+      <div id="rsvp-form-container">
         <div>
           <Stepper activeStep={activeStep}>
             {steps.map((label, index) => {

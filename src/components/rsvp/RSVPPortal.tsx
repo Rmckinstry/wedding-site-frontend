@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import RSVPForm from "./RSVPForm.tsx";
 import { useQuery } from "@tanstack/react-query";
+import RSVPStatusMenu from "./RSVPStatusMenu.tsx";
+import { GroupData } from "../../utility/types.ts";
 
-function RSVPPortal({ groupData }) {
-  const groupName = groupData["group_name"];
-  const groupId = Number(groupData["guests"][0]["group_id"]);
-
-  console.log(groupData);
+function RSVPPortal({ groupData }: { groupData: GroupData }) {
+  const groupName = groupData.group_name;
+  const groupId = Number(groupData.guests[0].group_id);
 
   //GET call to check if there any RSVPs assigned to the groupID
   const groupRSVPs = useQuery({
@@ -26,9 +26,9 @@ function RSVPPortal({ groupData }) {
   }
 
   return (
-    <div id="rsvp-form-container">
+    <div id="rsvp-portal-container">
       <p>{groupName} RSVP Portal</p>
-      {groupRSVPs.data.length > 0 && <p>portal</p>}
+      {groupRSVPs.data.length > 0 && <RSVPStatusMenu groupData={groupData} groupRSVPs={groupRSVPs.data} />}
       {groupRSVPs.data.length === 0 && <RSVPForm groupData={groupData} />}
     </div>
   );
