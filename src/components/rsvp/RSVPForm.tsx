@@ -168,7 +168,6 @@ function RSVPForm({ groupData }: RSVPFormProps) {
   useEffect(() => {
     console.log("New RSVP");
     console.log(rsvps);
-    console.log(groupData);
   }, [rsvps]);
 
   const isFormValid = rsvps.every((rsvp) => rsvp.attendance !== "");
