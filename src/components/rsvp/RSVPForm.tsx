@@ -98,15 +98,12 @@ function RSVPForm({ groupData }: RSVPFormProps) {
         return acc.length === 0 ? song : acc + "," + song;
       }, "");
 
-      console.log(songString);
       return {
         attendance,
         guestId: rsvp.guestId,
         spotify: songString,
       };
     });
-
-    console.log({ rsvpList: submitData });
 
     try {
       const response = await fetch("https://wedding-site-backend-76nm.onrender.com/rsvps", {
@@ -171,6 +168,7 @@ function RSVPForm({ groupData }: RSVPFormProps) {
   useEffect(() => {
     console.log("New RSVP");
     console.log(rsvps);
+    console.log(groupData);
   }, [rsvps]);
 
   const isFormValid = rsvps.every((rsvp) => rsvp.attendance !== "");
@@ -213,25 +211,34 @@ function RSVPForm({ groupData }: RSVPFormProps) {
             </div>
           ) : (
             <div>
-              {/* Guest RSVP Question */}
               {activeStep === 0 && (
+                // Guest RSVP Question
                 <div id="rsvp-card-container">
                   {rsvps.map((rsvp) => {
                     const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
                     return (
-                      <FormControl key={`rsvp-guest-${rsvp.guestId}`}>
-                        <FormLabel>{guest?.name}</FormLabel>
-                        <RadioGroup
-                          name={`rsvp-${rsvp.guestId}-group`}
-                          value={rsvp.attendance}
-                          onChange={(e) =>
-                            handleAttendanceChange(rsvp.guestId, e.target.value === "true" ? true : false)
-                          }
-                        >
-                          <FormControlLabel value={true} control={<Radio />} label="Attending" />
-                          <FormControlLabel value={false} control={<Radio />} label="Not Attending" />
-                        </RadioGroup>
-                      </FormControl>
+                      <div key={`rsvp-guest-${rsvp.guestId}`}>
+                        <FormControl key={`rsvp-guest-${rsvp.guestId}`}>
+                          <FormLabel>{guest?.name}</FormLabel>
+                          <RadioGroup
+                            name={`rsvp-${rsvp.guestId}-group`}
+                            value={rsvp.attendance}
+                            onChange={(e) =>
+                              handleAttendanceChange(rsvp.guestId, e.target.value === "true" ? true : false)
+                            }
+                          >
+                            <FormControlLabel value={true} control={<Radio />} label="Attending" />
+                            <FormControlLabel value={false} control={<Radio />} label="Not Attending" />
+                          </RadioGroup>
+                        </FormControl>
+                        {rsvp.attendance && guest?.plus_one_allowed && (
+                          <p>
+                            {guest.name} has a plus one for this invitation. Plus ones can be added{" "}
+                            <strong style={{ textDecoration: "underline" }}>after the RSVP is submitted</strong> by
+                            entering your name again in the RSVP portal.
+                          </p>
+                        )}
+                      </div>
                     );
                   })}
                   <div className="btn-container">
