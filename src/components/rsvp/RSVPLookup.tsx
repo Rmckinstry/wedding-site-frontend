@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 function RSVPConfirmation({ guest, handleConfirmation }) {
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ["groupInfo"],
+    queryKey: ["groupData"],
     queryFn: async () => {
       const response = await fetch(`https://wedding-site-backend-76nm.onrender.com/guests/group/${guest["group_id"]}`);
       return await response.json();

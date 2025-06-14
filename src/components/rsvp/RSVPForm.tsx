@@ -10,8 +10,7 @@ import {
   FormLabel,
   TextField,
 } from "@mui/material";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Guest, GroupData } from "../../utility/types";
+import { GroupData } from "../../utility/types";
 
 type RSVPPost = {
   guestId: number;
@@ -146,7 +145,7 @@ function RSVPForm({ groupData }: { groupData: GroupData }) {
 
   //for debugging
   useEffect(() => {
-    console.log("New RSVP");
+    console.log("RSVP useEffect debugger");
     console.log(rsvps);
   }, [rsvps]);
 

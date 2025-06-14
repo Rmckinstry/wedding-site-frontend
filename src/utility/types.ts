@@ -1,7 +1,12 @@
 export type Group = {
     group_name: string;
-    group_id: number;
+    group_id: number
 }
+
+export type GroupData = {
+  group_name: string;
+  guests: Guest[];
+};
 
 export type Guest = {
   added_by_guest_id: null;
@@ -13,11 +18,6 @@ export type Guest = {
   name: string;
   plus_one_allowed: boolean;
   song_requests: number;
-};
-
-export type GroupData = {
-  group_name: string;
-  guests: Guest[];
 };
 
 export type RSVP = {
