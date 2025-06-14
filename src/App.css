@@ -80,6 +80,9 @@ p{
     margin: 0;
 }
 
+button:hover{
+    cursor: pointer;
+}
 /* IDs */
 #page-container{
     margin: 1rem 0;
