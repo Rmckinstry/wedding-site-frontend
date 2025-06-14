@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Autocomplete } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { Guest } from "../../utility/types";
 
 function RSVPConfirmation({ guest, handleConfirmation }) {
   const { isPending, isError, data, error } = useQuery({
@@ -44,7 +45,7 @@ function RSVPConfirmation({ guest, handleConfirmation }) {
   );
 }
 
-function RSVPLookup({ data, handleGroupSelect }) {
+function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSelect: ({ id, name }) => void }) {
   const [inputValue, setInputValue] = useState("");
   const [selectedGuest, setSelectedGuest] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -65,7 +66,17 @@ function RSVPLookup({ data, handleGroupSelect }) {
         <div>
           <p>Lookup your name to access your / your groups RSVP Guest Portal.</p>
           <Autocomplete
-            options={data}
+            options={data.sort((a, b) => {
+              const nameA = a.name.toUpperCase();
+              const nameB = b.name.toUpperCase();
+              if (nameA < nameB) {
+                return -1;
+              } else if (nameA > nameB) {
+                return 1;
+              } else {
+                return 0;
+              }
+            })}
             getOptionLabel={(option: any) => option.name}
             value={selectedGuest}
             onChange={(event: any, newValue: any) => {

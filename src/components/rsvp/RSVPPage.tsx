@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import RSVPLookup from "./RSVPLookup.tsx";
 import RSVPPortal from "./RSVPPortal.tsx";
-import { GroupData } from "../../utility/types.ts";
+import { GroupData, Guest } from "../../utility/types.ts";
 
 function RSVPPage() {
   // tracks the selected guest that is accessing the portal
@@ -15,7 +15,7 @@ function RSVPPage() {
     setSelectedGroupName(data.name);
   };
 
-  const { isPending, isError, data, error } = useQuery({
+  const { isPending, isError, data, error } = useQuery<Guest[]>({
     queryKey: ["allGuests"],
     queryFn: async () => {
       const response = await fetch("https://wedding-site-backend-76nm.onrender.com/guests");
