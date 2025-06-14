@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Guest } from "../../utility/types";
 
 function RSVPConfirmation({ guest, handleConfirmation }) {
-  const { isPending, isError, data, error } = useQuery({
+  const { isPending, isFetching, isError, data, error } = useQuery({
     queryKey: ["groupData"],
     queryFn: async () => {
       const response = await fetch(`https://wedding-site-backend-76nm.onrender.com/guests/group/${guest["group_id"]}`);
@@ -12,7 +12,7 @@ function RSVPConfirmation({ guest, handleConfirmation }) {
     },
   });
 
-  if (isPending) {
+  if (isPending || isFetching) {
     return <p>Loading Guests Information...</p>;
   }
 
@@ -37,7 +37,13 @@ function RSVPConfirmation({ guest, handleConfirmation }) {
         >
           Yes, this is me/my group!
         </button>
-        <button className="btn-link btn-xl" onClick={() => handleConfirmation(false, "", 0)}>
+        <button
+          className="btn-link btn-xl"
+          onClick={() => {
+            // queryClient.resetQueries({ queryKey: ["groupData"] });
+            handleConfirmation(false, "", 0);
+          }}
+        >
           No, lets search again.
         </button>
       </div>

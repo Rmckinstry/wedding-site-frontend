@@ -2,11 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import RSVPLookup from "./RSVPLookup.tsx";
 import RSVPPortal from "./RSVPPortal.tsx";
-import { GroupData, Guest } from "../../utility/types.ts";
+import { Guest } from "../../utility/types.ts";
 
 function RSVPPage() {
-  // tracks the selected guest that is accessing the portal
-  // const [selectedGroupData, setSelectedGroupData] = useState<GroupData | null>(null);
+  // tracks the selected guestId that is accessing the portal
+  // tracks name for easy display purposes
   const [selectedGroupName, setSelectedGroupName] = useState<string>("");
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
 
