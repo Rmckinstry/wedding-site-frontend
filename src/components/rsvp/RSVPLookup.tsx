@@ -66,6 +66,7 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
         <div>
           <p>Lookup your name to access your / your groups RSVP Guest Portal.</p>
           <Autocomplete
+            // might move sorting to backend - because might combine it with duplication handling
             options={data.sort((a, b) => {
               const nameA = a.name.toUpperCase();
               const nameB = b.name.toUpperCase();
