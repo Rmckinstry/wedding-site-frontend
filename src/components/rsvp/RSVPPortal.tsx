@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import RSVPForm from "./RSVPForm.tsx";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import RSVPStatusMenu from "./RSVPStatusMenu.tsx";
 import { GroupData } from "../../utility/types.ts";
 
-function RSVPPortal({ groupData }: { groupData: GroupData }) {
-  const groupName = groupData.group_name;
-  const groupId = Number(groupData.guests[0].group_id);
+function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string }) {
+  const queryClient = useQueryClient();
 
   //GET call to check if there any RSVPs assigned to the groupID
   const groupRSVPs = useQuery({
@@ -17,7 +16,21 @@ function RSVPPortal({ groupData }: { groupData: GroupData }) {
     },
   });
 
-  if (groupRSVPs.isPending) {
+  const groupData = useQuery({
+    queryKey: ["groupData"],
+    queryFn: async () => {
+      const response = await fetch(`https://wedding-site-backend-76nm.onrender.com/guests/group/${groupId}`);
+      return await response.json();
+    },
+  });
+
+  function refreshData() {
+    queryClient.invalidateQueries({
+      predicate: (query) => query.queryKey.every((key: any) => ["groupRSVP", "groupData"].includes(key)),
+    });
+  }
+
+  if (groupRSVPs.isPending || groupData.isPending) {
     return <p>Loading {groupName} Portal Information...</p>;
   }
 
@@ -25,11 +38,15 @@ function RSVPPortal({ groupData }: { groupData: GroupData }) {
     return <p>Error: {groupRSVPs.error.message}</p>;
   }
 
+  if (groupData.isError) {
+    return <p>Error: {groupData.error.message}</p>;
+  }
+
   return (
     <div id="rsvp-portal-container">
       <p>{groupName} RSVP Portal</p>
-      {groupRSVPs.data.length > 0 && <RSVPStatusMenu groupData={groupData} groupRSVPs={groupRSVPs.data} />}
-      {groupRSVPs.data.length === 0 && <RSVPForm groupData={groupData} />}
+      {groupRSVPs.data.length > 0 && <RSVPStatusMenu groupData={groupData.data} groupRSVPs={groupRSVPs.data} />}
+      {groupRSVPs.data.length === 0 && <RSVPForm groupData={groupData.data} sendRefresh={refreshData} />}
     </div>
   );
 }

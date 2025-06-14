@@ -6,10 +6,13 @@ import { GroupData } from "../../utility/types.ts";
 
 function RSVPPage() {
   // tracks the selected guest that is accessing the portal
-  const [selectedGroupData, setSelectedGroupData] = useState<GroupData | null>(null);
+  // const [selectedGroupData, setSelectedGroupData] = useState<GroupData | null>(null);
+  const [selectedGroupName, setSelectedGroupName] = useState<string>("");
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
 
-  const handleGroupSelect = (data: GroupData) => {
-    setSelectedGroupData(data);
+  const handleGroupSelect = (data: { name: string; id: number }) => {
+    setSelectedGroupId(data.id);
+    setSelectedGroupName(data.name);
   };
 
   const { isPending, isError, data, error } = useQuery({
@@ -30,8 +33,8 @@ function RSVPPage() {
   return (
     <>
       <div className="rsvp-page-container">
-        {selectedGroupData === null && <RSVPLookup data={data} handleGroupSelect={handleGroupSelect} />}
-        {selectedGroupData !== null && <RSVPPortal groupData={selectedGroupData} />}
+        {selectedGroupId === null && <RSVPLookup data={data} handleGroupSelect={handleGroupSelect} />}
+        {selectedGroupId !== null && <RSVPPortal groupName={selectedGroupName} groupId={selectedGroupId} />}
       </div>
     </>
   );

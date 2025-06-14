@@ -26,7 +26,7 @@ type SubmitData = {
 
 const steps = ["Guests", "Song Requests", "Confirmation"];
 
-function RSVPForm({ groupData }: { groupData: GroupData }) {
+function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefresh: () => void }) {
   const [activeStep, setActiveStep] = useState(0);
   const [rsvps, setRsvps] = useState<RSVPPost[]>([]);
 
@@ -184,6 +184,8 @@ function RSVPForm({ groupData }: { groupData: GroupData }) {
                     Better message here (about visiting the portal to edit certain things and show message about
                     registry)
                   </p>
+                  {/* temporary */}
+                  <button onClick={sendRefresh}>RSVP Home</button>
                 </div>
               )}
             </div>

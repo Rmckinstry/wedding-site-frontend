@@ -30,10 +30,13 @@ function RSVPConfirmation({ guest, handleConfirmation }) {
         ))}
       </div>
       <div className="btn-container">
-        <button className="btn-link btn-xl" onClick={() => handleConfirmation(true, data)}>
+        <button
+          className="btn-link btn-xl"
+          onClick={() => handleConfirmation(true, data["group_name"], guest["group_id"])}
+        >
           Yes, this is me/my group!
         </button>
-        <button className="btn-link btn-xl" onClick={() => handleConfirmation(false, "")}>
+        <button className="btn-link btn-xl" onClick={() => handleConfirmation(false, "", 0)}>
           No, lets search again.
         </button>
       </div>
@@ -46,9 +49,9 @@ function RSVPLookup({ data, handleGroupSelect }) {
   const [selectedGuest, setSelectedGuest] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const handleConfirmation = (confirmation, groupData) => {
+  const handleConfirmation = (confirmation: boolean, groupName: string, groupId: number) => {
     if (confirmation) {
-      handleGroupSelect(groupData);
+      handleGroupSelect({ id: groupId, name: groupName });
     } else {
       setShowConfirmation(false);
       setSelectedGuest(null);
