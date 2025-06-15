@@ -45,7 +45,9 @@ function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string
   return (
     <div id="rsvp-portal-container">
       <p>{groupName} RSVP Portal</p>
-      {groupRSVPs.data.length > 0 && <RSVPStatusMenu groupData={groupData.data} groupRSVPs={groupRSVPs.data} />}
+      {groupRSVPs.data.length > 0 && (
+        <RSVPStatusMenu groupData={groupData.data} groupRSVPs={groupRSVPs.data} refreshData={refreshData} />
+      )}
       {groupRSVPs.data.length === 0 && <RSVPForm groupData={groupData.data} sendRefresh={refreshData} />}
     </div>
   );
