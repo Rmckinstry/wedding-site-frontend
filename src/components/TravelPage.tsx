@@ -27,7 +27,7 @@ function TravelPage() {
               <p className="secondary-text">(Recommended)</p>
             </div>
             <div className="info-container contain-text-center">
-              <p className="primary-text">Nashille International Airport</p>
+              <p className="primary-text">Nashville International Airport</p>
               <p className="secondary-text">(Note: 3 hour drive to Memphis.)</p>
             </div>
             <div className="info-container contain-text-center">
@@ -63,7 +63,7 @@ function TravelPage() {
                 <p className="secondary-text">(901) 850-9390</p>
               </div>
               <p className="detail-text" style={{ margin: "0px", textAlign: "center" }}>
-                To receive the “Kail-Mckinstry Wedding Block” rate, use the button below.
+                To receive the “Kail-McKinstry Wedding Block” rate, use the button below.
               </p>
               <p className="detail-text" style={{ margin: "0px", textAlign: "center" }}>
                 If the block is out of stock, please let us know!
@@ -81,7 +81,7 @@ function TravelPage() {
               <div>
                 <p className="detail-text">The Courtyard Memphis is located in the Carriage Crossing Outdoor Mall.</p>
                 <p className="detail-text">
-                  The mall has several restaraunts, bars, and shops all in walking distance of the hotel for you to
+                  The mall has several restaurants, bars, and shops all in walking distance of the hotel for you to
                   enjoy.
                 </p>
               </div>
