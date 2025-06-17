@@ -81,7 +81,7 @@ const SongEditForm = ({
     const songString = newSongsString.length > 0 ? oldSongsString + "," + newSongsString : oldSongsString;
 
     try {
-      const response = await fetch(`https://wedding-site-backend-76nm.onrender.com/rsvps/songs/${rsvp.rsvp_id}`, {
+      const response = await fetch(`${process.env.API_URL}/rsvps/songs/${rsvp.rsvp_id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -231,7 +231,7 @@ function RSVPStatusMenu({
     };
     try {
       setIsSubmitting(true);
-      const response = await fetch("https://wedding-site-backend-76nm.onrender.com/rsvps/additional", {
+      const response = await fetch(`${process.env.API_URL}/rsvps/additional`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -282,7 +282,7 @@ function RSVPStatusMenu({
   const handleEmailSubmit = async (email: string, guestId: number) => {
     try {
       setIsSubmitting(true);
-      const response = await fetch(`https://wedding-site-backend-76nm.onrender.com/guests/email/${guestId}`, {
+      const response = await fetch(`${process.env.API_URL}/guests/email/${guestId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

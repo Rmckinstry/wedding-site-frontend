@@ -7,7 +7,7 @@ function RSVPConfirmation({ guest, handleConfirmation }) {
   const { isPending, isFetching, isError, data, error } = useQuery({
     queryKey: ["groupData"],
     queryFn: async () => {
-      const response = await fetch(`https://wedding-site-backend-76nm.onrender.com/guests/group/${guest["group_id"]}`);
+      const response = await fetch(`${process.env.API_URL}/guests/group/${guest["group_id"]}`);
       return await response.json();
     },
   });

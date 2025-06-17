@@ -18,7 +18,7 @@ function RSVPPage() {
   const { isPending, isError, data, error } = useQuery<Guest[]>({
     queryKey: ["allGuests"],
     queryFn: async () => {
-      const response = await fetch("https://wedding-site-backend-76nm.onrender.com/guests");
+      const response = await fetch(`${process.env.API_URL}/guests`);
       return await response.json();
     },
   });
