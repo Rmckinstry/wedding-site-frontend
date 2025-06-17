@@ -30,9 +30,25 @@ const GridOption = ({
   );
 };
 
-const SongEditForm = ({ guest, rsvp }: { guest: Guest; rsvp: RSVP }) => {
+const SongEditForm = ({
+  guest,
+  rsvp,
+  handleDataRefresh,
+}: {
+  guest: Guest;
+  rsvp: RSVP;
+  handleDataRefresh: () => void;
+}) => {
   const submittedSongs = rsvp.spotify.split(",").filter((song) => song !== "");
   const [emptySongs, setEmptySongs] = useState<string[]>(Array(guest.song_requests - submittedSongs.length).fill(""));
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+
+  useEffect(() => {
+    const submittedSongs = rsvp.spotify.split(",").filter((song) => song !== "");
+    setEmptySongs(Array(guest.song_requests - submittedSongs.length).fill(""));
+  }, [guest, rsvp]);
 
   const handleSongRequestChange = (index: number, key: string, value: string) => {
     setEmptySongs((prev) => {
@@ -45,17 +61,49 @@ const SongEditForm = ({ guest, rsvp }: { guest: Guest; rsvp: RSVP }) => {
         [currentTitle, currentArtist] = newSongs[index].split(" - ");
       }
 
-      // Update the relevant field
       const updatedTitle = key === "title" ? value : currentTitle;
       const updatedArtist = key === "artist" ? value : currentArtist;
 
       newSongs[index] = updatedTitle || updatedArtist ? `${updatedTitle || ""} - ${updatedArtist || ""}` : "";
-      console.log(newSongs);
-      return newSongs; // Return the updated array directly
+      return newSongs;
     });
   };
 
-  const handleSongSubmit = () => {};
+  const handleSongSubmit = async () => {
+    setIsLoading(true);
+
+    const oldSongsString: string = submittedSongs.reduce((acc, song) => {
+      return acc.length === 0 ? song : acc + "," + song;
+    }, "");
+    const newSongsString: string = emptySongs.reduce((acc, song) => {
+      return acc.length === 0 ? song : acc + "," + song;
+    }, "");
+
+    const songString = newSongsString.length > 0 ? oldSongsString + "," + newSongsString : oldSongsString;
+
+    try {
+      const response = await fetch(`https://wedding-site-backend-76nm.onrender.com/rsvps/songs/${rsvp.rsvp_id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ songs: songString }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Response from server:", result);
+      setIsLoading(false);
+      handleDataRefresh();
+    } catch (error) {
+      console.error("Error submitting RSVP:", error);
+      setIsLoading(false);
+      setError(error);
+    }
+  };
 
   return (
     <div>
@@ -73,32 +121,59 @@ const SongEditForm = ({ guest, rsvp }: { guest: Guest; rsvp: RSVP }) => {
         </div>
       )}
 
-      <div>
-        <p>Add New Song Requests:</p>
-        {emptySongs.map((song, index) => {
-          const [title, artist] = song ? song.split(" - ") : ["", ""];
-
-          return (
-            <div key={index}>
-              <TextField
-                onChange={(e) => handleSongRequestChange(index, "title", e.target.value)}
-                value={title || ""}
-                id="song-request-title"
-                label="Song Title"
-              />
-              <TextField
-                onChange={(e) => handleSongRequestChange(index, "artist", e.target.value)}
-                value={artist || ""}
-                id="song-request-author"
-                label="Song Author"
-              />
+      {submittedSongs.length !== guest.song_requests && (
+        <div>
+          {isLoading && (
+            <div>
+              <p>Submitting song requests. Please Wait...</p>
             </div>
-          );
-        })}
-        <div className="btn-container">
-          <button onClick={handleSongSubmit}>Submit Song Requests for {guest.name}</button>
+          )}
+          {error && (
+            <div>
+              <p>There was an error submitting your song requests. Please try again.</p>
+              <div className="btn-container">
+                <button
+                  onClick={() => {
+                    setError(false);
+                  }}
+                >
+                  Okay - Retry
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* very temporary - error and submitted will probably be modals and popups */}
+          {!isLoading && !error && (
+            <div>
+              <p>Add New Song Requests:</p>
+              {emptySongs.map((song, index) => {
+                const [title, artist] = song ? song.split(" - ") : ["", ""];
+
+                return (
+                  <div key={index}>
+                    <TextField
+                      onChange={(e) => handleSongRequestChange(index, "title", e.target.value)}
+                      value={title || ""}
+                      id="song-request-title"
+                      label="Song Title"
+                    />
+                    <TextField
+                      onChange={(e) => handleSongRequestChange(index, "artist", e.target.value)}
+                      value={artist || ""}
+                      id="song-request-author"
+                      label="Song Author"
+                    />
+                  </div>
+                );
+              })}
+              <div className="btn-container">
+                <button onClick={handleSongSubmit}>Submit Song Requests for {guest.name}</button>
+              </div>
+            </div>
+          )}
         </div>
-      </div>
+      )}
     </div>
   );
 };
@@ -325,7 +400,7 @@ function RSVPStatusMenu({
               {groupRSVPs.map((rsvp) => {
                 const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
                 if (rsvp.attendance) {
-                  return <SongEditForm guest={guest!} rsvp={rsvp} />;
+                  return <SongEditForm guest={guest!} rsvp={rsvp} handleDataRefresh={refreshData} />;
                 }
               })}
             </div>
