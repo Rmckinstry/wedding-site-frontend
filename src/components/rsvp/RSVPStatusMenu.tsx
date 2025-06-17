@@ -30,6 +30,79 @@ const GridOption = ({
   );
 };
 
+const SongEditForm = ({ guest, rsvp }: { guest: Guest; rsvp: RSVP }) => {
+  const submittedSongs = rsvp.spotify.split(",").filter((song) => song !== "");
+  const [emptySongs, setEmptySongs] = useState<string[]>(Array(guest.song_requests - submittedSongs.length).fill(""));
+
+  const handleSongRequestChange = (index: number, key: string, value: string) => {
+    setEmptySongs((prev) => {
+      const newSongs = [...prev];
+
+      let currentTitle = "";
+      let currentArtist = "";
+
+      if (newSongs[index] && newSongs[index].includes(" - ")) {
+        [currentTitle, currentArtist] = newSongs[index].split(" - ");
+      }
+
+      // Update the relevant field
+      const updatedTitle = key === "title" ? value : currentTitle;
+      const updatedArtist = key === "artist" ? value : currentArtist;
+
+      newSongs[index] = updatedTitle || updatedArtist ? `${updatedTitle || ""} - ${updatedArtist || ""}` : "";
+      console.log(newSongs);
+      return newSongs; // Return the updated array directly
+    });
+  };
+
+  const handleSongSubmit = () => {};
+
+  return (
+    <div>
+      <p>{guest.name}</p>
+      {submittedSongs.length !== 0 && (
+        <div key={`song-container-guest-${rsvp.guest_id}`}>
+          <p>Submitted Song Requests:</p>
+          {submittedSongs.map((song) => {
+            return (
+              <div key={`song-name-${song}`}>
+                <TextField value={song} key={song} disabled />
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <div>
+        <p>Add New Song Requests:</p>
+        {emptySongs.map((song, index) => {
+          const [title, artist] = song ? song.split(" - ") : ["", ""];
+
+          return (
+            <div key={index}>
+              <TextField
+                onChange={(e) => handleSongRequestChange(index, "title", e.target.value)}
+                value={title || ""}
+                id="song-request-title"
+                label="Song Title"
+              />
+              <TextField
+                onChange={(e) => handleSongRequestChange(index, "artist", e.target.value)}
+                value={artist || ""}
+                id="song-request-author"
+                label="Song Author"
+              />
+            </div>
+          );
+        })}
+        <div className="btn-container">
+          <button onClick={handleSongSubmit}>Submit Song Requests for {guest.name}</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 function RSVPStatusMenu({
   groupData,
   groupRSVPs,
@@ -44,10 +117,11 @@ function RSVPStatusMenu({
   const [menuState, setMenuState] = useState<"main" | "plusOne" | "dependent" | "song" | "email" | "confirmation">(
     "main"
   );
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   const [plusOneNames, setPlusOneNames] = useState<{ [key: number]: string }>({});
   const [currentChild, setCurrentChild] = useState<string>("");
   const [childrenNames, setChildrenNames] = useState<string[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     for (const rsvp of groupRSVPs) {
@@ -245,7 +319,16 @@ function RSVPStatusMenu({
         )}
         {menuState === "song" && (
           <div>
-            <p>Song Menu</p>
+            <p>Song Request Menu</p>
+            <div>
+              {/* eslint-disable-next-line array-callback-return */}
+              {groupRSVPs.map((rsvp) => {
+                const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
+                if (rsvp.attendance) {
+                  return <SongEditForm guest={guest!} rsvp={rsvp} />;
+                }
+              })}
+            </div>
           </div>
         )}
         {menuState === "email" && (
