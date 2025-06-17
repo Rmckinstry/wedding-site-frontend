@@ -195,20 +195,21 @@ function RSVPStatusMenu({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const [plusOneNames, setPlusOneNames] = useState<{ [key: number]: string }>({});
+  const [emails, setEmails] = useState<{ [key: number]: string }>({});
   const [currentChild, setCurrentChild] = useState<string>("");
   const [childrenNames, setChildrenNames] = useState<string[]>([]);
 
   useEffect(() => {
     for (const rsvp of groupRSVPs) {
       const guest = groupData.guests.find((guest: Guest) => guest.guest_id === rsvp.guest_id);
-      if (rsvp.attendance) {
+      if (rsvp.attendance && guest) {
         if (guest?.plus_one_allowed) {
           setPlusOneEnabled(true);
         }
-        console.log(guest);
         if (guest?.has_dependents) {
           setDependentsEnabled(true);
         }
+        handleEmailChange(guest.guest_id, guest.email);
       }
     }
   }, [groupData, groupRSVPs]);
@@ -271,6 +272,39 @@ function RSVPStatusMenu({
   const handleMenuClick = (key) => {
     if (menuState === "dependent") handleChildReset();
     setMenuState(key);
+  };
+
+  const handleEmailChange = (guestId: number, email: string) => {
+    console.log(guestId, email);
+    setEmails((prevEmails) => ({
+      ...prevEmails,
+      [guestId]: email,
+    }));
+  };
+
+  const handleEmailSubmit = async (email: string, guestId: number) => {
+    try {
+      setIsSubmitting(true);
+      const response = await fetch(`https://wedding-site-backend-76nm.onrender.com/guests/email/${guestId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const result = await response.json();
+      setIsSubmitting(false);
+      refreshData();
+    } catch (error) {
+      console.error("Error submitting RSVP:", error);
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -399,8 +433,8 @@ function RSVPStatusMenu({
               {/* eslint-disable-next-line array-callback-return */}
               {groupRSVPs.map((rsvp) => {
                 const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
-                if (rsvp.attendance) {
-                  return <SongEditForm guest={guest!} rsvp={rsvp} handleDataRefresh={refreshData} />;
+                if (rsvp.attendance && guest) {
+                  return <SongEditForm guest={guest} rsvp={rsvp} handleDataRefresh={refreshData} />;
                 }
               })}
             </div>
@@ -409,6 +443,48 @@ function RSVPStatusMenu({
         {menuState === "email" && (
           <div>
             <p>Email Menu</p>
+            {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
+            {isSubmitting ? (
+              <div>
+                <p>Submitting Email... Please Wait.</p>
+              </div>
+            ) : (
+              <div>
+                <p>
+                  Emails will only be used for important wedding updates, confirmations, and photos! Emails aren't
+                  required and are completely optional
+                </p>
+                {/* eslint-disable-next-line array-callback-return */}
+                {groupRSVPs.map((rsvp) => {
+                  const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
+
+                  if (rsvp.attendance && !isSubmitting && guest) {
+                    return (
+                      <div key={rsvp.rsvp_id}>
+                        {guest?.email === "" && guest?.email !== null ? (
+                          <p>Add {guest.name}'s Email</p>
+                        ) : (
+                          <p>Edit {guest.name}'s Email</p>
+                        )}
+                        <TextField
+                          value={emails[guest.guest_id] || ""} // Controlled component
+                          onChange={(e) => handleEmailChange(guest.guest_id, e.target.value)}
+                          label="Email Address"
+                        />
+                        <button
+                          disabled={!emails[guest.guest_id]}
+                          onClick={() => {
+                            handleEmailSubmit(emails[guest.guest_id], guest.guest_id);
+                          }}
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    );
+                  }
+                })}
+              </div>
+            )}
           </div>
         )}
         {menuState === "confirmation" && (
