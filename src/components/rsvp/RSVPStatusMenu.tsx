@@ -272,7 +272,6 @@ function RSVPStatusMenu({
   };
 
   const handleEmailChange = (guestId: number, email: string) => {
-    console.log(guestId, email);
     setEmails((prevEmails) => ({
       ...prevEmails,
       [guestId]: email,
