@@ -42,7 +42,6 @@ const SongEditForm = ({
   const submittedSongs = rsvp.spotify.split(",").filter((song) => song !== "");
   const [emptySongs, setEmptySongs] = useState<string[]>(Array(guest.song_requests - submittedSongs.length).fill(""));
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
@@ -196,9 +195,6 @@ function RSVPStatusMenu({
   const [emails, setEmails] = useState<{ [key: number]: string }>({});
   const [currentChild, setCurrentChild] = useState<string>("");
   const [childrenNames, setChildrenNames] = useState<string[]>([]);
-
-  const plusOnes = groupData.guests.filter((guest) => guest.additional_guest_type === "plus_one");
-  const dependent = groupData.guests.filter((guest) => guest.additional_guest_type === "dependent");
 
   useEffect(() => {
     for (const rsvp of groupRSVPs) {
@@ -567,7 +563,7 @@ function RSVPStatusMenu({
                 <div>
                   <p>
                     At least one attending guest in your group does not have an email associated with their RSVP. While
-                    this is completley optional - it is recommended to keep up to date with the event and to get first
+                    this is completely optional - it is recommended to keep up to date with the event and to get first
                     access to any picture put out.
                   </p>
                 </div>
