@@ -2,6 +2,12 @@ import { TextField } from "@mui/material";
 import { GroupData, Guest, RSVP } from "../../utility/types";
 import React, { useEffect, useState } from "react";
 
+type additionalPost = {
+  additionalGuests: string[];
+  guestId: number;
+  groupId: number;
+  additionalType: "plus_one" | "dependent";
+};
 const GridOption = ({
   optionName,
   menuKey,
@@ -63,8 +69,8 @@ function RSVPStatusMenu({
     }));
   };
   const handlePlusOneSubmit = async (plusOneName: string, guestId: number, groupId: number) => {
-    const postData = {
-      additionalName: plusOneName,
+    const postData: additionalPost = {
+      additionalGuests: [plusOneName],
       guestId: guestId,
       groupId: groupId,
       additionalType: "plus_one",
