@@ -189,15 +189,16 @@ function RSVPStatusMenu({
 }) {
   const [plusOneEnabled, setPlusOneEnabled] = useState<boolean>(false);
   const [dependentsEnabled, setDependentsEnabled] = useState<boolean>(false);
-  const [menuState, setMenuState] = useState<"main" | "plusOne" | "dependent" | "song" | "email" | "confirmation">(
-    "main"
-  );
+  const [menuState, setMenuState] = useState<"main" | "plusOne" | "dependent" | "song" | "email" | "overview">("main");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const [plusOneNames, setPlusOneNames] = useState<{ [key: number]: string }>({});
   const [emails, setEmails] = useState<{ [key: number]: string }>({});
   const [currentChild, setCurrentChild] = useState<string>("");
   const [childrenNames, setChildrenNames] = useState<string[]>([]);
+
+  const plusOnes = groupData.guests.filter((guest) => guest.additional_guest_type === "plus_one");
+  const dependent = groupData.guests.filter((guest) => guest.additional_guest_type === "dependent");
 
   useEffect(() => {
     for (const rsvp of groupRSVPs) {
@@ -320,7 +321,11 @@ function RSVPStatusMenu({
             )}
             <GridOption optionName={"Add Song Requests"} menuKey={"song"} handleMenuClick={handleMenuClick} />
             <GridOption optionName={"Add/Edit Email"} menuKey={"email"} handleMenuClick={handleMenuClick} />
-            <GridOption optionName={"RSVP Confirmation"} menuKey={"confirmation"} handleMenuClick={handleMenuClick} />
+            <GridOption
+              optionName={"RSVP Confirmation & Overview"}
+              menuKey={"overview"}
+              handleMenuClick={handleMenuClick}
+            />
           </div>
         )}
         {menuState === "plusOne" && (
@@ -487,9 +492,70 @@ function RSVPStatusMenu({
             )}
           </div>
         )}
-        {menuState === "confirmation" && (
+        {menuState === "overview" && (
           <div>
             <p>RSVP Confirmation Menu</p>
+            <div>
+              {groupRSVPs.map((rsvp) => {
+                const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
+                if (guest) {
+                  return (
+                    <div id="rsvp-overview-container" key={guest.guest_id}>
+                      <div>
+                        <p>Guest: {guest.name}</p>
+                        {guest.additional_guest_type === "plus_one" && <p> - Plus One</p>}
+                        {guest.additional_guest_type === "dependent" && <p> - Child/Dependent</p>}
+                        <div>
+                          {rsvp.attendance && <p>Attending!</p>}
+                          {!rsvp.attendance && <p>Not Attending.</p>}
+                        </div>
+                      </div>
+                      {rsvp.spotify && rsvp.spotify.split(",").length > 0 && (
+                        <div>
+                          <p>Song Requests:</p>
+                          {rsvp.spotify.split(",").map((song, index) => (
+                            <p key={index}>{song}</p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+                return null;
+              })}
+              {groupData.guests.some((guest) => guest.has_dependents) && (
+                <div>
+                  <p>
+                    Children & dependent RSVP's can be added from the{" "}
+                    <strong
+                      onClick={() => {
+                        handleMenuClick("dependent");
+                      }}
+                      style={{ textDecoration: "underline" }}
+                    >
+                      "Add Children"
+                    </strong>{" "}
+                    menu.
+                  </p>
+                </div>
+              )}
+              {groupData.guests.some((guest) => guest.plus_one_allowed) && (
+                <div>
+                  <p>
+                    At least one attending in your group is able to add/bring a plus one. This can be accessed from the{" "}
+                    <strong
+                      onClick={() => {
+                        handleMenuClick("plusOne");
+                      }}
+                      style={{ textDecoration: "underline" }}
+                    >
+                      "Add Plus One"
+                    </strong>{" "}
+                    menu.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         )}
         {menuState !== "main" && (
