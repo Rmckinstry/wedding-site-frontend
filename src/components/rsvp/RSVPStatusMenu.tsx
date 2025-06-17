@@ -45,6 +45,8 @@ function RSVPStatusMenu({
     "main"
   );
   const [plusOneNames, setPlusOneNames] = useState<{ [key: number]: string }>({});
+  const [currentChild, setCurrentChild] = useState<string>("");
+  const [childrenNames, setChildrenNames] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
@@ -68,12 +70,17 @@ function RSVPStatusMenu({
       [guestId]: name,
     }));
   };
-  const handlePlusOneSubmit = async (plusOneName: string, guestId: number, groupId: number) => {
+  const handleAdditionalSubmit = async (
+    plusOneName: string | string[],
+    guestId: number,
+    groupId: number,
+    additionalType: "plus_one" | "dependent"
+  ) => {
     const postData: additionalPost = {
-      additionalGuests: [plusOneName],
+      additionalGuests: typeof plusOneName === "string" ? [plusOneName] : plusOneName,
       guestId: guestId,
       groupId: groupId,
-      additionalType: "plus_one",
+      additionalType: additionalType,
     };
     try {
       setIsSubmitting(true);
@@ -89,16 +96,33 @@ function RSVPStatusMenu({
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const result = await response.json();
       setIsSubmitting(false);
       refreshData();
+      if (additionalType === "dependent") {
+        handleChildReset();
+      }
     } catch (error) {
       console.error("Error submitting RSVP:", error);
       setIsSubmitting(false);
     }
   };
 
-  const handleMenuClick = (key) => setMenuState(key);
+  const handleChildAdd = () => {
+    setChildrenNames([...childrenNames, currentChild]);
+    setCurrentChild("");
+  };
+
+  const handleChildReset = () => {
+    setChildrenNames([]);
+    setCurrentChild("");
+  };
+
+  const handleMenuClick = (key) => {
+    if (menuState === "dependent") handleChildReset();
+    setMenuState(key);
+  };
 
   return (
     <>
@@ -126,7 +150,7 @@ function RSVPStatusMenu({
               </div>
             ) : (
               <div>
-                {" "}
+                {/* eslint-disable-next-line array-callback-return */}
                 {groupRSVPs.map((rsvp) => {
                   const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
 
@@ -140,8 +164,14 @@ function RSVPStatusMenu({
                           label="Plus One Name"
                         />
                         <button
+                          disabled={!plusOneNames[guest.guest_id]}
                           onClick={() => {
-                            handlePlusOneSubmit(plusOneNames[guest.guest_id], guest.guest_id, guest.group_id);
+                            handleAdditionalSubmit(
+                              plusOneNames[guest.guest_id],
+                              guest.guest_id,
+                              guest.group_id,
+                              "plus_one"
+                            );
                           }}
                         >
                           Submit
@@ -157,6 +187,60 @@ function RSVPStatusMenu({
         {menuState === "dependent" && (
           <div>
             <p>Add Children Menu</p>
+            {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
+            {isSubmitting ? (
+              <div>
+                <p>Submitting Children RSVPs... Please Wait.</p>
+              </div>
+            ) : (
+              <div>
+                <div>
+                  <TextField
+                    onChange={(e) => {
+                      setCurrentChild(e.target.value);
+                    }}
+                    label="First & last name"
+                    value={currentChild || ""}
+                  ></TextField>
+                  <button onClick={handleChildAdd} disabled={currentChild === ""}>
+                    Add Child
+                  </button>
+                  {childrenNames.length !== 0 && (
+                    <div>
+                      <p>{groupData.group_name} Child RSVPs:</p>
+                      {childrenNames.map((child) => {
+                        return <p>{child}</p>;
+                      })}
+                      <p>Please press "Submit" when done to finalize the children attendance for the wedding.</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="btn-container">
+                  <button
+                    disabled={childrenNames.length === 0}
+                    onClick={() => {
+                      const validParent = groupData.guests.find((guest) => guest.has_dependents === true);
+                      handleAdditionalSubmit(
+                        childrenNames,
+                        validParent?.guest_id !== undefined ? validParent.guest_id : 0,
+                        validParent?.group_id !== undefined ? validParent.group_id : groupData.guests[0].group_id,
+                        "dependent"
+                      );
+                    }}
+                  >
+                    Submit Children RSVP's
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleChildReset();
+                    }}
+                  >
+                    Reset
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
         {menuState === "song" && (
