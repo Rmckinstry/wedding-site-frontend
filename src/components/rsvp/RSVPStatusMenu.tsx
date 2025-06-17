@@ -399,7 +399,7 @@ function RSVPStatusMenu({
                       {childrenNames.map((child) => {
                         return <p>{child}</p>;
                       })}
-                      <p>Please press "Submit" when done to finalize the children attendance for the wedding.</p>
+                      <p>"Please press 'Submit' when done to finalize the children's attendance for the wedding."</p>
                     </div>
                   )}
                 </div>
@@ -463,7 +463,13 @@ function RSVPStatusMenu({
                 {groupRSVPs.map((rsvp) => {
                   const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
 
-                  if (rsvp.attendance && !isSubmitting && guest) {
+                  if (
+                    rsvp.attendance &&
+                    !isSubmitting &&
+                    guest &&
+                    guest.additional_guest_type !== "plus_one" &&
+                    guest.additional_guest_type !== "dependent"
+                  ) {
                     return (
                       <div key={rsvp.rsvp_id}>
                         {guest?.email === "" && guest?.email !== null ? (
@@ -477,7 +483,7 @@ function RSVPStatusMenu({
                           label="Email Address"
                         />
                         <button
-                          disabled={!emails[guest.guest_id]}
+                          // disabled={!emails[guest.guest_id]}
                           onClick={() => {
                             handleEmailSubmit(emails[guest.guest_id], guest.guest_id);
                           }}
@@ -510,6 +516,7 @@ function RSVPStatusMenu({
                           {!rsvp.attendance && <p>Not Attending.</p>}
                         </div>
                       </div>
+                      {guest.email && <p>Email: {guest.email}</p>}
                       {rsvp.spotify && rsvp.spotify.split(",").length > 0 && (
                         <div>
                           <p>Song Requests:</p>
@@ -542,7 +549,8 @@ function RSVPStatusMenu({
               {groupData.guests.some((guest) => guest.plus_one_allowed) && (
                 <div>
                   <p>
-                    At least one attending in your group is able to add/bring a plus one. This can be accessed from the{" "}
+                    At least one attending guest in your group is able to add/bring a plus one. This can be accessed
+                    from the{" "}
                     <strong
                       onClick={() => {
                         handleMenuClick("plusOne");
@@ -552,6 +560,15 @@ function RSVPStatusMenu({
                       "Add Plus One"
                     </strong>{" "}
                     menu.
+                  </p>
+                </div>
+              )}
+              {groupData.guests.some((guest) => !guest.email && !guest.additional_guest_type) && (
+                <div>
+                  <p>
+                    At least one attending guest in your group does not have an email associated with their RSVP. While
+                    this is completley optional - it is recommended to keep up to date with the event and to get first
+                    access to any picture put out.
                   </p>
                 </div>
               )}
