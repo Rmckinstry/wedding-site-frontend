@@ -11,7 +11,7 @@ function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string
   const groupRSVPs = useQuery<RSVP[]>({
     queryKey: ["groupRSVP"],
     queryFn: async () => {
-      const response = await fetch(`${process.env.API_URL}/rsvps/group/${groupId}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/rsvps/group/${groupId}`);
       return await response.json();
     },
   });
@@ -19,7 +19,7 @@ function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string
   const groupData = useQuery<GroupData>({
     queryKey: ["groupData"],
     queryFn: async () => {
-      const response = await fetch(`${process.env.API_URL}/guests/group/${groupId}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/guests/group/${groupId}`);
       return await response.json();
     },
   });

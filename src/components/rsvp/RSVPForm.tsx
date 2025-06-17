@@ -85,7 +85,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     });
 
     try {
-      const response = await fetch(`${process.env.API_URL}/rsvps`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/rsvps`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
