@@ -268,6 +268,7 @@ function RSVPStatusMenu({
 
   const handleMenuClick = (key) => {
     if (key === "dependent") handleChildReset();
+    if (key === "email") handleEmailReset();
     setMenuState(key);
   };
 
@@ -370,6 +371,15 @@ function RSVPStatusMenu({
 
   const handleEmailSubmit = async (email: string | null, guestId: number) => {
     emailSubmitMutation.mutate({ email: email, guestId: guestId });
+  };
+
+  const handleEmailReset = () => {
+    for (const rsvp of groupRSVPs) {
+      const guest = groupData.guests.find((guest: Guest) => guest.guest_id === rsvp.guest_id);
+      if (rsvp.attendance && guest) {
+        handleEmailChange(guest.guest_id, guest.email);
+      }
+    }
   };
 
   const emailSubmitMutation = useMutation<ResponseType, ErrorType, { email: string | null; guestId: number }>({
