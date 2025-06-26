@@ -1,5 +1,5 @@
 import { TextField } from "@mui/material";
-import { ErrorType, GroupData, Guest, RSVP } from "../../utility/types";
+import { ErrorType, GroupData, Guest, RSVP, SongRequestError } from "../../utility/types";
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import Error from "../utility/Error.tsx";
@@ -46,6 +46,13 @@ const SongEditForm = ({
   const submittedSongs = rsvp.spotify.split(separator).filter((song) => song !== "");
   const [emptySongs, setEmptySongs] = useState<string[]>(Array(guest.song_requests - submittedSongs.length).fill(""));
 
+  const [songValidationErrors, setSongValidationErrors] = useState<SongRequestError[]>([]);
+
+  // const isSongTabInvalid = Object.values(songValidationErrors)
+  //   .map((errorObject) => errorObject.some((combo) => combo.title || combo.artist))
+  //   .some((value) => value);
+
+  const isSongMenuInvalid = songValidationErrors.some((errObject) => errObject.artist || errObject.title);
   useEffect(() => {
     const submittedSongs = rsvp.spotify.split(separator).filter((song) => song !== "");
     setEmptySongs(Array(guest.song_requests - submittedSongs.length).fill(""));
@@ -66,6 +73,31 @@ const SongEditForm = ({
       const updatedArtist = key === "artist" ? value : currentArtist;
 
       newSongs[index] = updatedTitle || updatedArtist ? `${updatedTitle || ""} - ${updatedArtist || ""}` : "";
+
+      const newErrorsForIndex = {
+        // Create the error object for the current index
+        title: false,
+        artist: false,
+        message: "",
+      };
+
+      // setting errors and flags
+      if (updatedTitle && !updatedArtist) {
+        newErrorsForIndex.title = false;
+        newErrorsForIndex.artist = true;
+        newErrorsForIndex.message = "Artist is required when a song title is entered.";
+      } else if (!updatedTitle && updatedArtist) {
+        newErrorsForIndex.title = true;
+        newErrorsForIndex.artist = false;
+        newErrorsForIndex.message = "Song title is required when an artist is entered.";
+      }
+
+      setSongValidationErrors((prevErrors) => {
+        const updatedErrors = [...prevErrors];
+        updatedErrors[index] = newErrorsForIndex;
+        return updatedErrors;
+      });
+
       return newSongs;
     });
   };
@@ -113,6 +145,7 @@ const SongEditForm = ({
 
   return (
     <div>
+      {/* already submitted song display */}
       <p>{guest.name}</p>
       {submittedSongs.length !== 0 && (
         <div key={`song-container-guest-${rsvp.guest_id}`}>
@@ -146,7 +179,11 @@ const SongEditForm = ({
               <p>Add New Song Requests:</p>
               {emptySongs.map((song, index) => {
                 const [title, artist] = song ? song.split(" - ") : ["", ""];
-
+                const errors = songValidationErrors[index] || {
+                  title: false,
+                  artist: false,
+                  message: "",
+                };
                 return (
                   <div key={index}>
                     <TextField
@@ -154,18 +191,24 @@ const SongEditForm = ({
                       value={title || ""}
                       id="song-request-title"
                       label="Song Title"
+                      error={errors.title}
+                      helperText={errors.title ? errors.message : ""}
                     />
                     <TextField
                       onChange={(e) => handleSongRequestChange(index, "artist", e.target.value)}
                       value={artist || ""}
                       id="song-request-author"
                       label="Song Author"
+                      error={errors.artist}
+                      helperText={errors.artist ? errors.message : ""}
                     />
                   </div>
                 );
               })}
               <div className="btn-container">
-                <button onClick={handleSongSubmit}>Submit Song Requests for {guest.name}</button>
+                <button disabled={isSongMenuInvalid} onClick={handleSongSubmit}>
+                  Submit Song Requests for {guest.name}
+                </button>
               </div>
             </div>
           )}
@@ -221,9 +264,8 @@ function RSVPStatusMenu({
   useEffect(() => {
     additionalGuestMutation.reset();
     emailSubmitMutation.reset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-
     refreshData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menuState]);
 
   const handleMenuClick = (key) => {

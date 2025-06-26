@@ -10,7 +10,7 @@ import {
   FormLabel,
   TextField,
 } from "@mui/material";
-import { ErrorType, GroupData } from "../../utility/types";
+import { ErrorType, GroupData, SongRequestError } from "../../utility/types";
 import { useMutation } from "@tanstack/react-query";
 import Error from "../utility/Error.tsx";
 
@@ -24,12 +24,6 @@ type SubmitData = {
   guestId: number;
   attendance: boolean | "";
   spotify: string;
-};
-
-type SongRequestError = {
-  title: boolean;
-  artist: boolean;
-  message: string;
 };
 
 const steps = ["Guests", "Song Requests", "Confirmation"];
@@ -226,18 +220,6 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     console.log("RSVP useEffect debugger");
     console.log(rsvps);
   }, [rsvps]);
-
-  // const [songValidationErrors, setSongValidationErrors] = useState<{ [guestId: string]: SongRequestError[] }>({});
-
-  useEffect(() => {
-    // const errors = Object.values(songValidationErrors);
-
-    // const isError = errors.map((errorObject) => errorObject.some((combo) => combo.title || combo.artist));
-
-    const isSongTabValid = Object.values(songValidationErrors)
-      .map((errorObject) => errorObject.some((combo) => combo.title || combo.artist))
-      .some((value) => value);
-  }, [songValidationErrors]);
 
   return (
     <>

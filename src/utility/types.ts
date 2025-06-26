@@ -40,3 +40,9 @@ export type ResponseType = {
   message? : string,
   data? : any[]
 }
+
+export type SongRequestError = {
+  title: boolean;
+  artist: boolean;
+  message: string;
+};
