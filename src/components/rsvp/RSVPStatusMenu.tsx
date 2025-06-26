@@ -194,10 +194,14 @@ function RSVPStatusMenu({
   const [childrenNames, setChildrenNames] = useState<string[]>([]);
 
   useEffect(() => {
+    setPlusOneEnabled(false);
+    setDependentsEnabled(false);
+
     for (const rsvp of groupRSVPs) {
       const guest = groupData.guests.find((guest: Guest) => guest.guest_id === rsvp.guest_id);
       if (rsvp.attendance && guest) {
         if (guest?.plus_one_allowed) {
+          console.log("hit", guest.name);
           setPlusOneEnabled(true);
         }
         if (guest?.has_dependents) {
@@ -213,6 +217,8 @@ function RSVPStatusMenu({
     additionalGuestMutation.reset();
     emailSubmitMutation.reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    refreshData();
   }, [menuState]);
 
   const handleMenuClick = (key) => {
