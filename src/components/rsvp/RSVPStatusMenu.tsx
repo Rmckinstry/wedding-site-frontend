@@ -31,7 +31,7 @@ const GridOption = ({
     </div>
   );
 };
-
+//#region song form component
 const SongEditForm = ({
   guest,
   rsvp,
@@ -105,7 +105,7 @@ const SongEditForm = ({
     },
     onError: (error: ErrorType) => {
       console.log(error);
-      console.error("Error submitting RSVP:", error.message);
+      console.error("Error submitting songs:", error.message);
     },
   });
 
@@ -173,6 +173,8 @@ const SongEditForm = ({
   );
 };
 
+//#endregion
+//#region main rsvp status menu componet
 function RSVPStatusMenu({
   groupData,
   groupRSVPs,
@@ -185,7 +187,6 @@ function RSVPStatusMenu({
   const [plusOneEnabled, setPlusOneEnabled] = useState<boolean>(false);
   const [dependentsEnabled, setDependentsEnabled] = useState<boolean>(false);
   const [menuState, setMenuState] = useState<"main" | "plusOne" | "dependent" | "song" | "email" | "overview">("main");
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const [plusOneNames, setPlusOneNames] = useState<{ [key: number]: string }>({});
   const [emails, setEmails] = useState<{ [key: number]: string }>({});
@@ -207,12 +208,35 @@ function RSVPStatusMenu({
     }
   }, [groupData, groupRSVPs]);
 
+  // clears mutations when tab is changed - allows specific menus to reset
+  useEffect(() => {
+    additionalGuestMutation.reset();
+    emailSubmitMutation.reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [menuState]);
+
+  const handleMenuClick = (key) => {
+    if (key === "dependent") handleChildReset();
+    setMenuState(key);
+  };
+
+  //#region additional guest logic
   const handlePlusOneNameChange = (guestId: number, name: string) => {
     setPlusOneNames((prevNames) => ({
       ...prevNames,
       [guestId]: name,
     }));
   };
+  const handleChildAdd = () => {
+    setChildrenNames([...childrenNames, currentChild]);
+    setCurrentChild("");
+  };
+
+  const handleChildReset = () => {
+    setChildrenNames([]);
+    setCurrentChild("");
+  };
+
   const handleAdditionalSubmit = async (
     plusOneName: string | string[],
     guestId: number,
@@ -225,8 +249,15 @@ function RSVPStatusMenu({
       groupId: groupId,
       additionalType: additionalType,
     };
-    try {
-      setIsSubmitting(true);
+    additionalGuestMutation.mutate({ postData: postData, type: additionalType });
+  };
+
+  const additionalGuestMutation = useMutation<
+    ResponseType,
+    ErrorType,
+    { postData: additionalPost; type: "plus_one" | "dependent" }
+  >({
+    mutationFn: async ({ postData, type }) => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/rsvps/additional`, {
         method: "POST",
         headers: {
@@ -234,39 +265,28 @@ function RSVPStatusMenu({
         },
         body: JSON.stringify({ postData }),
       });
-
       if (!response.ok) {
-        // throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorBody: ErrorType = await response.json();
+        throw errorBody;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const result = await response.json();
-      setIsSubmitting(false);
+      return response.json() as Promise<ResponseType>;
+    },
+    onSuccess: (data, variables) => {
+      console.log("Response from server:", data);
       refreshData();
-      if (additionalType === "dependent") {
+      if (variables.type === "dependent") {
         handleChildReset();
       }
-    } catch (error) {
-      console.error("Error submitting RSVP:", error);
-      setIsSubmitting(false);
-    }
-  };
+    },
+    onError: (error: ErrorType) => {
+      console.log(error);
+      console.error("Error creating plus one rsvp:", error.message);
+    },
+  });
 
-  const handleChildAdd = () => {
-    setChildrenNames([...childrenNames, currentChild]);
-    setCurrentChild("");
-  };
-
-  const handleChildReset = () => {
-    setChildrenNames([]);
-    setCurrentChild("");
-  };
-
-  const handleMenuClick = (key) => {
-    if (menuState === "dependent") handleChildReset();
-    setMenuState(key);
-  };
-
+  //#endregion
+  //#region email logic
   const handleEmailChange = (guestId: number, email: string) => {
     setEmails((prevEmails) => ({
       ...prevEmails,
@@ -275,8 +295,11 @@ function RSVPStatusMenu({
   };
 
   const handleEmailSubmit = async (email: string, guestId: number) => {
-    try {
-      setIsSubmitting(true);
+    emailSubmitMutation.mutate({ email: email, guestId: guestId });
+  };
+
+  const emailSubmitMutation = useMutation<ResponseType, ErrorType, { email: string; guestId: number }>({
+    mutationFn: async ({ email, guestId }) => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/guests/email/${guestId}`, {
         method: "PATCH",
         headers: {
@@ -286,18 +309,22 @@ function RSVPStatusMenu({
       });
 
       if (!response.ok) {
-        // throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorBody: ErrorType = await response.json();
+        throw errorBody;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const result = await response.json();
-      setIsSubmitting(false);
+      return response.json() as Promise<ResponseType>;
+    },
+    onSuccess: (data) => {
+      console.log("Response from server:", data);
       refreshData();
-    } catch (error) {
-      console.error("Error submitting RSVP:", error);
-      setIsSubmitting(false);
-    }
-  };
+    },
+    onError: (error: ErrorType) => {
+      console.log(error);
+      console.error("Error creating plus one rsvp:", error.message);
+    },
+  });
+  //#endregion
 
   return (
     <>
@@ -323,9 +350,29 @@ function RSVPStatusMenu({
           <div>
             <p>Plus One Menu</p>
             {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
-            {isSubmitting ? (
+            {additionalGuestMutation.isPending ||
+            additionalGuestMutation.isError ||
+            additionalGuestMutation.isSuccess ? (
               <div>
-                <p>Submitting Plus One... Please Wait.</p>
+                {additionalGuestMutation.isPending && (
+                  <div>
+                    <p>Creating Plus One RSVP. Please Wait...</p>
+                  </div>
+                )}
+                {additionalGuestMutation.isError && (
+                  <div>
+                    <Error
+                      errorInfo={additionalGuestMutation.error}
+                      tryEnabled={true}
+                      handleRetry={additionalGuestMutation.reset}
+                    />
+                  </div>
+                )}
+                {additionalGuestMutation.isSuccess && (
+                  <div>
+                    <p>Your Plus One RSVP was created!</p>
+                  </div>
+                )}
               </div>
             ) : (
               <div>
@@ -333,7 +380,7 @@ function RSVPStatusMenu({
                 {groupRSVPs.map((rsvp) => {
                   const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
 
-                  if (guest?.plus_one_allowed && rsvp.attendance && !isSubmitting) {
+                  if (guest?.plus_one_allowed && rsvp.attendance && !additionalGuestMutation.isPending) {
                     return (
                       <div key={guest.guest_id}>
                         <p>Add {guest.name}'s Plus One</p>
@@ -367,9 +414,29 @@ function RSVPStatusMenu({
           <div>
             <p>Add Children Menu</p>
             {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
-            {isSubmitting ? (
+            {additionalGuestMutation.isPending ||
+            additionalGuestMutation.isError ||
+            additionalGuestMutation.isSuccess ? (
               <div>
-                <p>Submitting Children RSVPs... Please Wait.</p>
+                {additionalGuestMutation.isPending && (
+                  <div>
+                    <p>Creating child RSVP(s). Please wait...</p>
+                  </div>
+                )}
+                {additionalGuestMutation.isError && (
+                  <div>
+                    <Error
+                      errorInfo={additionalGuestMutation.error}
+                      tryEnabled={true}
+                      handleRetry={additionalGuestMutation.reset}
+                    />
+                  </div>
+                )}
+                {additionalGuestMutation.isSuccess && (
+                  <div>
+                    <p>Your child RSVP(s) was created!</p>
+                  </div>
+                )}
               </div>
             ) : (
               <div>
@@ -440,9 +507,27 @@ function RSVPStatusMenu({
           <div>
             <p>Email Menu</p>
             {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
-            {isSubmitting ? (
+            {emailSubmitMutation.isPending || emailSubmitMutation.isError || emailSubmitMutation.isSuccess ? (
               <div>
-                <p>Submitting Email... Please Wait.</p>
+                {emailSubmitMutation.isPending && (
+                  <div>
+                    <p>Saving email. Please Wait...</p>
+                  </div>
+                )}
+                {emailSubmitMutation.isError && (
+                  <div>
+                    <Error
+                      errorInfo={emailSubmitMutation.error}
+                      tryEnabled={true}
+                      handleRetry={emailSubmitMutation.reset}
+                    />
+                  </div>
+                )}
+                {emailSubmitMutation.isSuccess && (
+                  <div>
+                    <p>Your email was saved!</p>
+                  </div>
+                )}
               </div>
             ) : (
               <div>
@@ -456,7 +541,7 @@ function RSVPStatusMenu({
 
                   if (
                     rsvp.attendance &&
-                    !isSubmitting &&
+                    !emailSubmitMutation.isPending &&
                     guest &&
                     guest.additional_guest_type !== "plus_one" &&
                     guest.additional_guest_type !== "dependent"
