@@ -401,11 +401,12 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                   </div>
                   {rsvps.map((rsvp) => {
                     const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
+                    const hasSongs = rsvp.spotify.some((index) => index !== "");
                     return (
                       <div>
                         <p>Name: {guest?.name}</p>
                         <p>Attending: {rsvp.attendance ? "Yes" : "No"}</p>
-                        {rsvp.attendance && (
+                        {rsvp.attendance && hasSongs && (
                           <div>
                             <p>Requested Songs</p>
                             {rsvp.spotify
@@ -413,6 +414,11 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                               .map((song) => (
                                 <p>{song}</p>
                               ))}
+                          </div>
+                        )}
+                        {rsvp.attendance && !hasSongs && (
+                          <div>
+                            <p>No songs requested yet! (This can be done after you submit the rsvp as well!)</p>
                           </div>
                         )}
                         {rsvp.attendance && guest?.plus_one_allowed && (
