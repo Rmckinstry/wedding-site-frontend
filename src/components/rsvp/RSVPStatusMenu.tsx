@@ -1,6 +1,8 @@
 import { TextField } from "@mui/material";
-import { GroupData, Guest, RSVP } from "../../utility/types";
+import { ErrorType, GroupData, Guest, RSVP } from "../../utility/types";
 import React, { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import Error from "../utility/Error.tsx";
 
 type additionalPost = {
   additionalGuests: string[];
@@ -41,8 +43,6 @@ const SongEditForm = ({
 }) => {
   const submittedSongs = rsvp.spotify.split(",").filter((song) => song !== "");
   const [emptySongs, setEmptySongs] = useState<string[]>(Array(guest.song_requests - submittedSongs.length).fill(""));
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     const submittedSongs = rsvp.spotify.split(",").filter((song) => song !== "");
@@ -69,18 +69,21 @@ const SongEditForm = ({
   };
 
   const handleSongSubmit = async () => {
-    setIsLoading(true);
-
     const oldSongsString: string = submittedSongs.reduce((acc, song) => {
       return acc.length === 0 ? song : acc + "," + song;
     }, "");
+
     const newSongsString: string = emptySongs.reduce((acc, song) => {
       return acc.length === 0 ? song : acc + "," + song;
     }, "");
 
-    const songString = newSongsString.length > 0 ? oldSongsString + "," + newSongsString : oldSongsString;
+    const songString = oldSongsString.length === 0 ? newSongsString : oldSongsString + "," + newSongsString;
 
-    try {
+    songSubmitMutation.mutate(songString);
+  };
+
+  const songSubmitMutation = useMutation<ResponseType, ErrorType, string>({
+    mutationFn: async (songString) => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/rsvps/songs/${rsvp.rsvp_id}`, {
         method: "PATCH",
         headers: {
@@ -90,19 +93,21 @@ const SongEditForm = ({
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorBody: ErrorType = await response.json();
+        throw errorBody;
       }
 
-      const result = await response.json();
-      console.log("Response from server:", result);
-      setIsLoading(false);
+      return response.json() as Promise<ResponseType>;
+    },
+    onSuccess: (data) => {
+      console.log("Response from server:", data);
       handleDataRefresh();
-    } catch (error) {
-      console.error("Error submitting RSVP:", error);
-      setIsLoading(false);
-      setError(error);
-    }
-  };
+    },
+    onError: (error: ErrorType) => {
+      console.log(error);
+      console.error("Error submitting RSVP:", error.message);
+    },
+  });
 
   return (
     <div>
@@ -122,28 +127,19 @@ const SongEditForm = ({
 
       {submittedSongs.length !== guest.song_requests && (
         <div>
-          {isLoading && (
+          {songSubmitMutation.isPending && (
             <div>
               <p>Submitting song requests. Please Wait...</p>
             </div>
           )}
-          {error && (
+          {songSubmitMutation.isError && (
             <div>
-              <p>There was an error submitting your song requests. Please try again.</p>
-              <div className="btn-container">
-                <button
-                  onClick={() => {
-                    setError(false);
-                  }}
-                >
-                  Okay - Retry
-                </button>
-              </div>
+              <Error errorInfo={songSubmitMutation.error} tryEnabled={true} handleRetry={songSubmitMutation.reset} />
             </div>
           )}
 
           {/* very temporary - error and submitted will probably be modals and popups */}
-          {!isLoading && !error && (
+          {!songSubmitMutation.isPending && !songSubmitMutation.isError && (
             <div>
               <p>Add New Song Requests:</p>
               {emptySongs.map((song, index) => {
@@ -240,7 +236,7 @@ function RSVPStatusMenu({
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        // throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -290,7 +286,7 @@ function RSVPStatusMenu({
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        // throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
