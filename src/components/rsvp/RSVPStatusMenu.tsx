@@ -340,7 +340,7 @@ function RSVPStatusMenu({
   //#region email logic
 
   const validateEmail = (email: string): string | null => {
-    if (!email.trim()) {
+    if (email !== null && !email.trim()) {
       return "Email cannot be empty.";
     }
     // Basic email regex validation
@@ -356,11 +356,16 @@ function RSVPStatusMenu({
       ...prevEmails,
       [guestId]: email,
     }));
+    // Validate on change to provide immediate feedback
+    setEmailErrors((prevErrors) => ({
+      ...prevErrors,
+      [guestId]: validateEmail(email),
+    }));
   };
 
   const isButtonDisabled = (guestId: number) => {
     const currentEmail = emails[guestId] || "";
-    return !!validateEmail(currentEmail); // True if there's an error
+    return !!validateEmail(currentEmail);
   };
 
   const handleEmailSubmit = async (email: string | null, guestId: number) => {
@@ -616,6 +621,7 @@ function RSVPStatusMenu({
                     guest.additional_guest_type !== "plus_one" &&
                     guest.additional_guest_type !== "dependent"
                   ) {
+                    const hasError = !!emailErrors[guest.guest_id];
                     return (
                       <div key={rsvp.rsvp_id}>
                         {guest?.email === "" && guest?.email !== null ? (
@@ -624,9 +630,11 @@ function RSVPStatusMenu({
                           <p>Edit {guest.name}'s Email</p>
                         )}
                         <TextField
-                          value={emails[guest.guest_id] || ""} // Controlled component
+                          value={emails[guest.guest_id] || ""}
                           onChange={(e) => handleEmailChange(guest.guest_id, e.target.value)}
                           label="Email Address"
+                          error={hasError}
+                          helperText={hasError ? emailErrors[guest.guest_id] : ""}
                         />
                         <div className="btn-container">
                           <button
