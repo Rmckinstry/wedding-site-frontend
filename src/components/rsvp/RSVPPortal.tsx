@@ -1,25 +1,37 @@
-import React, { useState } from "react";
+import React from "react";
 import RSVPForm from "./RSVPForm.tsx";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import RSVPStatusMenu from "./RSVPStatusMenu.tsx";
-import { GroupData, RSVP } from "../../utility/types.ts";
+import { ErrorType, GroupData, RSVP } from "../../utility/types.ts";
+import Error from "../utility/Error.tsx";
 
 function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string }) {
   const queryClient = useQueryClient();
 
   //GET call to check if there any RSVPs assigned to the groupID
-  const groupRSVPs = useQuery<RSVP[]>({
+  const groupRSVPs = useQuery<RSVP[], ErrorType>({
     queryKey: ["groupRSVP"],
     queryFn: async () => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/rsvps/group/${groupId}`);
+
+      if (!response.ok) {
+        const errorData: ErrorType = await response.json();
+        throw errorData;
+      }
       return await response.json();
     },
   });
 
-  const groupData = useQuery<GroupData>({
+  // seperate GroupData query from lookup because this instance gets updated when info is changed
+  const groupData = useQuery<GroupData, ErrorType>({
     queryKey: ["groupData"],
     queryFn: async () => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/guests/group/${groupId}`);
+
+      if (!response.ok) {
+        const errorData: ErrorType = await response.json();
+        throw errorData;
+      }
       return await response.json();
     },
   });
@@ -35,11 +47,11 @@ function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string
   }
 
   if (groupRSVPs.isError) {
-    return <p>Error: {groupRSVPs.error.message}</p>;
+    return <Error errorInfo={groupRSVPs.error} />;
   }
 
   if (groupData.isError) {
-    return <p>Error: {groupData.error.message}</p>;
+    return <Error errorInfo={groupData.error} />;
   }
 
   return (

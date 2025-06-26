@@ -21,10 +21,22 @@ export type Guest = {
 };
 
 export type RSVP = {
-    rsvp_id: number;
-    guest_id: number;
-    attendance: boolean;
-    spotify: string;
-    created_at: string;
-    updated_at: string | null;
+  rsvp_id: number;
+  guest_id: number;
+  attendance: boolean;
+  spotify: string;
+  created_at: string;
+  updated_at: string | null;
+}
+
+export type ErrorType = {
+  status : number,
+  message : string,
+  error? : string
+}
+
+export type ResponseType = {
+  status? : number,
+  message? : string,
+  data? : any[]
 }

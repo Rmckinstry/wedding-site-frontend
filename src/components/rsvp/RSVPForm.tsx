@@ -10,7 +10,9 @@ import {
   FormLabel,
   TextField,
 } from "@mui/material";
-import { GroupData } from "../../utility/types";
+import { ErrorType, GroupData } from "../../utility/types";
+import { useMutation } from "@tanstack/react-query";
+import Error from "../utility/Error.tsx";
 
 type RSVPPost = {
   guestId: number;
@@ -30,10 +32,6 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
   const [activeStep, setActiveStep] = useState(0);
   const [rsvps, setRsvps] = useState<RSVPPost[]>([]);
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState(null);
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-
   // Memoize resetRSVPs
   const resetRSVPs = useCallback(() => {
     if (groupData && groupData.guests) {
@@ -51,6 +49,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     resetRSVPs();
   }, [groupData, resetRSVPs]);
 
+  // stepper controls
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -59,16 +58,14 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  // resets errything for the form
+
   const handleReset = () => {
     resetRSVPs();
     setActiveStep(0);
-    setError(null);
-    setIsLoading(false);
-    setIsSubmitted(false);
   };
 
   const handleSubmit = async () => {
-    setIsLoading(true);
     const submitData: SubmitData[] = rsvps.map((rsvp: RSVPPost) => {
       // Convert attendance to boolean
       const attendance = typeof rsvp.attendance === "string" ? rsvp.attendance !== "" : rsvp.attendance;
@@ -84,29 +81,34 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
       };
     });
 
-    try {
+    submitRsvpsMutation.mutate({ rsvpList: submitData });
+  };
+
+  const submitRsvpsMutation = useMutation<ResponseType, ErrorType, { rsvpList: SubmitData[] }>({
+    mutationFn: async (data) => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/rsvps`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ rsvpList: submitData }),
+        body: JSON.stringify(data),
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorBody: ErrorType = await response.json();
+        throw errorBody;
       }
 
-      const result = await response.json();
-      console.log("Response from server:", result);
-      setIsLoading(false);
-      setIsSubmitted(true);
-    } catch (error) {
-      console.error("Error submitting RSVP:", error);
-      setIsLoading(false);
-      setError(error);
-    }
-  };
+      return response.json() as Promise<ResponseType>;
+    },
+    onSuccess: (data) => {
+      console.log("Response from server:", data);
+    },
+    onError: (error: ErrorType) => {
+      console.log(error);
+      console.error("Error submitting RSVP:", error.message);
+    },
+  });
 
   const handleAttendanceChange = (guestId: number, value: boolean) => {
     setRsvps((prev) =>
@@ -165,19 +167,23 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
               );
             })}
           </Stepper>
-          {isLoading || error || isSubmitted ? (
+          {submitRsvpsMutation.isPending || submitRsvpsMutation.isError || submitRsvpsMutation.isSuccess ? (
             <div>
-              {isLoading && (
+              {submitRsvpsMutation.isPending && (
                 <div>
                   <p>Submitting RSVPs. Please wait...</p>
                 </div>
               )}
-              {error && (
+              {submitRsvpsMutation.isError && (
                 <div>
-                  <p>We ran into an error while submitting your RSVP. Please try again later.</p>
+                  <Error
+                    errorInfo={submitRsvpsMutation.error}
+                    tryEnabled={true}
+                    handleRetry={submitRsvpsMutation.reset}
+                  />
                 </div>
               )}
-              {isSubmitted && (
+              {submitRsvpsMutation.isSuccess && (
                 <div>
                   <p>Your RSVPs were succesfully submitted. Thank you!</p>
                   <p>
@@ -334,13 +340,13 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                     </p>
                   )}
                   <div className="btn-container">
-                    <button className="btn-link" onClick={handleBack}>
+                    <button className="btn-link" onClick={handleBack} disabled={submitRsvpsMutation.isPending}>
                       Back
                     </button>
-                    <button className="btn-link" onClick={handleReset}>
+                    <button className="btn-link" onClick={handleReset} disabled={submitRsvpsMutation.isPending}>
                       Reset
                     </button>
-                    <button className="btn-link" onClick={handleSubmit}>
+                    <button className="btn-link" onClick={handleSubmit} disabled={submitRsvpsMutation.isPending}>
                       Submit RSVP
                     </button>
                   </div>

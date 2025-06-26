@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import { TextField, Autocomplete } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { Guest } from "../../utility/types";
+import { ErrorType, GroupData, Guest } from "../../utility/types";
+import Error from "../utility/Error.tsx";
 
 function RSVPConfirmation({ guest, handleConfirmation }) {
-  const { isPending, isFetching, isError, data, error } = useQuery({
+  const { isPending, isFetching, isError, data, error } = useQuery<GroupData, ErrorType>({
     queryKey: ["groupData"],
     queryFn: async () => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/guests/group/${guest["group_id"]}`);
+
+      if (!response.ok) {
+        const errorData: ErrorType = await response.json();
+        throw errorData;
+      }
+
       return await response.json();
     },
   });
@@ -17,7 +24,7 @@ function RSVPConfirmation({ guest, handleConfirmation }) {
   }
 
   if (isError) {
-    return <p>Error: {error.message}</p>;
+    return <Error errorInfo={error} />;
   }
 
   return (
@@ -27,7 +34,7 @@ function RSVPConfirmation({ guest, handleConfirmation }) {
       <div>
         <p>Guests:</p>
         {data["guests"].map((guest) => (
-          <p key={guest.id}>{guest.name}</p>
+          <p key={guest.guest_id}>{guest.name}</p>
         ))}
       </div>
       <div className="btn-container">
@@ -40,7 +47,6 @@ function RSVPConfirmation({ guest, handleConfirmation }) {
         <button
           className="btn-link btn-xl"
           onClick={() => {
-            // queryClient.resetQueries({ queryKey: ["groupData"] });
             handleConfirmation(false, "", 0);
           }}
         >

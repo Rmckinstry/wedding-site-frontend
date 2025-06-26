@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import RSVPLookup from "./RSVPLookup.tsx";
 import RSVPPortal from "./RSVPPortal.tsx";
-import { Guest } from "../../utility/types.ts";
+import { ErrorType, Guest } from "../../utility/types.ts";
+import Error from "../utility/Error.tsx";
 
 function RSVPPage() {
   // tracks the selected guestId that is accessing the portal
@@ -15,10 +16,15 @@ function RSVPPage() {
     setSelectedGroupName(data.name);
   };
 
-  const { isPending, isError, data, error } = useQuery<Guest[]>({
+  const { isPending, isError, data, error } = useQuery<Guest[], ErrorType>({
     queryKey: ["allGuests"],
     queryFn: async () => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/guests`);
+
+      if (!response.ok) {
+        const errorData: ErrorType = await response.json();
+        throw errorData;
+      }
       return await response.json();
     },
   });
@@ -28,7 +34,8 @@ function RSVPPage() {
   }
 
   if (isError) {
-    return <p>Error: {error.message}</p>;
+    // return <p>Error: {error.message}</p>;
+    return <Error errorInfo={error} />;
   }
   return (
     <>
