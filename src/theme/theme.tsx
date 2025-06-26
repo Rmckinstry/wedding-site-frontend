@@ -57,6 +57,25 @@ const theme = createTheme({
         },
       },
     },
+    MuiStepLabel: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Cormorant Garamond",
+          fontWeight: "600",
+        },
+        label: {
+          "&.Mui-active": {
+            color: "var(--default-text)", // Active step label color
+          },
+          "&.Mui-completed": {
+            color: "var(--default-text)", // Completed step label color
+          },
+          "&.Mui-disabled": {
+            color: "gray", // Disabled step label color
+          },
+        },
+      },
+    },
   },
   breakpoints: {
     values: {

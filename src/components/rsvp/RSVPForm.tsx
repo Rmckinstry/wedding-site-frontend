@@ -32,6 +32,13 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
   const [activeStep, setActiveStep] = useState(0);
   const [rsvps, setRsvps] = useState<RSVPPost[]>([]);
 
+  const isFormValid = rsvps.every((rsvp) => rsvp.attendance !== "");
+
+  const allGuestsAttendingFalse = rsvps.every((rsvp) => rsvp.attendance === false);
+
+  // Determine if the "Song Requests" step should be disabled
+  const isSongRequestsDisabled = allGuestsAttendingFalse;
+
   // Memoize resetRSVPs
   const resetRSVPs = useCallback(() => {
     if (groupData && groupData.guests) {
@@ -51,11 +58,31 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
 
   // stepper controls
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    //default behavior
+    let newActiveStep = activeStep + 1;
+
+    // If the next step would be "Song Requests" AND it's disabled, skip it
+    if (steps[newActiveStep] === "Song Requests" && isSongRequestsDisabled) {
+      newActiveStep = newActiveStep + 1; // Skip "Song Requests", go to "Confirmation"
+    }
+
+    setActiveStep(newActiveStep);
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    //default behavior
+    let newActiveStep = activeStep - 1;
+
+    // If we're going back from "Confirmation" and "Song Requests" was skipped
+    if (
+      steps[activeStep] === "Confirmation" &&
+      isSongRequestsDisabled &&
+      steps[newActiveStep] === "Song Requests" // This means we would normally go to Song Requests
+    ) {
+      newActiveStep = newActiveStep - 1; // Skip back past "Song Requests", go to "Guests"
+    }
+
+    setActiveStep(newActiveStep);
   };
 
   // resets errything for the form
@@ -151,15 +178,16 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     console.log(rsvps);
   }, [rsvps]);
 
-  const isFormValid = rsvps.every((rsvp) => rsvp.attendance !== "");
-
   return (
     <>
       <div id="rsvp-form-container">
         <div>
           <Stepper activeStep={activeStep}>
             {steps.map((label, index) => {
-              const stepProps: { completed?: boolean } = {};
+              const stepProps: { completed?: boolean; disabled?: boolean } = {};
+              if (label === "Song Requests" && isSongRequestsDisabled) {
+                stepProps.disabled = true;
+              }
               return (
                 <Step key={label} {...stepProps}>
                   <StepLabel>{label}</StepLabel>
