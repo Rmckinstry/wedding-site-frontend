@@ -10,6 +10,7 @@ type additionalPost = {
   groupId: number;
   additionalType: "plus_one" | "dependent";
 };
+//#region grid option
 const GridOption = ({
   optionName,
   menuKey,
@@ -31,7 +32,7 @@ const GridOption = ({
     </div>
   );
 };
-//#region song form component
+//#region song form
 const SongEditForm = ({
   guest,
   rsvp,
@@ -47,10 +48,6 @@ const SongEditForm = ({
   const [emptySongs, setEmptySongs] = useState<string[]>(Array(guest.song_requests - submittedSongs.length).fill(""));
 
   const [songValidationErrors, setSongValidationErrors] = useState<SongRequestError[]>([]);
-
-  // const isSongTabInvalid = Object.values(songValidationErrors)
-  //   .map((errorObject) => errorObject.some((combo) => combo.title || combo.artist))
-  //   .some((value) => value);
 
   const isSongMenuInvalid = songValidationErrors.some((errObject) => errObject.artist || errObject.title);
   useEffect(() => {
@@ -219,7 +216,7 @@ const SongEditForm = ({
 };
 
 //#endregion
-//#region main rsvp status menu componet
+//#region rsvp menu
 function RSVPStatusMenu({
   groupData,
   groupRSVPs,
@@ -235,6 +232,7 @@ function RSVPStatusMenu({
 
   const [plusOneNames, setPlusOneNames] = useState<{ [key: number]: string }>({});
   const [emails, setEmails] = useState<{ [key: number]: string }>({});
+  const [emailErrors, setEmailErrors] = useState<{ [key: number]: string | null }>({});
   const [currentChild, setCurrentChild] = useState<string>("");
   const [childrenNames, setChildrenNames] = useState<string[]>([]);
 
@@ -340,6 +338,19 @@ function RSVPStatusMenu({
 
   //#endregion
   //#region email logic
+
+  const validateEmail = (email: string): string | null => {
+    if (!email.trim()) {
+      return "Email cannot be empty.";
+    }
+    // Basic email regex validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return "Please enter a valid email address.";
+    }
+    return null;
+  };
+
   const handleEmailChange = (guestId: number, email: string) => {
     setEmails((prevEmails) => ({
       ...prevEmails,
@@ -347,11 +358,16 @@ function RSVPStatusMenu({
     }));
   };
 
-  const handleEmailSubmit = async (email: string, guestId: number) => {
+  const isButtonDisabled = (guestId: number) => {
+    const currentEmail = emails[guestId] || "";
+    return !!validateEmail(currentEmail); // True if there's an error
+  };
+
+  const handleEmailSubmit = async (email: string | null, guestId: number) => {
     emailSubmitMutation.mutate({ email: email, guestId: guestId });
   };
 
-  const emailSubmitMutation = useMutation<ResponseType, ErrorType, { email: string; guestId: number }>({
+  const emailSubmitMutation = useMutation<ResponseType, ErrorType, { email: string | null; guestId: number }>({
     mutationFn: async ({ email, guestId }) => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/guests/email/${guestId}`, {
         method: "PATCH",
@@ -379,6 +395,7 @@ function RSVPStatusMenu({
   });
   //#endregion
 
+  //#region template
   return (
     <>
       <div id="rsvp-status-menu-container">
@@ -586,7 +603,7 @@ function RSVPStatusMenu({
               <div>
                 <p>
                   Emails will only be used for important wedding updates, confirmations, and photos! Emails aren't
-                  required and are completely optional
+                  required and are completely optional.
                 </p>
                 {/* eslint-disable-next-line array-callback-return */}
                 {groupRSVPs.map((rsvp) => {
@@ -611,14 +628,23 @@ function RSVPStatusMenu({
                           onChange={(e) => handleEmailChange(guest.guest_id, e.target.value)}
                           label="Email Address"
                         />
-                        <button
-                          // disabled={!emails[guest.guest_id]}
-                          onClick={() => {
-                            handleEmailSubmit(emails[guest.guest_id], guest.guest_id);
-                          }}
-                        >
-                          Submit
-                        </button>
+                        <div className="btn-container">
+                          <button
+                            onClick={() => {
+                              handleEmailSubmit(emails[guest.guest_id], guest.guest_id);
+                            }}
+                            disabled={isButtonDisabled(guest.guest_id)}
+                          >
+                            Submit Email
+                          </button>
+                          <button
+                            onClick={() => {
+                              handleEmailSubmit("", guest.guest_id);
+                            }}
+                          >
+                            Remove Email
+                          </button>
+                        </div>
                       </div>
                     );
                   }
