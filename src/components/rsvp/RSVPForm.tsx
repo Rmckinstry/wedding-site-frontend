@@ -39,6 +39,8 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
   // Determine if the "Song Requests" step should be disabled
   const isSongRequestsDisabled = allGuestsAttendingFalse;
 
+  const separator = "\u00A7";
+
   // Memoize resetRSVPs
   const resetRSVPs = useCallback(() => {
     if (groupData && groupData.guests) {
@@ -98,7 +100,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
       const attendance = typeof rsvp.attendance === "string" ? rsvp.attendance !== "" : rsvp.attendance;
 
       const songString: string = rsvp.spotify.reduce((acc, song) => {
-        return acc.length === 0 ? song : acc + "," + song;
+        return acc.length === 0 ? song : acc + separator + song;
       }, "");
 
       return {

@@ -41,11 +41,13 @@ const SongEditForm = ({
   rsvp: RSVP;
   handleDataRefresh: () => void;
 }) => {
-  const submittedSongs = rsvp.spotify.split(",").filter((song) => song !== "");
+  const separator = "\u00A7";
+
+  const submittedSongs = rsvp.spotify.split(separator).filter((song) => song !== "");
   const [emptySongs, setEmptySongs] = useState<string[]>(Array(guest.song_requests - submittedSongs.length).fill(""));
 
   useEffect(() => {
-    const submittedSongs = rsvp.spotify.split(",").filter((song) => song !== "");
+    const submittedSongs = rsvp.spotify.split(separator).filter((song) => song !== "");
     setEmptySongs(Array(guest.song_requests - submittedSongs.length).fill(""));
   }, [guest, rsvp]);
 
@@ -70,14 +72,14 @@ const SongEditForm = ({
 
   const handleSongSubmit = async () => {
     const oldSongsString: string = submittedSongs.reduce((acc, song) => {
-      return acc.length === 0 ? song : acc + "," + song;
+      return acc.length === 0 ? song : acc + separator + song;
     }, "");
 
     const newSongsString: string = emptySongs.reduce((acc, song) => {
-      return acc.length === 0 ? song : acc + "," + song;
+      return acc.length === 0 ? song : acc + separator + song;
     }, "");
 
-    const songString = oldSongsString.length === 0 ? newSongsString : oldSongsString + "," + newSongsString;
+    const songString = oldSongsString.length === 0 ? newSongsString : oldSongsString + separator + newSongsString;
 
     songSubmitMutation.mutate(songString);
   };
@@ -192,6 +194,9 @@ function RSVPStatusMenu({
   const [emails, setEmails] = useState<{ [key: number]: string }>({});
   const [currentChild, setCurrentChild] = useState<string>("");
   const [childrenNames, setChildrenNames] = useState<string[]>([]);
+
+  // song seperator code
+  const separator = "\u00A7";
 
   useEffect(() => {
     setPlusOneEnabled(false);
@@ -599,10 +604,10 @@ function RSVPStatusMenu({
                         </div>
                       </div>
                       {guest.email && <p>Email: {guest.email}</p>}
-                      {rsvp.spotify && rsvp.spotify.split(",").length > 0 && (
+                      {rsvp.spotify && rsvp.spotify.split(separator).length > 0 && (
                         <div>
                           <p>Song Requests:</p>
-                          {rsvp.spotify.split(",").map((song, index) => (
+                          {rsvp.spotify.split(separator).map((song, index) => (
                             <p key={index}>{song}</p>
                           ))}
                         </div>
