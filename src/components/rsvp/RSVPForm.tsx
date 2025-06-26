@@ -26,18 +26,29 @@ type SubmitData = {
   spotify: string;
 };
 
+type SongRequestError = {
+  title: boolean;
+  artist: boolean;
+  message: string;
+};
+
 const steps = ["Guests", "Song Requests", "Confirmation"];
 
 function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefresh: () => void }) {
   const [activeStep, setActiveStep] = useState(0);
   const [rsvps, setRsvps] = useState<RSVPPost[]>([]);
+  const [songValidationErrors, setSongValidationErrors] = useState<{ [guestId: string]: SongRequestError[] }>({});
 
-  const isFormValid = rsvps.every((rsvp) => rsvp.attendance !== "");
+  const isRSVPStepValid = rsvps.every((rsvp) => rsvp.attendance !== "");
 
   const allGuestsAttendingFalse = rsvps.every((rsvp) => rsvp.attendance === false);
 
   // Determine if the "Song Requests" step should be disabled
-  const isSongRequestsDisabled = allGuestsAttendingFalse;
+  const isSongRequestTabDisabled = allGuestsAttendingFalse;
+
+  const isSongTabInvalid = Object.values(songValidationErrors)
+    .map((errorObject) => errorObject.some((combo) => combo.title || combo.artist))
+    .some((value) => value);
 
   const separator = "\u00A7";
 
@@ -64,7 +75,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     let newActiveStep = activeStep + 1;
 
     // If the next step would be "Song Requests" AND it's disabled, skip it
-    if (steps[newActiveStep] === "Song Requests" && isSongRequestsDisabled) {
+    if (steps[newActiveStep] === "Song Requests" && isSongRequestTabDisabled) {
       newActiveStep = newActiveStep + 1; // Skip "Song Requests", go to "Confirmation"
     }
 
@@ -78,7 +89,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     // If we're going back from "Confirmation" and "Song Requests" was skipped
     if (
       steps[activeStep] === "Confirmation" &&
-      isSongRequestsDisabled &&
+      isSongRequestTabDisabled &&
       steps[newActiveStep] === "Song Requests" // This means we would normally go to Song Requests
     ) {
       newActiveStep = newActiveStep - 1; // Skip back past "Song Requests", go to "Guests"
@@ -151,6 +162,13 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
           : rsvp
       )
     );
+    if (!value) {
+      setSongValidationErrors((prevErrors) => {
+        const newErrors = { ...prevErrors };
+        delete newErrors[guestId]; // Remove the entry for this guest
+        return newErrors;
+      });
+    }
   };
 
   const handleSongRequestChange = (guestId, index, key: string, value: string) => {
@@ -169,6 +187,35 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
         const updatedArtist = key === "artist" ? value : currentArtist;
         // Only concatenate if at least one field is non-empty
         newSpotify[index] = updatedTitle || updatedArtist ? `${updatedTitle || ""} - ${updatedArtist || ""}` : "";
+
+        //creates array of exisiting guest errors or new if none exists
+        const newErrorsForGuest = [...(songValidationErrors[guestId] || [])];
+        let titleError = false;
+        let artistError = false;
+        let errorMessage = "";
+
+        //setting errors and flags
+        if (updatedTitle && !updatedArtist) {
+          titleError = false;
+          artistError = true;
+          errorMessage = "Artist is required when a song title is entered.";
+        } else if (!updatedTitle && updatedArtist) {
+          titleError = true;
+          artistError = false;
+          errorMessage = "Song title is required when an artist is entered.";
+        }
+
+        // index refers to the specific song/artist combo in the array of songs - matches up with error
+        newErrorsForGuest[index] = {
+          title: titleError,
+          artist: artistError,
+          message: errorMessage,
+        };
+
+        setSongValidationErrors((prevErrors) => ({
+          ...prevErrors,
+          [guestId]: newErrorsForGuest,
+        }));
         return { ...rsvp, spotify: newSpotify };
       })
     );
@@ -180,6 +227,18 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     console.log(rsvps);
   }, [rsvps]);
 
+  // const [songValidationErrors, setSongValidationErrors] = useState<{ [guestId: string]: SongRequestError[] }>({});
+
+  useEffect(() => {
+    // const errors = Object.values(songValidationErrors);
+
+    // const isError = errors.map((errorObject) => errorObject.some((combo) => combo.title || combo.artist));
+
+    const isSongTabValid = Object.values(songValidationErrors)
+      .map((errorObject) => errorObject.some((combo) => combo.title || combo.artist))
+      .some((value) => value);
+  }, [songValidationErrors]);
+
   return (
     <>
       <div id="rsvp-form-container">
@@ -187,7 +246,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
           <Stepper activeStep={activeStep}>
             {steps.map((label, index) => {
               const stepProps: { completed?: boolean; disabled?: boolean } = {};
-              if (label === "Song Requests" && isSongRequestsDisabled) {
+              if (label === "Song Requests" && isSongRequestTabDisabled) {
                 stepProps.disabled = true;
               }
               return (
@@ -269,7 +328,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                     </p>
                   )}
                   <div className="btn-container">
-                    <button disabled={!isFormValid} className="btn-link" onClick={handleNext}>
+                    <button disabled={!isRSVPStepValid} className="btn-link" onClick={handleNext}>
                       Next
                     </button>
                   </div>
@@ -284,11 +343,15 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                       const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
                       return (
                         <div key={`song-container-${rsvp.guestId}-guest`}>
-                          <p>{rsvp.attendance}</p>
                           <FormControl key={`rsvp-guest-${rsvp.guestId}`}>
                             <FormLabel>{guest?.name}</FormLabel>
                             {rsvp.spotify.map((request, index) => {
                               const [title, artist] = request ? request.split(" - ") : ["", ""];
+                              const errors = songValidationErrors[rsvp.guestId]?.[index] || {
+                                title: false,
+                                artist: false,
+                                message: "",
+                              };
                               return (
                                 <div className="song-request-container">
                                   <TextField
@@ -298,6 +361,8 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                                     value={title || ""}
                                     id="song-request-title"
                                     label="Song Title"
+                                    error={errors.title}
+                                    helperText={errors.title ? errors.message : ""}
                                   />
                                   <TextField
                                     onChange={(e) =>
@@ -306,6 +371,8 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                                     value={artist || ""}
                                     id="song-request-author"
                                     label="Song Author"
+                                    error={errors.artist}
+                                    helperText={errors.artist ? errors.message : ""}
                                   />
                                 </div>
                               );
@@ -318,7 +385,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                     <button className="btn-link" onClick={handleBack}>
                       Back
                     </button>
-                    <button className="btn-link" onClick={handleNext}>
+                    <button disabled={isSongTabInvalid} className="btn-link" onClick={handleNext}>
                       Next
                     </button>
                   </div>
