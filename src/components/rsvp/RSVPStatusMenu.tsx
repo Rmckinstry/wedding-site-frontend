@@ -495,6 +495,10 @@ function RSVPStatusMenu({
     },
   });
 
+  const hasChildren = () => {
+    const childPresent = groupData.guests.some((guest) => guest.additional_guest_type === "dependent");
+    return childPresent;
+  };
   //#endregion
   //#region template
   return (
@@ -582,7 +586,7 @@ function RSVPStatusMenu({
           </div>
         )}
         {menuState === "dependent" && (
-          <div>
+          <div id="dependent-menu-container">
             <p>Add Children Menu</p>
             {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
             {additionalGuestMutation.isPending ||
@@ -611,7 +615,18 @@ function RSVPStatusMenu({
               </div>
             ) : (
               <div>
-                <div>
+                {hasChildren() && (
+                  <div id="dependent-overview-container">
+                    <p>Already submitted child RSVPs:</p>
+                    {groupData.guests.map((guest) => {
+                      if (guest.additional_guest_type == "dependent") {
+                        return <p>{guest.name}</p>;
+                      }
+                    })}
+                  </div>
+                )}
+
+                <div id="dependent-form-container">
                   <TextField
                     onChange={(e) => {
                       setCurrentChild(e.target.value);
@@ -624,7 +639,7 @@ function RSVPStatusMenu({
                   </button>
                   {childrenNames.length !== 0 && (
                     <div>
-                      <p>{groupData.group_name} Child RSVPs:</p>
+                      <p>{groupData.group_name} child RSVPs to be added:</p>
                       {childrenNames.map((child) => {
                         return <p>{child}</p>;
                       })}
@@ -632,7 +647,6 @@ function RSVPStatusMenu({
                     </div>
                   )}
                 </div>
-
                 <div className="btn-container">
                   <button
                     disabled={childrenNames.length === 0}

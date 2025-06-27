@@ -34,9 +34,13 @@ function RSVPConfirmation({ guest, handleConfirmation }) {
       <p>{data["group_name"]}</p>
       <div>
         <p>Guests:</p>
-        {data["guests"].map((guest) => (
-          <p key={guest.guest_id}>{guest.name}</p>
-        ))}
+        {data["guests"].map((guest) => {
+          if (guest.additional_guest_type === "dependent")
+            return <p key={guest.guest_id}>{guest.name} - Child/Dependent RSVP</p>;
+          if (guest.additional_guest_type === "plus_one")
+            return <p key={guest.guest_id}>{guest.name} - Plus One RSVP</p>;
+          return <p key={guest.guest_id}>{guest.name}</p>;
+        })}
       </div>
       <div className="btn-container">
         <button
