@@ -80,7 +80,7 @@ function RSVPConfirmation({
                   <div className="btn-container">
                     <button
                       className="btn-link btn-xl"
-                      onClick={() => handleConfirmation(true, group["group_name"], group["guests"][0].guest_id)}
+                      onClick={() => handleConfirmation(true, group["group_name"], group["guests"][0].group_id)}
                     >
                       Yes, this is me/my group!
                     </button>
