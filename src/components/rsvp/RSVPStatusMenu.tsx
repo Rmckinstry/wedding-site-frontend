@@ -231,7 +231,7 @@ function RSVPStatusMenu({
   const [menuState, setMenuState] = useState<"main" | "plusOne" | "dependent" | "song" | "email" | "overview">("main");
 
   const [plusOneNames, setPlusOneNames] = useState<{ [key: number]: string }>({});
-  const [emails, setEmails] = useState<{ [key: number]: string }>({});
+  const [emails, setEmails] = useState<{ [key: number]: string | null }>({});
   const [emailErrors, setEmailErrors] = useState<{ [key: number]: string | null }>({});
   const [currentChild, setCurrentChild] = useState<string>("");
   const [childrenNames, setChildrenNames] = useState<string[]>([]);
@@ -256,6 +256,7 @@ function RSVPStatusMenu({
         handleEmailChange(guest.guest_id, guest.email);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupData, groupRSVPs]);
 
   // clears mutations when tab is changed - allows specific menus to reset
@@ -340,8 +341,12 @@ function RSVPStatusMenu({
   //#endregion
   //#region email logic
 
-  const validateEmail = (email: string): string | null => {
-    if (email !== null && !email.trim()) {
+  const validateEmail = (email: string | null): string | null => {
+    console.log(email);
+    if (email === null || email.trim() === "") {
+      return null; // No error
+    }
+    if (!email.trim()) {
       return "Email cannot be empty.";
     }
     // Basic email regex validation
@@ -657,7 +662,7 @@ function RSVPStatusMenu({
                           </button>
                           <button
                             onClick={() => {
-                              handleEmailSubmit("", guest.guest_id);
+                              handleEmailSubmit(null, guest.guest_id);
                             }}
                           >
                             Remove Email
