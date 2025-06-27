@@ -8,8 +8,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: true,
-      staleTime: 5 * 60 * 1000
+      refetchOnWindowFocus: false,
+      // staleTime: 5 * 60 * 1000
+      // no idea why this broke the lookup/confirmation
     }
   }
 });
