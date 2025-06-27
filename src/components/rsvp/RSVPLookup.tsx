@@ -221,7 +221,9 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
                 return 0;
               }
             })}
-            getOptionLabel={(option: any) => option.name}
+            getOptionLabel={(option: any) =>
+              option.name === "Anne Marie McKinstry" ? "Anne Marie McKinstry *" : option.name
+            }
             value={selectedGuest}
             onChange={(event: any, newValue: any) => {
               setSelectedGuest(newValue);
