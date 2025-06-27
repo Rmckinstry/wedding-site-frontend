@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import RSVPStatusMenu from "./RSVPStatusMenu.tsx";
 import { ErrorType, GroupData, RSVP } from "../../utility/types.ts";
 import Error from "../utility/Error.tsx";
+import Loading from "../utility/Loading.tsx";
 
 function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string }) {
   const queryClient = useQueryClient();
@@ -42,9 +43,16 @@ function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string
     });
   }
 
+  // possible location for the flashing bug
   if (groupRSVPs.isPending || groupData.isPending) {
-    return <p>Loading {groupName} Portal Information...</p>;
+    return <Loading loadingText={`Loading {groupName}'s Portal Information...`} />;
   }
+
+  // idk if i want / need this
+  // might want to do something else if isFetching
+  // if (groupRSVPs.isFetching || groupData.isFetching) {
+  //   return <Loading loadingText={`Refreshing {groupName}'s Portal Information...`} />;
+  // }
 
   if (groupRSVPs.isError) {
     return <Error errorInfo={groupRSVPs.error} />;
@@ -54,6 +62,7 @@ function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string
     return <Error errorInfo={groupData.error} />;
   }
 
+  // possible location for the flashing bug
   return (
     <div id="rsvp-portal-container">
       <p>{groupName} RSVP Portal</p>

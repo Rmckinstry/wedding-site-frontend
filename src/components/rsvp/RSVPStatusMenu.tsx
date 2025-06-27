@@ -1,8 +1,10 @@
+/* eslint-disable array-callback-return */
 import { TextField } from "@mui/material";
 import { ErrorType, GroupData, Guest, RSVP, SongRequestError } from "../../utility/types";
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import Error from "../utility/Error.tsx";
+import Loading from "../utility/Loading.tsx";
 
 type additionalPost = {
   additionalGuests: string[];
@@ -50,11 +52,14 @@ const SongEditForm = ({
   const [songValidationErrors, setSongValidationErrors] = useState<SongRequestError[]>([]);
 
   const isSongMenuInvalid = songValidationErrors.some((errObject) => errObject.artist || errObject.title);
+
+  //sets inital songs
   useEffect(() => {
     const submittedSongs = rsvp.spotify.split(separator).filter((song) => song !== "");
     setEmptySongs(Array(guest.song_requests - submittedSongs.length).fill(""));
   }, [guest, rsvp]);
 
+  //#region song methods
   const handleSongRequestChange = (index: number, key: string, value: string) => {
     setEmptySongs((prev) => {
       const newSongs = [...prev];
@@ -113,6 +118,7 @@ const SongEditForm = ({
     songSubmitMutation.mutate(songString);
   };
 
+  //#region song mutation
   const songSubmitMutation = useMutation<ResponseType, ErrorType, string>({
     mutationFn: async (songString) => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/rsvps/songs/${rsvp.rsvp_id}`, {
@@ -133,6 +139,7 @@ const SongEditForm = ({
     onSuccess: (data) => {
       console.log("Response from server:", data);
       handleDataRefresh();
+      // possible success snackbar trigger
     },
     onError: (error: ErrorType) => {
       console.log(error);
@@ -140,6 +147,7 @@ const SongEditForm = ({
     },
   });
 
+  //#region song template
   return (
     <div>
       {/* already submitted song display */}
@@ -161,7 +169,7 @@ const SongEditForm = ({
         <div>
           {songSubmitMutation.isPending && (
             <div>
-              <p>Submitting song requests. Please Wait...</p>
+              <Loading loadingText={"Submitting song requests. Please Wait..."} />
             </div>
           )}
           {songSubmitMutation.isError && (
@@ -170,7 +178,6 @@ const SongEditForm = ({
             </div>
           )}
 
-          {/* very temporary - error and submitted will probably be modals and popups */}
           {!songSubmitMutation.isPending && !songSubmitMutation.isError && (
             <div>
               <p>Add New Song Requests:</p>
@@ -214,6 +221,157 @@ const SongEditForm = ({
     </div>
   );
 };
+//#region email component
+const EmailForm = ({ guest, rsvp, handleDataRefresh }: { guest: Guest; rsvp: RSVP; handleDataRefresh: () => void }) => {
+  const [emails, setEmails] = useState<{ [key: number]: string | null }>({});
+  const [emailErrors, setEmailErrors] = useState<{ [key: number]: string | null }>({});
+
+  const hasError = !!emailErrors[guest.guest_id];
+
+  useEffect(() => {
+    handleEmailChange(guest.guest_id, guest.email);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [guest, rsvp]);
+
+  //#region email logic
+  const validateEmail = (email: string | null): string | null => {
+    // If the email is explicitly null, it's considered valid (optional and not provided)
+    if (email === null) {
+      return null;
+    }
+
+    // If  email is an empty string or contains only whitespace after trimming, it's an error
+    const trimmedEmail = email.trim();
+    if (trimmedEmail === "") {
+      return "Email address cannot be empty.";
+    }
+
+    //valid email check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      return "Please enter a valid email address.";
+    }
+
+    return null;
+  };
+
+  const handleEmailChange = (guestId: number, email: string) => {
+    setEmails((prevEmails) => ({
+      ...prevEmails,
+      [guestId]: email,
+    }));
+    // Validate on change to provide immediate feedback
+    setEmailErrors((prevErrors) => ({
+      ...prevErrors,
+      [guestId]: validateEmail(email),
+    }));
+  };
+
+  const isButtonDisabled = (guestId: number) => {
+    const currentEmail = emails[guestId] || "";
+    return !!validateEmail(currentEmail);
+  };
+
+  const handleEmailSubmit = async (email: string | null, guestId: number) => {
+    emailSubmitMutation.mutate({ email: email, guestId: guestId });
+  };
+
+  const emailSubmitMutation = useMutation<ResponseType, ErrorType, { email: string | null; guestId: number }>({
+    mutationFn: async ({ email, guestId }) => {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/guests/email/${guestId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email }),
+      });
+
+      if (!response.ok) {
+        const errorBody: ErrorType = await response.json();
+        throw errorBody;
+      }
+
+      return response.json() as Promise<ResponseType>;
+    },
+    onSuccess: (data) => {
+      console.log("Response from server:", data);
+      handleDataRefresh();
+    },
+    onError: (error: ErrorType) => {
+      console.log(error);
+      console.error("Error creating plus one rsvp:", error.message);
+    },
+  });
+  //#endregion
+
+  // #region email template
+  return (
+    <>
+      <div className="email-form-container">
+        {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
+        {emailSubmitMutation.isPending || emailSubmitMutation.isError ? (
+          <div>
+            {emailSubmitMutation.isPending && (
+              <div>
+                <p>Saving email. Please Wait...</p>
+              </div>
+            )}
+            {emailSubmitMutation.isError && (
+              <div>
+                <Error
+                  errorInfo={emailSubmitMutation.error}
+                  tryEnabled={true}
+                  handleRetry={emailSubmitMutation.reset}
+                />
+              </div>
+            )}
+            {/* redo this - maybe use the mutation hook above to make this a popup snack bar or modal pop up */}
+            {/* {emailSubmitMutation.isSuccess && (
+                    <div>
+                      <p>Your email was saved!</p>
+                    </div>
+                  )} */}
+          </div>
+        ) : (
+          <div>
+            {/* Assuming 'rsvp' is an array you want to map over */}
+            <div key={rsvp.rsvp_id}>
+              {guest?.email === "" && guest?.email !== null ? (
+                <p>Add {guest.name}'s Email</p>
+              ) : (
+                <p>Edit {guest.name}'s Email</p>
+              )}
+              <TextField
+                value={emails[guest.guest_id] || ""}
+                onChange={(e) => handleEmailChange(guest.guest_id, e.target.value)}
+                label="Email Address"
+                error={hasError}
+                helperText={hasError ? emailErrors[guest.guest_id] : ""}
+              />
+              <div className="btn-container">
+                <button
+                  onClick={() => {
+                    handleEmailSubmit(emails[guest.guest_id], guest.guest_id);
+                  }}
+                  disabled={isButtonDisabled(guest.guest_id)}
+                >
+                  Submit Email
+                </button>
+                <button
+                  onClick={() => {
+                    handleEmailSubmit(null, guest.guest_id);
+                  }}
+                >
+                  Remove Email
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
 
 //#endregion
 //#region rsvp menu
@@ -231,8 +389,7 @@ function RSVPStatusMenu({
   const [menuState, setMenuState] = useState<"main" | "plusOne" | "dependent" | "song" | "email" | "overview">("main");
 
   const [plusOneNames, setPlusOneNames] = useState<{ [key: number]: string }>({});
-  const [emails, setEmails] = useState<{ [key: number]: string | null }>({});
-  const [emailErrors, setEmailErrors] = useState<{ [key: number]: string | null }>({});
+
   const [currentChild, setCurrentChild] = useState<string>("");
   const [childrenNames, setChildrenNames] = useState<string[]>([]);
 
@@ -253,7 +410,7 @@ function RSVPStatusMenu({
         if (guest?.has_dependents) {
           setDependentsEnabled(true);
         }
-        handleEmailChange(guest.guest_id, guest.email);
+        // handleEmailChange(guest.guest_id, guest.email);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -262,14 +419,14 @@ function RSVPStatusMenu({
   // clears mutations when tab is changed - allows specific menus to reset
   useEffect(() => {
     additionalGuestMutation.reset();
-    emailSubmitMutation.reset();
+    // emailSubmitMutation.reset();
     refreshData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menuState]);
 
   const handleMenuClick = (key) => {
     if (key === "dependent") handleChildReset();
-    if (key === "email") handleEmailReset();
+    // if (key === "email") handleEmailReset();
     setMenuState(key);
   };
 
@@ -339,82 +496,6 @@ function RSVPStatusMenu({
   });
 
   //#endregion
-  //#region email logic
-
-  const validateEmail = (email: string | null): string | null => {
-    console.log(email);
-    if (email === null || email.trim() === "") {
-      return null; // No error
-    }
-    if (!email.trim()) {
-      return "Email cannot be empty.";
-    }
-    // Basic email regex validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return "Please enter a valid email address.";
-    }
-    return null;
-  };
-
-  const handleEmailChange = (guestId: number, email: string) => {
-    setEmails((prevEmails) => ({
-      ...prevEmails,
-      [guestId]: email,
-    }));
-    // Validate on change to provide immediate feedback
-    setEmailErrors((prevErrors) => ({
-      ...prevErrors,
-      [guestId]: validateEmail(email),
-    }));
-  };
-
-  const isButtonDisabled = (guestId: number) => {
-    const currentEmail = emails[guestId] || "";
-    return !!validateEmail(currentEmail);
-  };
-
-  const handleEmailSubmit = async (email: string | null, guestId: number) => {
-    emailSubmitMutation.mutate({ email: email, guestId: guestId });
-  };
-
-  const handleEmailReset = () => {
-    for (const rsvp of groupRSVPs) {
-      const guest = groupData.guests.find((guest: Guest) => guest.guest_id === rsvp.guest_id);
-      if (rsvp.attendance && guest) {
-        handleEmailChange(guest.guest_id, guest.email);
-      }
-    }
-  };
-
-  const emailSubmitMutation = useMutation<ResponseType, ErrorType, { email: string | null; guestId: number }>({
-    mutationFn: async ({ email, guestId }) => {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/guests/email/${guestId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email }),
-      });
-
-      if (!response.ok) {
-        const errorBody: ErrorType = await response.json();
-        throw errorBody;
-      }
-
-      return response.json() as Promise<ResponseType>;
-    },
-    onSuccess: (data) => {
-      console.log("Response from server:", data);
-      refreshData();
-    },
-    onError: (error: ErrorType) => {
-      console.log(error);
-      console.error("Error creating plus one rsvp:", error.message);
-    },
-  });
-  //#endregion
-
   //#region template
   return (
     <>
@@ -446,7 +527,7 @@ function RSVPStatusMenu({
               <div>
                 {additionalGuestMutation.isPending && (
                   <div>
-                    <p>Creating Plus One RSVP. Please Wait...</p>
+                    <Loading loadingText={"Creating Plus One RSVP. Please Wait..."} />
                   </div>
                 )}
                 {additionalGuestMutation.isError && (
@@ -470,7 +551,7 @@ function RSVPStatusMenu({
                 {groupRSVPs.map((rsvp) => {
                   const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
 
-                  if (guest?.plus_one_allowed && rsvp.attendance && !additionalGuestMutation.isPending) {
+                  if (guest?.plus_one_allowed && rsvp.attendance) {
                     return (
                       <div key={guest.guest_id}>
                         <p>Add {guest.name}'s Plus One</p>
@@ -510,7 +591,7 @@ function RSVPStatusMenu({
               <div>
                 {additionalGuestMutation.isPending && (
                   <div>
-                    <p>Creating child RSVP(s). Please wait...</p>
+                    <Loading loadingText={"Creating child RSVP(s). Please wait..."} />
                   </div>
                 )}
                 {additionalGuestMutation.isError && (
@@ -596,84 +677,21 @@ function RSVPStatusMenu({
         {menuState === "email" && (
           <div>
             <p>Email Menu</p>
-            {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
-            {emailSubmitMutation.isPending || emailSubmitMutation.isError || emailSubmitMutation.isSuccess ? (
-              <div>
-                {emailSubmitMutation.isPending && (
-                  <div>
-                    <p>Saving email. Please Wait...</p>
-                  </div>
-                )}
-                {emailSubmitMutation.isError && (
-                  <div>
-                    <Error
-                      errorInfo={emailSubmitMutation.error}
-                      tryEnabled={true}
-                      handleRetry={emailSubmitMutation.reset}
-                    />
-                  </div>
-                )}
-                {emailSubmitMutation.isSuccess && (
-                  <div>
-                    <p>Your email was saved!</p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div>
-                <p>
-                  Emails will only be used for important wedding updates, confirmations, and photos! Emails aren't
-                  required and are completely optional.
-                </p>
-                {/* eslint-disable-next-line array-callback-return */}
-                {groupRSVPs.map((rsvp) => {
-                  const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
-
-                  if (
-                    rsvp.attendance &&
-                    !emailSubmitMutation.isPending &&
-                    guest &&
-                    guest.additional_guest_type !== "plus_one" &&
-                    guest.additional_guest_type !== "dependent"
-                  ) {
-                    const hasError = !!emailErrors[guest.guest_id];
-                    return (
-                      <div key={rsvp.rsvp_id}>
-                        {guest?.email === "" && guest?.email !== null ? (
-                          <p>Add {guest.name}'s Email</p>
-                        ) : (
-                          <p>Edit {guest.name}'s Email</p>
-                        )}
-                        <TextField
-                          value={emails[guest.guest_id] || ""}
-                          onChange={(e) => handleEmailChange(guest.guest_id, e.target.value)}
-                          label="Email Address"
-                          error={hasError}
-                          helperText={hasError ? emailErrors[guest.guest_id] : ""}
-                        />
-                        <div className="btn-container">
-                          <button
-                            onClick={() => {
-                              handleEmailSubmit(emails[guest.guest_id], guest.guest_id);
-                            }}
-                            disabled={isButtonDisabled(guest.guest_id)}
-                          >
-                            Submit Email
-                          </button>
-                          <button
-                            onClick={() => {
-                              handleEmailSubmit(null, guest.guest_id);
-                            }}
-                          >
-                            Remove Email
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  }
-                })}
-              </div>
-            )}
+            <p>
+              Emails will only be used for important wedding updates, confirmations, and photos! Emails aren't required
+              and are completely optional.
+            </p>
+            {groupRSVPs.map((rsvp) => {
+              const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
+              if (
+                rsvp.attendance &&
+                guest &&
+                guest.additional_guest_type !== "plus_one" &&
+                guest.additional_guest_type !== "dependent"
+              ) {
+                return <EmailForm guest={guest} rsvp={rsvp} handleDataRefresh={refreshData} />;
+              }
+            })}
           </div>
         )}
         {menuState === "overview" && (

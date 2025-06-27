@@ -12,7 +12,11 @@ function Error({ errorInfo, tryEnabled = false, handleRetry }: ErrorProps) {
     <>
       <div className="error-container">
         <p>Error</p>
-        <p>{errorInfo.message}</p>
+        <p>
+          {errorInfo.message === "Failed to fetch"
+            ? "There was an unexpected error with the server. Please try again later."
+            : errorInfo.message}
+        </p>
         <p>{errorInfo.status}</p>
 
         {tryEnabled && (

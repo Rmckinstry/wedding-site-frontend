@@ -3,6 +3,7 @@ import { TextField, Autocomplete } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { ErrorType, GroupData, Guest } from "../../utility/types";
 import Error from "../utility/Error.tsx";
+import Loading from "../utility/Loading.tsx";
 
 function RSVPConfirmation({ guest, handleConfirmation }) {
   const { isPending, isFetching, isError, data, error } = useQuery<GroupData, ErrorType>({
@@ -20,7 +21,7 @@ function RSVPConfirmation({ guest, handleConfirmation }) {
   });
 
   if (isPending || isFetching) {
-    return <p>Loading Guests Information...</p>;
+    return <Loading loadingText={`Loading ${guest["name"]}'s group information. Please wait...`} />;
   }
 
   if (isError) {

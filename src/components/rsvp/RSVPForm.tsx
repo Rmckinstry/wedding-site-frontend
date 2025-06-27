@@ -13,6 +13,7 @@ import {
 import { ErrorType, GroupData, SongRequestError } from "../../utility/types";
 import { useMutation } from "@tanstack/react-query";
 import Error from "../utility/Error.tsx";
+import Loading from "../utility/Loading.tsx";
 
 type RSVPPost = {
   guestId: number;
@@ -63,7 +64,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     resetRSVPs();
   }, [groupData, resetRSVPs]);
 
-  // stepper controls
+  //#region  stepper controls
   const handleNext = () => {
     //default behavior
     let newActiveStep = activeStep + 1;
@@ -99,6 +100,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     setActiveStep(0);
   };
 
+  //#region  submit
   const handleSubmit = async () => {
     const submitData: SubmitData[] = rsvps.map((rsvp: RSVPPost) => {
       // Convert attendance to boolean
@@ -144,6 +146,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     },
   });
 
+  //#region handle change
   const handleAttendanceChange = (guestId: number, value: boolean) => {
     setRsvps((prev) =>
       prev.map((rsvp) =>
@@ -221,6 +224,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     console.log(rsvps);
   }, [rsvps]);
 
+  //#region template
   return (
     <>
       <div id="rsvp-form-container">
@@ -242,7 +246,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
             <div>
               {submitRsvpsMutation.isPending && (
                 <div>
-                  <p>Submitting RSVPs. Please wait...</p>
+                  <Loading loadingText={"Submitting your RSVP(s). Please wait..."} />
                 </div>
               )}
               {submitRsvpsMutation.isError && (

@@ -4,6 +4,7 @@ import RSVPLookup from "./RSVPLookup.tsx";
 import RSVPPortal from "./RSVPPortal.tsx";
 import { ErrorType, Guest } from "../../utility/types.ts";
 import Error from "../utility/Error.tsx";
+import Loading from "../utility/Loading.tsx";
 
 function RSVPPage() {
   // tracks the selected guestId that is accessing the portal
@@ -30,11 +31,10 @@ function RSVPPage() {
   });
 
   if (isPending) {
-    return <p>Loading RSVP Portal...</p>;
+    return <Loading loadingText={"Loading RSVP Portal. Please wait..."} />;
   }
 
   if (isError) {
-    // return <p>Error: {error.message}</p>;
     return <Error errorInfo={error} />;
   }
   return (
