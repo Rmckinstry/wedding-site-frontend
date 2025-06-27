@@ -15,24 +15,25 @@ function App() {
 
   const [tabValue, setTabValue] = useState(0);
 
-  const handleScrollAction = () => {
-    const pageContainer = document.getElementById('page-container');
-    if (pageContainer) {
-      pageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
+  // good in theory - needs to be refined
+  // const handleScrollAction = () => {
+  //   const pageContainer = document.getElementById('page-container');
+  //   if (pageContainer) {
+  //     pageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  //   }
+  // };
 
   const handleChange = (event, newValue) => {
     if (newValue === undefined) {
       // assume mobile
       if (event.target.value !== tabValue) {
         setTabValue(Number(event.target.value));
-        handleScrollAction();
+        // handleScrollAction();
       }
     } else {
       if (newValue !== tabValue) {
         setTabValue(newValue);
-        handleScrollAction();
+        // handleScrollAction();
       }
     }
 

@@ -339,7 +339,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                                 message: "",
                               };
                               return (
-                                <div className="song-request-container">
+                                <div key={index} className="song-request-container">
                                   <TextField
                                     onChange={(e) =>
                                       handleSongRequestChange(rsvp.guestId, index, "title", e.target.value)
@@ -385,11 +385,11 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                   <div>
                     <p>Group Name: {groupData.group_name}</p>
                   </div>
-                  {rsvps.map((rsvp) => {
+                  {rsvps.map((rsvp, index) => {
                     const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
                     const hasSongs = rsvp.spotify.some((index) => index !== "");
                     return (
-                      <div>
+                      <div key={index}>
                         <p>Name: {guest?.name}</p>
                         <p>Attending: {rsvp.attendance ? "Yes" : "No"}</p>
                         {rsvp.attendance && hasSongs && (

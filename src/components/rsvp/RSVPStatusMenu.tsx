@@ -404,7 +404,6 @@ function RSVPStatusMenu({
       const guest = groupData.guests.find((guest: Guest) => guest.guest_id === rsvp.guest_id);
       if (rsvp.attendance && guest) {
         if (guest?.plus_one_allowed) {
-          console.log("hit", guest.name);
           setPlusOneEnabled(true);
         }
         if (guest?.has_dependents) {
@@ -618,9 +617,9 @@ function RSVPStatusMenu({
                 {hasChildren() && (
                   <div id="dependent-overview-container">
                     <p>Already submitted child RSVPs:</p>
-                    {groupData.guests.map((guest) => {
+                    {groupData.guests.map((guest, index) => {
                       if (guest.additional_guest_type == "dependent") {
-                        return <p>{guest.name}</p>;
+                        return <p key={index}>{guest.name}</p>;
                       }
                     })}
                   </div>
