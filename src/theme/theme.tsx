@@ -107,6 +107,14 @@ const theme = createTheme({
         },
       },
     },
+
+    MuiCircularProgress: {
+      styleOverrides: {
+        root: {
+          color: "var(--default-text)", // This sets the default color
+        },
+      },
+    },
   },
   breakpoints: {
     values: {

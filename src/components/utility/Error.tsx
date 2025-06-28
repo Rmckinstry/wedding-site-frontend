@@ -23,7 +23,9 @@ function Error({ errorInfo, tryEnabled = false, handleRetry }: ErrorProps) {
 
         {tryEnabled && (
           <div className="btn-container">
-            <button onClick={handleRetry}>Try Again</button>
+            <button className="btn-rsvp-sm" onClick={handleRetry}>
+              Try Again
+            </button>
           </div>
         )}
       </div>

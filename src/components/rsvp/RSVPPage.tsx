@@ -17,7 +17,7 @@ function RSVPPage() {
     setSelectedGroupName(data.name);
   };
 
-  const { isPending, isError, data, error } = useQuery<Guest[], ErrorType>({
+  const guestQuery = useQuery<Guest[], ErrorType>({
     queryKey: ["allGuests"],
     queryFn: async () => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/guests`);
@@ -30,17 +30,17 @@ function RSVPPage() {
     },
   });
 
-  if (isPending) {
+  if (guestQuery.isPending) {
     return <Loading loadingText={"Loading RSVP Portal. Please wait..."} />;
   }
 
-  if (isError) {
-    return <Error errorInfo={error} />;
+  if (guestQuery.isError) {
+    return <Error errorInfo={guestQuery.error} tryEnabled={true} handleRetry={guestQuery.refetch} />;
   }
   return (
     <>
       <div className="rsvp-page-container">
-        {selectedGroupId === null && <RSVPLookup data={data} handleGroupSelect={handleGroupSelect} />}
+        {selectedGroupId === null && <RSVPLookup data={guestQuery.data} handleGroupSelect={handleGroupSelect} />}
         {selectedGroupId !== null && <RSVPPortal groupName={selectedGroupName} groupId={selectedGroupId} />}
       </div>
     </>
