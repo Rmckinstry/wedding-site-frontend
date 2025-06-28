@@ -13,7 +13,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           color: "var(--default-text)", // Default text color
-          fontSize: "1.25rem",
+          fontSize: "1.5rem",
           marginRight: "1rem",
           marginLeft: "1rem",
           fontFamily: "Cormorant Garamond",
@@ -22,6 +22,7 @@ const theme = createTheme({
           },
           "&:hover": {
             color: "var(--default-text)", // Hover text color
+            fontWeight: "600",
           },
         },
       },
@@ -73,6 +74,36 @@ const theme = createTheme({
           "&.Mui-disabled": {
             color: "gray", // Disabled step label color
           },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontFamily: "Cormorant Garamond",
+          fontWeight: "600",
+          "&.Mui-focused": {
+            color: "var(--default-text)", // Active step label color
+          },
+          "&.Mui-completed": {
+            color: "var(--default-text)", // Completed step label color
+          },
+          "&.Mui-disabled": {
+            color: "gray", // Disabled step label color
+          },
+        },
+      },
+    },
+
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "var(--default-text)", // Your desired focus color
+          },
+        },
+        notchedOutline: {
+          borderColor: "var(--default-text)",
         },
       },
     },

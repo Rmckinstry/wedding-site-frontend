@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Autocomplete, Button } from "@mui/material";
+import { TextField, Autocomplete, Button, createFilterOptions } from "@mui/material";
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { ErrorType, GroupData, Guest } from "../../utility/types";
 import Error from "../utility/Error.tsx";
@@ -206,9 +206,10 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
   return (
     <div id="rsvp-lookup-container">
       {!showConfirmation ? (
-        <div>
-          <p>Lookup your name to access your / your groups RSVP Guest Portal.</p>
+        <div className="flex-col" style={{ gap: "2rem" }}>
+          <p className="font-med">Lookup your name to access your / your groups RSVP Guest Portal.</p>
           <Autocomplete
+            open={inputValue.length > 0}
             // might move sorting to backend - because might combine it with duplication handling
             options={reducedData.sort((a, b) => {
               const nameA = a.name.toUpperCase();
@@ -233,11 +234,11 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
               setInputValue(newInputValue);
             }}
             disablePortal
-            sx={{ width: 300 }}
+            sx={{ width: "30%" }}
             renderInput={(params) => <TextField {...params} label="Enter Guest Name" />}
           />
           <div className="btn-container">
-            <button disabled={!selectedGuest} className="btn-link" onClick={() => setShowConfirmation(true)}>
+            <button disabled={!selectedGuest} className="btn-rsvp" onClick={() => setShowConfirmation(true)}>
               FIND YOUR RSVP
             </button>
           </div>
