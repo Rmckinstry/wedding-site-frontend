@@ -10,14 +10,16 @@ interface ErrorProps {
 function Error({ errorInfo, tryEnabled = false, handleRetry }: ErrorProps) {
   return (
     <>
-      <div className="error-container">
-        <p>Error</p>
-        <p>
+      <div className="error-container flex-col">
+        <p className="font-med strong-text" style={{ textDecoration: "underline" }}>
+          Error
+        </p>
+        <p className="font-sm-med">
           {errorInfo.message === "Failed to fetch"
             ? "There was an unexpected error with the server. Please try again later."
             : errorInfo.message}
         </p>
-        <p>{errorInfo.status}</p>
+        <p className="font-sm-med">EC:{errorInfo.status}</p>
 
         {tryEnabled && (
           <div className="btn-container">
