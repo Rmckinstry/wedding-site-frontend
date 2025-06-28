@@ -56,46 +56,62 @@ function RSVPConfirmation({
     //#region anne marie template
     return (
       <>
-        <div id="anne-marie-container">
+        <div id="anne-marie-container" className="flex-col" style={{ gap: "2.5rem" }}>
           {anneGroups && anneGroups.length > 0 && (
-            <p>The name you selected shows up more than once. Please select which group you are trying to access:</p>
+            <p className="secondary-text font-sm-med">
+              The name you selected shows up more than once. Please select which group you are trying to access:
+            </p>
           )}
-          <div>
+          <div className="flex-row" style={{ alignItems: "start", gap: "5rem" }}>
             {anneGroups &&
               anneGroups.map((group) => (
-                <div key={group?.group_name}>
-                  <p>Group Name: {group?.group_name}</p>
+                <div className="flex-col" key={group?.group_name}>
+                  <p className="font-sm-med strong-text">Group: {group?.group_name}</p>
                   <div>
-                    <p>Guests:</p>
+                    <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
+                      Guests:
+                    </p>
                     {group?.guests.map((guest) => {
                       if (guest.additional_guest_type === "dependent") {
-                        return <p key={guest.guest_id}>{guest.name} - Child/Dependent RSVP</p>;
+                        return (
+                          <p className="font-sm-med" key={guest.guest_id}>
+                            {guest.name} - Child/Dependent RSVP
+                          </p>
+                        );
                       }
                       if (guest.additional_guest_type === "plus_one") {
-                        return <p key={guest.guest_id}>{guest.name} - Plus One RSVP</p>;
+                        return (
+                          <p className="font-sm-med" key={guest.guest_id}>
+                            {guest.name} - Plus One RSVP
+                          </p>
+                        );
                       }
-                      return <p key={guest.guest_id}>{guest.name}</p>;
+                      return (
+                        <p className="font-sm-med" key={guest.guest_id} style={{ margin: ".5rem" }}>
+                          {guest.name}
+                        </p>
+                      );
                     })}
                   </div>
                   <div className="btn-container">
                     <button
-                      className="btn-link btn-xl"
+                      className="btn-rsvp-sm"
                       onClick={() => handleConfirmation(true, group["group_name"], group["guests"][0].group_id)}
                     >
-                      Yes, this is me/my group!
+                      Select group.
                     </button>
                   </div>
                 </div>
               ))}
           </div>
-          <div className="btn-container">
+          <div>
             <button
-              className="btn-link btn-xl"
+              className="btn-rsvp"
               onClick={() => {
                 handleConfirmation(false, "", 0);
               }}
             >
-              No, lets search names again.
+              Search names again.
             </button>
           </div>
         </div>
@@ -139,7 +155,7 @@ function RSVPConfirmation({
             Please confirm that this is the correct group information that you are trying to RSVP for:
           </p>
           <p className="font-sm-med strong-text">Group Name: {data["group_name"]}</p>
-          <div className="flex-row">
+          <div className="flex-row" style={{ alignItems: "start", gap: "3rem" }}>
             <div id="rsvp-confirm-guest-container" className="flex-col">
               <p className="font-sm-med" style={{ textDecoration: "underline" }}>
                 Guests:
