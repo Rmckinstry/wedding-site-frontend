@@ -264,9 +264,12 @@ button:hover {
     padding-bottom: 1rem;
 }
 
+.strong-text{
+    font-weight: 600;
+}
+
 .primary-text {
     font-weight: 500;
-    margin: 0px;
 }
 
 .secondary-text {

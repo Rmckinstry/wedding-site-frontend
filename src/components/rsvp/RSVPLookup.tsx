@@ -130,32 +130,68 @@ function RSVPConfirmation({
   return (
     <div id="rsvp-confirmation-container">
       {guest.name === "Anne Marie McKinstry" ? (
-        <div id="anne-marie">
+        <div id="duplicate">
           <AnneMarieConfirmation anneMarieData={anneMarieData} />
         </div>
       ) : (
-        <div id="no-anne-marie">
-          <p>Please confirm that this is the correct group information that you are trying to RSVP for:</p>
-          <p>{data["group_name"]}</p>
-          <div>
-            <p>Guests:</p>
-            {data["guests"].map((guest) => {
-              if (guest.additional_guest_type === "dependent")
-                return <p key={guest.guest_id}>{guest.name} - Child/Dependent RSVP</p>;
-              if (guest.additional_guest_type === "plus_one")
-                return <p key={guest.guest_id}>{guest.name} - Plus One RSVP</p>;
-              return <p key={guest.guest_id}>{guest.name}</p>;
-            })}
+        <div className="flex-col" style={{ gap: "2rem" }} id="no-duplicate">
+          <p className="secondary-text font-sm-med">
+            Please confirm that this is the correct group information that you are trying to RSVP for:
+          </p>
+          <p className="font-sm-med strong-text">Group Name: {data["group_name"]}</p>
+          <div className="flex-row">
+            <div id="rsvp-confirm-guest-container" className="flex-col">
+              <p className="font-sm-med" style={{ textDecoration: "underline" }}>
+                Guests:
+              </p>
+              {data["guests"].map((guest) => {
+                if (!guest.additional_guest_type) {
+                  return (
+                    <p className="font-sm-med" key={guest.guest_id}>
+                      {guest.name}
+                    </p>
+                  );
+                }
+                return null;
+              })}
+            </div>
+
+            {/* Check if there are any additional guests before rendering the div */}
+            {data["guests"].some((guest) => guest.additional_guest_type) && (
+              <div id="rsvp-confirm-addit-container" className="flex-col">
+                <p className="font-sm-med" style={{ textDecoration: "underline" }}>
+                  Additional Guests:
+                </p>
+                {data["guests"].map((guest) => {
+                  if (guest.additional_guest_type === "dependent") {
+                    return (
+                      <p className="font-sm-med" key={guest.guest_id}>
+                        {guest.name} - Child RSVP
+                      </p>
+                    );
+                  }
+                  if (guest.additional_guest_type === "plus_one") {
+                    return (
+                      <p className="font-sm-med" key={guest.guest_id}>
+                        {guest.name} - Plus One RSVP
+                      </p>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            )}
           </div>
+
           <div className="btn-container">
             <button
-              className="btn-link btn-xl"
+              className="btn-rsvp"
               onClick={() => handleConfirmation(true, data["group_name"], guest["group_id"])}
             >
-              Yes, this is me/my group!
+              Yes, this is my group!
             </button>
             <button
-              className="btn-link btn-xl"
+              className="btn-rsvp"
               onClick={() => {
                 handleConfirmation(false, "", 0);
               }}
@@ -209,7 +245,8 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
         <div className="flex-col" style={{ gap: "2rem" }}>
           <p className="font-med">Lookup your name to access your / your groups RSVP Guest Portal.</p>
           <Autocomplete
-            open={inputValue.length > 0}
+            //current open logic doesn't fully work, when clicking a name it doesn't close the list
+            // open={inputValue.length > 0}
             // might move sorting to backend - because might combine it with duplication handling
             options={reducedData.sort((a, b) => {
               const nameA = a.name.toUpperCase();
