@@ -33,6 +33,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
   const [activeStep, setActiveStep] = useState(0);
   const [rsvps, setRsvps] = useState<RSVPPost[]>([]);
   const [songValidationErrors, setSongValidationErrors] = useState<{ [guestId: string]: SongRequestError[] }>({});
+  const [songInputsCount, setSongInputsCount] = useState<{ [guestId: string]: number }>({});
 
   const isRSVPStepValid = rsvps.every((rsvp) => rsvp.attendance !== "");
 
@@ -53,7 +54,8 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
       const newRsvps: RSVPPost[] = groupData.guests.map((guest) => ({
         guestId: guest.guest_id,
         attendance: "",
-        spotify: Array(guest.song_requests).fill(""),
+        spotify: [],
+        // spotify: Array(guest.song_requests).fill(""),
       }));
       setRsvps(newRsvps);
     }
@@ -168,31 +170,34 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     }
   };
 
-  const handleSongRequestChange = (guestId, index, key: string, value: string) => {
+  const handleSongRequestChange = (guestId: number, index: number, key: string, value: string) => {
     setRsvps((prev) =>
       prev.map((rsvp) => {
         if (rsvp.guestId !== guestId) return rsvp;
+
         const newSpotify = [...rsvp.spotify];
-        // Split current song request, handling empty or malformed cases
         let currentTitle = "";
         let currentArtist = "";
+
         if (newSpotify[index] && newSpotify[index].includes(" - ")) {
           [currentTitle, currentArtist] = newSpotify[index].split(" - ");
         }
-        // Update the relevant field
+
         const updatedTitle = key === "title" ? value : currentTitle;
         const updatedArtist = key === "artist" ? value : currentArtist;
-        // Only concatenate if at least one field is non-empty
         newSpotify[index] = updatedTitle || updatedArtist ? `${updatedTitle || ""} - ${updatedArtist || ""}` : "";
 
-        //creates array of exisiting guest errors or new if none exists
         const newErrorsForGuest = [...(songValidationErrors[guestId] || [])];
         let titleError = false;
         let artistError = false;
         let errorMessage = "";
 
-        //setting errors and flags
-        if (updatedTitle && !updatedArtist) {
+        // Check for empty inputs or partial inputs
+        if (!updatedTitle && !updatedArtist) {
+          titleError = true;
+          artistError = true;
+          errorMessage = "Both song title and artist are required.";
+        } else if (updatedTitle && !updatedArtist) {
           titleError = false;
           artistError = true;
           errorMessage = "Artist is required when a song title is entered.";
@@ -202,7 +207,6 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
           errorMessage = "Song title is required when an artist is entered.";
         }
 
-        // index refers to the specific song/artist combo in the array of songs - matches up with error
         newErrorsForGuest[index] = {
           title: titleError,
           artist: artistError,
@@ -213,10 +217,60 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
           ...prevErrors,
           [guestId]: newErrorsForGuest,
         }));
+
         return { ...rsvp, spotify: newSpotify };
       })
     );
   };
+
+  const handleAddSong = (guestId: number, maxRequests: number) => {
+    // Check if there are errors for this guest
+    const hasErrors = songValidationErrors[guestId]?.some((error) => error.title || error.artist);
+
+    // Get current number of inputs
+    const currentInputs = songInputsCount[guestId] || 0;
+
+    // Check if guest has requests remaining
+    if (!hasErrors && currentInputs < maxRequests) {
+      setSongInputsCount((prev) => ({
+        ...prev,
+        [guestId]: currentInputs + 1,
+      }));
+
+      // Add empty song slot to rsvp
+      setRsvps((prev) =>
+        prev.map((rsvp) => {
+          if (rsvp.guestId !== guestId) return rsvp;
+          return { ...rsvp, spotify: [...rsvp.spotify, ""] };
+        })
+      );
+
+      // Initialize error state for the new song input
+      setSongValidationErrors((prevErrors) => ({
+        ...prevErrors,
+        [guestId]: [
+          ...(prevErrors[guestId] || []),
+          {
+            title: false,
+            artist: false,
+            message: "",
+          },
+        ],
+      }));
+    }
+  };
+
+  // Initialize song inputs count when groupData changes
+  useEffect(() => {
+    const initialCounts = groupData.guests.reduce(
+      (acc, guest) => ({
+        ...acc,
+        [guest.guest_id]: 0,
+      }),
+      {}
+    );
+    setSongInputsCount(initialCounts);
+  }, [groupData]);
 
   //for debugging
   useEffect(() => {
@@ -327,10 +381,15 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                     .filter((rsvp) => rsvp.attendance === true)
                     .map((rsvp) => {
                       const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
+                      const requestsLeft = (guest?.song_requests || 0) - (songInputsCount[rsvp.guestId] || 0);
+
                       return (
-                        <div key={`song-container-${rsvp.guestId}-guest`}>
+                        <div key={`song-container-${rsvp.guestId}-guest`} className="guest-song-container">
                           <FormControl key={`rsvp-guest-${rsvp.guestId}`}>
-                            <FormLabel>{guest?.name}</FormLabel>
+                            <FormLabel>
+                              {guest?.name} - {requestsLeft} songs requests left
+                            </FormLabel>
+
                             {rsvp.spotify.map((request, index) => {
                               const [title, artist] = request ? request.split(" - ") : ["", ""];
                               const errors = songValidationErrors[rsvp.guestId]?.[index] || {
@@ -338,6 +397,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                                 artist: false,
                                 message: "",
                               };
+
                               return (
                                 <div key={index} className="song-request-container">
                                   <TextField
@@ -345,7 +405,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                                       handleSongRequestChange(rsvp.guestId, index, "title", e.target.value)
                                     }
                                     value={title || ""}
-                                    id="song-request-title"
+                                    id={`song-request-title-${index}`}
                                     label="Song Title"
                                     error={errors.title}
                                     helperText={errors.title ? errors.message : ""}
@@ -355,18 +415,29 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                                       handleSongRequestChange(rsvp.guestId, index, "artist", e.target.value)
                                     }
                                     value={artist || ""}
-                                    id="song-request-author"
-                                    label="Song Author"
+                                    id={`song-request-artist-${index}`}
+                                    label="Song Artist"
                                     error={errors.artist}
                                     helperText={errors.artist ? errors.message : ""}
                                   />
                                 </div>
                               );
                             })}
+
+                            <button
+                              onClick={() => handleAddSong(rsvp.guestId, guest?.song_requests || 0)}
+                              disabled={
+                                requestsLeft <= 0 ||
+                                songValidationErrors[rsvp.guestId]?.some((error) => error.title || error.artist)
+                              }
+                            >
+                              Add Song
+                            </button>
                           </FormControl>
                         </div>
                       );
                     })}
+
                   <div className="btn-container">
                     <button className="btn-link" onClick={handleBack}>
                       Back
