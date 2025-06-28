@@ -94,10 +94,6 @@ button:hover{
     height: auto;
 }
 
-#header-event-info{
-    font-size: 2.5rem;
-}
-
 #header-info-container{
     gap: 1.5rem;
     margin-bottom: 2.5rem;
@@ -155,11 +151,6 @@ button:hover{
 
 #footer-text{
     font-weight: 600;
-    font-size: 3rem;
-}
-
-#footer-date{
-    font-size: 2rem;
 }
 
 #venue-container{
@@ -215,8 +206,40 @@ button:hover{
     justify-content: center;
 }
 
-.home-footer p{
+/* ---FONT SIZES--- */
+.font-xs{
+    font-size: 1rem;
+}
+
+.font-sm{
+    font-size: 1.25rem;
+}
+
+.font-sm-med{
+    font-size: 1.5rem;
+}
+
+.font-med{
+    font-size: 2rem;
+}
+
+.font-med-lg{
+    font-size: 2.5rem;
+}
+
+.font-lg{
     font-size: 3rem;
+}
+
+.font-xl{
+    font-size: 3.5rem;
+}
+
+.font-xxl{
+    font-size: 4rem;
+}
+
+.home-footer p{
     margin: 0px;
     letter-spacing: .25rem;
 }
@@ -230,19 +253,13 @@ button:hover{
 }
 
 .primary-text{
-    font-size: 2.5rem;
     font-weight: 500;
     margin: 0px;
 }
 
 .secondary-text{
-    font-size: 2rem;
     font-family: Cormorant Upright, serif;
     margin: 0px;
-}
-
-.detail-text{
-    font-size: 1.25rem;
 }
 
 .info-container{
@@ -297,13 +314,12 @@ button:hover{
 .faq-mobile-container, .faq-desktop-container{
     margin-bottom: 1.5rem;
 }
+
 .faq-title-desktop{
-    font-size: 1.25rem;
     font-weight: 600;
 }
 
 .faq-answer-desktop{
-    font-size: 1rem;
     font-weight: 500;
 }
 
@@ -319,16 +335,13 @@ button:hover{
 
 .faq-title-mobile{
     font-weight: 600;
-    font-size: 2rem
 }
 
 .faq-answer-mobile{
-    font-size: 1.5rem;
     font-weight: 500;
 }
 
 .registry-text{
-    font-size: 1.5rem;
     margin-top: 0px;
 }
 

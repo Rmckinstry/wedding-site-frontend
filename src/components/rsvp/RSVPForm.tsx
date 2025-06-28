@@ -387,7 +387,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                         <div key={`song-container-${rsvp.guestId}-guest`} className="guest-song-container">
                           <FormControl key={`rsvp-guest-${rsvp.guestId}`}>
                             <FormLabel>
-                              {guest?.name} - {requestsLeft} songs requests left
+                              {guest?.name} - {requestsLeft} song requests left
                             </FormLabel>
 
                             {rsvp.spotify.map((request, index) => {

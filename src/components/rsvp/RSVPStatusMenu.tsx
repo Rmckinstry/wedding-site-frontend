@@ -201,8 +201,8 @@ const SongEditForm = ({
                     <TextField
                       onChange={(e) => handleSongRequestChange(index, "artist", e.target.value)}
                       value={artist || ""}
-                      id="song-request-author"
-                      label="Song Author"
+                      id="song-request-artist"
+                      label="Song Artist"
                       error={errors.artist}
                       helperText={errors.artist ? errors.message : ""}
                     />
