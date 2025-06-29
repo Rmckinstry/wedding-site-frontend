@@ -195,9 +195,10 @@ button:hover {
     height: 4rem;
 }
 
-#rsvp-portal-container{
+#rsvp-portal-container {
     padding-bottom: 1rem;
 }
+
 #rsvp-card-container {
     display: flex;
     flex-direction: column;
@@ -207,7 +208,7 @@ button:hover {
     padding: 1rem;
 }
 
-#rsvp-form-continue-btn{
+#rsvp-form-continue-btn {
     display: block;
     background-color: var(--default-text);
     color: var(--base-background);
@@ -235,21 +236,33 @@ button:hover {
     font-weight: 500;
 }
 
-#rsvp-status-menu-container{
+#rsvp-status-menu-container {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 #status-menu-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); /* Increased min width to accommodate icons */
-  /* needs to be dynamic for screen sizes - large needs more rem so all 5 items arent on the screen */
-  gap: 5rem;
-  width: 100%;
-  box-sizing: border-box;
-  /* needs to be dynamic for screen sizes - large needs more rem so all 5 items arent on the screen */
-  padding: 1rem 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    /* Increased min width to accommodate icons */
+    /* needs to be dynamic for screen sizes - large needs more rem so all 5 items arent on the screen */
+    gap: 5rem;
+    width: 100%;
+    box-sizing: border-box;
+    /* needs to be dynamic for screen sizes - large needs more rem so all 5 items arent on the screen */
+    padding: 1rem 3rem;
+    outline-style: solid;
+    outline-color: #6464400e;
+    border-radius: 3rem;
+}
+
+#portal-horiz-divider {
+    width: 100%;
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: var(--default-text-transparent);
+    margin-bottom: 2rem;
 }
 
 /* classes */
@@ -268,6 +281,13 @@ button:hover {
     align-items: center;
     justify-content: center;
     gap: 1rem;
+}
+
+.flex-col-start{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 2rem;
 }
 
 .flex-row {
@@ -332,7 +352,7 @@ button:hover {
     padding-bottom: 1rem;
 }
 
-.strong-text{
+.strong-text {
     font-weight: 600;
 }
 
@@ -420,17 +440,20 @@ button:hover {
     /* height: 3rem; */
 }
 
-.btn-rsvp:hover, .btn-rsvp-sm:hover {
+.btn-rsvp:hover,
+.btn-rsvp-sm:hover {
     cursor: pointer;
     transform: scale(1.1);
     font-weight: 600;
 }
 
-.btn-rsvp:disabled, .btn-rsvp-sm:disabled {
+.btn-rsvp:disabled,
+.btn-rsvp-sm:disabled {
     background-color: var(--btn-disabled);
 }
 
-.btn-rsvp:disabled:hover, .btn-rsvp-sm:disabled:hover {
+.btn-rsvp:disabled:hover,
+.btn-rsvp-sm:disabled:hover {
     cursor: not-allowed;
 }
 
@@ -470,13 +493,13 @@ button:hover {
     margin-top: 0px;
 }
 
-.rsvp-form-action-container{
+.rsvp-form-action-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.rsvp-card{
+.rsvp-card {
     width: 38rem;
     display: flex;
     flex-direction: column;
@@ -506,14 +529,15 @@ button:hover {
     border-radius: .5rem;
 }
 
-.confirmation-header{
+.confirmation-header {
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 2px;
 }
 
 .status-menu-btn-container {
-  width: 100%; /* Ensure container respects grid cell */
+    width: 100%;
+    /* Ensure container respects grid cell */
 }
 
 button.status-menu-btn {
@@ -524,27 +548,41 @@ button.status-menu-btn {
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    width: 100%; /* Removed or constrained to fit grid */
-    max-width: 18rem; /* Match the minmax min value */
+    width: 100%;
+    /* Removed or constrained to fit grid */
+    max-width: 18rem;
+    /* Match the minmax min value */
 }
 
 button.status-menu-btn:hover {
     transform: scale(1.1);
 
-    .status-menu-text{
+    .status-menu-text {
         text-decoration: underline;
     }
 }
 
-.status-menu-icon{
+.status-menu-icon {
     font-size: 5rem;
 }
 
-.status-menu-text{
+.status-menu-text {
     color: var(--default-text);
     font-family: Cormorant Garamond, serif;
     text-align: center;
 }
+
+.status-menu-card {
+    width: 38rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem 3rem 1rem 3rem;
+    outline-style: solid;
+    outline-color: #6464400e;
+    border-radius: 3rem;
+}
+
 /* Media Queries */
 
 /* Small devices (phones, 600px and below) */
@@ -623,7 +661,7 @@ button.status-menu-btn:hover {
         padding: 0 10rem;
     }
 
-    #page-container{
+    #page-container {
         margin: 1rem 15%;
     }
 }

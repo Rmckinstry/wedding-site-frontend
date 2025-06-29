@@ -518,6 +518,7 @@ function RSVPStatusMenu({
   return (
     <>
       <div id="rsvp-status-menu-container">
+        {menuState !== "main" && <div id="portal-horiz-divider"></div>}
         {menuState === "main" && (
           <div id="status-menu-grid">
             {plusOneEnabled && (
@@ -532,8 +533,10 @@ function RSVPStatusMenu({
           </div>
         )}
         {menuState === "plusOne" && (
-          <div>
-            <p>Plus One Menu</p>
+          <div id="plus-one-status-container" className="status-menu-card">
+            <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
+              Plus One Menu
+            </p>
             {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
             {additionalGuestMutation.isPending ||
             additionalGuestMutation.isError ||
@@ -560,19 +563,20 @@ function RSVPStatusMenu({
                 )}
               </div>
             ) : (
-              <div>
+              <div className="flex-col-start">
                 {/* eslint-disable-next-line array-callback-return */}
                 {groupRSVPs.map((rsvp) => {
                   const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
 
                   if (guest?.plus_one_allowed && rsvp.attendance) {
                     return (
-                      <div key={guest.guest_id}>
-                        <p>Add {guest.name}'s Plus One</p>
+                      <div key={guest.guest_id} className="flex-col-start">
+                        <p className="font-sm">{guest.name}'s Plus One</p>
                         <TextField
                           value={plusOneNames[guest.guest_id] || ""} // Controlled component
                           onChange={(e) => handlePlusOneNameChange(guest.guest_id, e.target.value)}
-                          label="Plus One Name"
+                          label="Add Plus One's Full Name"
+                          sx={{ width: "20rem" }}
                         />
                         <button
                           disabled={!plusOneNames[guest.guest_id]}
@@ -584,8 +588,9 @@ function RSVPStatusMenu({
                               "plus_one"
                             );
                           }}
+                          className="btn-rsvp"
                         >
-                          Submit
+                          Submit Plus One
                         </button>
                       </div>
                     );
@@ -801,6 +806,8 @@ function RSVPStatusMenu({
               onClick={() => {
                 handleMenuClick("main");
               }}
+              className="btn-rsvp-sm"
+              style={{ padding: ".25rem 3rem", marginTop: "2rem" }}
             >
               Back
             </button>
