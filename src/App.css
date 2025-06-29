@@ -194,6 +194,10 @@ button:hover {
     width: 12rem;
     height: 4rem;
 }
+
+#rsvp-portal-container{
+    padding-bottom: 1rem;
+}
 #rsvp-card-container {
     display: flex;
     flex-direction: column;
@@ -237,15 +241,16 @@ button:hover {
     align-items: center;
 }
 
-#status-menu-grid{
-    display: flex;
-    justify-content: start;
-    row-gap: 4rem;
-    column-gap: 10%;
-    flex-wrap: wrap;
-    justify-content: space-between;
+#status-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); /* Increased min width to accommodate icons */
+  /* needs to be dynamic for screen sizes - large needs more rem so all 5 items arent on the screen */
+  gap: 5rem;
+  width: 100%;
+  box-sizing: border-box;
+  /* needs to be dynamic for screen sizes - large needs more rem so all 5 items arent on the screen */
+  padding: 1rem 3rem;
 }
-
 
 /* classes */
 .App {
@@ -507,8 +512,8 @@ button:hover {
     text-underline-offset: 2px;
 }
 
-.status-menu-btn-container{
-    width: 18rem;
+.status-menu-btn-container {
+  width: 100%; /* Ensure container respects grid cell */
 }
 
 button.status-menu-btn {
@@ -517,8 +522,10 @@ button.status-menu-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
-    width: 100%;
+    width: 100%; /* Removed or constrained to fit grid */
+    max-width: 18rem; /* Match the minmax min value */
 }
 
 button.status-menu-btn:hover {
@@ -536,6 +543,7 @@ button.status-menu-btn:hover {
 .status-menu-text{
     color: var(--default-text);
     font-family: Cormorant Garamond, serif;
+    text-align: center;
 }
 /* Media Queries */
 
