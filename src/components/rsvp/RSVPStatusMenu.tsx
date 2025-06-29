@@ -164,16 +164,15 @@ const SongEditForm = ({
 
   //#region song template
   return (
-    <div>
+    <div className="guest-song-container flex-col-start" style={{ width: "fit-content", gap: "1rem" }}>
       {/* already submitted song display */}
-      <p>{guest.name}</p>
+      <p className="font-sm strong-text">{guest.name} Song Requests</p>
       {submittedSongs.length !== 0 && (
-        <div key={`song-container-guest-${rsvp.guest_id}`}>
-          <p>Submitted Song Requests:</p>
+        <div key={`song-container-guest-${rsvp.guest_id}`} className="flex-col-start" style={{ gap: "1rem" }}>
           {submittedSongs.map((song) => {
             return (
               <div key={`song-name-${song}`}>
-                <TextField value={song} key={song} disabled />
+                <TextField sx={{ width: "35rem" }} value={song} key={song} disabled />
               </div>
             );
           })}
@@ -194,8 +193,7 @@ const SongEditForm = ({
           )}
 
           {!songSubmitMutation.isPending && !songSubmitMutation.isError && (
-            <div>
-              <p>Add New Song Requests:</p>
+            <div className="flex-col-start">
               {emptySongs.map((song, index) => {
                 const [title, artist] = song ? song.split(" - ") : ["", ""];
                 const errors = songValidationErrors[index] || {
@@ -204,7 +202,10 @@ const SongEditForm = ({
                   message: "",
                 };
                 return (
-                  <div key={index}>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}
+                    key={index}
+                  >
                     <TextField
                       onChange={(e) => handleSongRequestChange(index, "title", e.target.value)}
                       value={title || ""}
@@ -212,6 +213,8 @@ const SongEditForm = ({
                       label="Song Title"
                       error={errors.title}
                       helperText={errors.title ? errors.message : ""}
+                      variant="standard"
+                      sx={{ width: "17rem" }}
                     />
                     <TextField
                       onChange={(e) => handleSongRequestChange(index, "artist", e.target.value)}
@@ -220,13 +223,15 @@ const SongEditForm = ({
                       label="Song Artist"
                       error={errors.artist}
                       helperText={errors.artist ? errors.message : ""}
+                      variant="standard"
+                      sx={{ width: "17rem" }}
                     />
                   </div>
                 );
               })}
               <div className="btn-container">
-                <button disabled={isSongMenuInvalid} onClick={handleSongSubmit}>
-                  Submit Song Requests for {guest.name}
+                <button className="btn-rsvp-sm" disabled={isSongMenuInvalid} onClick={handleSongSubmit}>
+                  Submit Song Requests For {guest.name}
                 </button>
               </div>
             </div>
@@ -322,7 +327,7 @@ const EmailForm = ({ guest, rsvp, handleDataRefresh }: { guest: Guest; rsvp: RSV
   // #region email template
   return (
     <>
-      <div className="email-form-container">
+      <div className="email-form-container flex-col-start">
         {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
         {emailSubmitMutation.isPending || emailSubmitMutation.isError ? (
           <div>
@@ -348,38 +353,35 @@ const EmailForm = ({ guest, rsvp, handleDataRefresh }: { guest: Guest; rsvp: RSV
                   )} */}
           </div>
         ) : (
-          <div>
-            {/* Assuming 'rsvp' is an array you want to map over */}
-            <div key={rsvp.rsvp_id}>
-              {guest?.email === "" && guest?.email !== null ? (
-                <p>Add {guest.name}'s Email</p>
-              ) : (
-                <p>Edit {guest.name}'s Email</p>
-              )}
-              <TextField
-                value={emails[guest.guest_id] || ""}
-                onChange={(e) => handleEmailChange(guest.guest_id, e.target.value)}
-                label="Email Address"
-                error={hasError}
-                helperText={hasError ? emailErrors[guest.guest_id] : ""}
-              />
-              <div className="btn-container">
-                <button
-                  onClick={() => {
-                    handleEmailSubmit(emails[guest.guest_id], guest.guest_id);
-                  }}
-                  disabled={isButtonDisabled(guest.guest_id)}
-                >
-                  Submit Email
-                </button>
-                <button
-                  onClick={() => {
-                    handleEmailSubmit(null, guest.guest_id);
-                  }}
-                >
-                  Remove Email
-                </button>
-              </div>
+          <div key={rsvp.rsvp_id} className="flex-col-start" style={{ gap: "1rem" }}>
+            <p className="font-sm">{guest.name}'s Email</p>
+            <TextField
+              value={emails[guest.guest_id] || ""}
+              onChange={(e) => handleEmailChange(guest.guest_id, e.target.value)}
+              label="Email Address"
+              error={hasError}
+              helperText={hasError ? emailErrors[guest.guest_id] : ""}
+              variant="standard"
+              sx={{ width: "15rem" }}
+            />
+            <div className="btn-container">
+              <button
+                onClick={() => {
+                  handleEmailSubmit(null, guest.guest_id);
+                }}
+                className="btn-rsvp-sm btn-alt"
+              >
+                Remove Email
+              </button>
+              <button
+                onClick={() => {
+                  handleEmailSubmit(emails[guest.guest_id], guest.guest_id);
+                }}
+                disabled={isButtonDisabled(guest.guest_id)}
+                className="btn-rsvp-sm"
+              >
+                Submit Email
+              </button>
             </div>
           </div>
         )}
@@ -601,8 +603,10 @@ function RSVPStatusMenu({
           </div>
         )}
         {menuState === "dependent" && (
-          <div id="dependent-menu-container">
-            <p>Add Children Menu</p>
+          <div id="dependent-status-container" className="status-menu-card">
+            <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
+              Child / Dependent Menu
+            </p>
             {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
             {additionalGuestMutation.isPending ||
             additionalGuestMutation.isError ||
@@ -629,40 +633,57 @@ function RSVPStatusMenu({
                 )}
               </div>
             ) : (
-              <div>
+              <div className="flex-col-start">
                 {hasChildren() && (
                   <div id="dependent-overview-container">
-                    <p>Already submitted child RSVPs:</p>
+                    <p className="font-sm">Submitted Child RSVPs:</p>
                     {groupData.guests.map((guest, index) => {
-                      if (guest.additional_guest_type == "dependent") {
-                        return <p key={index}>{guest.name}</p>;
+                      if (guest.additional_guest_type === "dependent") {
+                        return (
+                          <p className="font-sm" style={{ marginLeft: "1rem", marginTop: "1rem" }} key={index}>
+                            • {guest.name}
+                          </p>
+                        );
                       }
                     })}
                   </div>
                 )}
+                {childrenNames.length !== 0 && (
+                  <div id="dependent-pending-container">
+                    <p className="font-sm">Pending Child RSVPs</p>
+                    {childrenNames.map((child, index) => {
+                      return (
+                        <p className="font-sm" style={{ marginLeft: "1rem", marginTop: "1rem" }} key={index}>
+                          • {child}
+                        </p>
+                      );
+                    })}
+                    <p style={{ marginTop: "1rem" }}>Press 'Submit' to finalize 'Pending' RSVPs."</p>
+                  </div>
+                )}
 
-                <div id="dependent-form-container">
+                <div id="dependent-form-container" className="flex-row-gap" style={{ justifyContent: "center" }}>
                   <TextField
                     onChange={(e) => {
                       setCurrentChild(e.target.value);
                     }}
-                    label="First & last name"
+                    label="Add Child/Dependent Full Name"
                     value={currentChild || ""}
+                    sx={{ width: "20rem" }}
                   ></TextField>
-                  <button onClick={handleChildAdd} disabled={currentChild === ""}>
+                  <button className="btn-stripped" onClick={handleChildAdd} disabled={currentChild === ""}>
                     Add Child
                   </button>
-                  {childrenNames.length !== 0 && (
-                    <div>
-                      <p>{groupData.group_name} child RSVPs to be added:</p>
-                      {childrenNames.map((child) => {
-                        return <p>{child}</p>;
-                      })}
-                      <p>"Please press 'Submit' when done to finalize the children's attendance for the wedding."</p>
-                    </div>
-                  )}
                 </div>
                 <div className="btn-container">
+                  <button
+                    onClick={() => {
+                      handleChildReset();
+                    }}
+                    className="btn-rsvp-sm btn-alt"
+                  >
+                    Reset
+                  </button>
                   <button
                     disabled={childrenNames.length === 0}
                     onClick={() => {
@@ -674,15 +695,9 @@ function RSVPStatusMenu({
                         "dependent"
                       );
                     }}
+                    className="btn-rsvp-sm"
                   >
-                    Submit Children RSVP's
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleChildReset();
-                    }}
-                  >
-                    Reset
+                    Submit
                   </button>
                 </div>
               </div>
@@ -690,9 +705,11 @@ function RSVPStatusMenu({
           </div>
         )}
         {menuState === "song" && (
-          <div>
-            <p>Song Request Menu</p>
-            <div>
+          <div id="song-status-container" className="status-menu-card">
+            <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
+              Song Request Menu
+            </p>
+            <div id="song-edit-form-container flex-col-start">
               {/* eslint-disable-next-line array-callback-return */}
               {groupRSVPs.map((rsvp) => {
                 const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
@@ -704,23 +721,27 @@ function RSVPStatusMenu({
           </div>
         )}
         {menuState === "email" && (
-          <div>
-            <p>Email Menu</p>
-            <p>
+          <div id="email-status-container" className="status-menu-card">
+            <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
+              Email Menu
+            </p>
+            <p className="secondary-text font-xs contain-text-center">
               Emails will only be used for important wedding updates, confirmations, and photos! Emails aren't required
               and are completely optional.
             </p>
-            {groupRSVPs.map((rsvp) => {
-              const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
-              if (
-                rsvp.attendance &&
-                guest &&
-                guest.additional_guest_type !== "plus_one" &&
-                guest.additional_guest_type !== "dependent"
-              ) {
-                return <EmailForm guest={guest} rsvp={rsvp} handleDataRefresh={refreshData} />;
-              }
-            })}
+            <div id="email-edit-form-container" className="flex-col-start">
+              {groupRSVPs.map((rsvp) => {
+                const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
+                if (
+                  rsvp.attendance &&
+                  guest &&
+                  guest.additional_guest_type !== "plus_one" &&
+                  guest.additional_guest_type !== "dependent"
+                ) {
+                  return <EmailForm guest={guest} rsvp={rsvp} handleDataRefresh={refreshData} />;
+                }
+              })}
+            </div>
           </div>
         )}
         {menuState === "overview" && (

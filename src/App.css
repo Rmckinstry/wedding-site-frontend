@@ -440,6 +440,11 @@ button:hover {
     /* height: 3rem; */
 }
 
+.btn-alt{
+    background-color: lightgray;
+    color: var(--default-text);
+}
+
 .btn-rsvp:hover,
 .btn-rsvp-sm:hover {
     cursor: pointer;
@@ -455,6 +460,22 @@ button:hover {
 .btn-rsvp:disabled:hover,
 .btn-rsvp-sm:disabled:hover {
     cursor: not-allowed;
+}
+
+.btn-stripped{
+    all: unset;
+    color: var(--default-text);
+    font-family: Cormorant Garamond, serif;
+}
+
+.btn-stripped:hover{
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-stripped:disabled:hover{
+    cursor: not-allowed;
+    color: rgb(83, 47, 17);
 }
 
 /* --- FAQ Styles --- */
@@ -500,7 +521,7 @@ button:hover {
 }
 
 .rsvp-card {
-    width: 38rem;
+    width: 39rem;
     display: flex;
     flex-direction: column;
     gap: 2rem;
