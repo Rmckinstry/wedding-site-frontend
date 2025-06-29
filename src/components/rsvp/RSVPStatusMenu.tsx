@@ -348,7 +348,7 @@ const EmailForm = ({ guest, rsvp, handleDataRefresh }: { guest: Guest; rsvp: RSV
             {/* redo this - maybe use the mutation hook above to make this a popup snack bar or modal pop up */}
             {/* {emailSubmitMutation.isSuccess && (
                     <div>
-                      <p>Your email was saved!</p>
+                      <p>Your email was updated!</p>
                     </div>
                   )} */}
           </div>
@@ -745,37 +745,61 @@ function RSVPStatusMenu({
           </div>
         )}
         {menuState === "overview" && (
-          <div>
-            <p>RSVP Confirmation Menu</p>
-            <div>
+          <div id="overview-status-container">
+            <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
+              RSVP Confirmation Menu
+            </p>
+            <div id="overview-staus-container">
               {groupRSVPs.map((rsvp) => {
                 const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
                 if (guest) {
                   return (
-                    <div id="rsvp-overview-container" key={guest.guest_id}>
-                      <div>
-                        <p>Guest: {guest.name}</p>
-                        {guest.additional_guest_type === "plus_one" && <p> - Plus One</p>}
-                        {guest.additional_guest_type === "dependent" && <p> - Child/Dependent</p>}
-                        <div>
-                          {rsvp.attendance && <p>Attending!</p>}
-                          {!rsvp.attendance && <p>Not Attending.</p>}
+                    <div className="overview-guest-container" key={guest.guest_id}>
+                      <div className="overview-guest-info">
+                        <div className="guest-name">
+                          <p style={{ textDecoration: "underline" }}>Guest:</p>
+                          <p>{guest.name}</p>
+                          {guest.additional_guest_type === "plus_one" && <p>(Plus One)</p>}
+                          {guest.additional_guest_type === "dependent" && <p>(Child RSVP)</p>}
                         </div>
+                        <div className="guest-attending">
+                          <p style={{ textDecoration: "underline" }}>Attending: </p>
+                          {rsvp.attendance && <p>Yes!</p>}
+                          {!rsvp.attendance && <p>No.</p>}
+                        </div>
+                        {guest.email && (
+                          <div className="guest-email">
+                            <p style={{ textDecoration: "underline" }}>Email:</p>
+                            <p>{guest.email}</p>
+                          </div>
+                        )}
                       </div>
-                      {guest.email && <p>Email: {guest.email}</p>}
-                      {rsvp.spotify && rsvp.spotify.split(separator).length > 0 && (
-                        <div>
-                          <p>Song Requests:</p>
+                      {rsvp.spotify && rsvp.spotify.split(separator).length > 0 ? (
+                        <div className="overview-guest-song">
+                          <p style={{ textDecoration: "underline" }}>Requested Songs</p>
                           {rsvp.spotify.split(separator).map((song, index) => (
-                            <p key={index}>{song}</p>
+                            <p style={{ marginLeft: "1rem", marginTop: "1rem" }} key={index}>
+                              • {song}
+                            </p>
                           ))}
                         </div>
+                      ) : (
+                        <p className="overview-guest-no-song">
+                          No songs yet. This can be done in the 'Song Request' menu.
+                        </p>
+                      )}
+                      {rsvp.attendance && guest.plus_one_allowed && (
+                        <p>
+                          Plus one <strong>available</strong> for {guest.name}. This can be added in the 'Plus One'
+                          menu.
+                        </p>
                       )}
                     </div>
                   );
                 }
                 return null;
               })}
+              {/* has dependents message */}
               {groupData.guests.some((guest) => guest.has_dependents) && (
                 <div>
                   <p>
@@ -792,23 +816,7 @@ function RSVPStatusMenu({
                   </p>
                 </div>
               )}
-              {groupData.guests.some((guest) => guest.plus_one_allowed) && (
-                <div>
-                  <p>
-                    At least one attending guest in your group is able to add/bring a plus one. This can be accessed
-                    from the{" "}
-                    <strong
-                      onClick={() => {
-                        handleMenuClick("plusOne");
-                      }}
-                      style={{ textDecoration: "underline" }}
-                    >
-                      "Add Plus One"
-                    </strong>{" "}
-                    menu.
-                  </p>
-                </div>
-              )}
+              {/* no email message */}
               {groupData.guests.some((guest) => !guest.email && !guest.additional_guest_type) && (
                 <div>
                   <p>
