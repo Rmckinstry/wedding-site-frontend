@@ -35,7 +35,13 @@ export type ErrorType = {
   error? : string
 }
 
-export type ResponseType = {
+export type RSVPResponseType = {
+  status? : number,
+  message? : string,
+  data? : RSVP[]
+}
+
+export type CustomResponseType = {
   status? : number,
   message? : string,
   data? : any[]

@@ -1,6 +1,6 @@
 /* eslint-disable array-callback-return */
 import { TextField } from "@mui/material";
-import { ErrorType, GroupData, Guest, RSVP, SongRequestError } from "../../utility/types";
+import { CustomResponseType, ErrorType, GroupData, Guest, RSVP, SongRequestError } from "../../utility/types";
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import Error from "../utility/Error.tsx";
@@ -119,7 +119,7 @@ const SongEditForm = ({
   };
 
   //#region song mutation
-  const songSubmitMutation = useMutation<ResponseType, ErrorType, string>({
+  const songSubmitMutation = useMutation<CustomResponseType, ErrorType, string>({
     mutationFn: async (songString) => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/rsvps/songs/${rsvp.rsvp_id}`, {
         method: "PATCH",
@@ -134,7 +134,7 @@ const SongEditForm = ({
         throw errorBody;
       }
 
-      return response.json() as Promise<ResponseType>;
+      return response.json() as Promise<CustomResponseType>;
     },
     onSuccess: (data) => {
       console.log("Response from server:", data);
@@ -276,7 +276,7 @@ const EmailForm = ({ guest, rsvp, handleDataRefresh }: { guest: Guest; rsvp: RSV
     emailSubmitMutation.mutate({ email: email, guestId: guestId });
   };
 
-  const emailSubmitMutation = useMutation<ResponseType, ErrorType, { email: string | null; guestId: number }>({
+  const emailSubmitMutation = useMutation<CustomResponseType, ErrorType, { email: string | null; guestId: number }>({
     mutationFn: async ({ email, guestId }) => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/guests/email/${guestId}`, {
         method: "PATCH",
@@ -291,7 +291,7 @@ const EmailForm = ({ guest, rsvp, handleDataRefresh }: { guest: Guest; rsvp: RSV
         throw errorBody;
       }
 
-      return response.json() as Promise<ResponseType>;
+      return response.json() as Promise<CustomResponseType>;
     },
     onSuccess: (data) => {
       console.log("Response from server:", data);
@@ -462,7 +462,7 @@ function RSVPStatusMenu({
   };
 
   const additionalGuestMutation = useMutation<
-    ResponseType,
+    CustomResponseType,
     ErrorType,
     { postData: additionalPost; type: "plus_one" | "dependent" }
   >({
@@ -479,7 +479,7 @@ function RSVPStatusMenu({
         throw errorBody;
       }
 
-      return response.json() as Promise<ResponseType>;
+      return response.json() as Promise<CustomResponseType>;
     },
     onSuccess: (data, variables) => {
       console.log("Response from server:", data);

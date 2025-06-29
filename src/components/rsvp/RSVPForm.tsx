@@ -9,11 +9,14 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from "@mui/material";
-import { ErrorType, GroupData, SongRequestError } from "../../utility/types";
+import { ErrorType, GroupData, RSVPResponseType, SongRequestError } from "../../utility/types";
 import { useMutation } from "@tanstack/react-query";
 import Error from "../utility/Error.tsx";
 import Loading from "../utility/Loading.tsx";
 import EventIcon from "@mui/icons-material/Event";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CelebrationIcon from "@mui/icons-material/Celebration";
+import RedeemIcon from "@mui/icons-material/Redeem";
 
 type RSVPPost = {
   guestId: number;
@@ -34,10 +37,13 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
   const [rsvps, setRsvps] = useState<RSVPPost[]>([]);
   const [songValidationErrors, setSongValidationErrors] = useState<{ [guestId: string]: SongRequestError[] }>({});
   const [songInputsCount, setSongInputsCount] = useState<{ [guestId: string]: number }>({});
+  const [directToRegistry, setDirectToRegistry] = useState<boolean>(false);
 
   const isRSVPStepValid = rsvps.every((rsvp) => rsvp.attendance !== "");
 
   const allGuestsAttendingFalse = rsvps.every((rsvp) => rsvp.attendance === false);
+
+  const submitFlag = false;
 
   // Determine if the "Song Requests" step should be disabled
   const isSongRequestTabDisabled = allGuestsAttendingFalse;
@@ -122,7 +128,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     submitRsvpsMutation.mutate({ rsvpList: submitData });
   };
 
-  const submitRsvpsMutation = useMutation<ResponseType, ErrorType, { rsvpList: SubmitData[] }>({
+  const submitRsvpsMutation = useMutation<RSVPResponseType, ErrorType, { rsvpList: SubmitData[] }>({
     mutationFn: async (data) => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/rsvps`, {
         method: "POST",
@@ -137,9 +143,16 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
         throw errorBody;
       }
 
-      return response.json() as Promise<ResponseType>;
+      return response.json() as Promise<RSVPResponseType>;
     },
     onSuccess: (data) => {
+      const hasChildOrDep = data["data"]?.some((rsvp) => {
+        const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
+        return rsvp.attendance && (guest?.has_dependents || guest?.plus_one_allowed);
+      });
+
+      setDirectToRegistry(!hasChildOrDep || true);
+      console.log(hasChildOrDep);
       console.log("Response from server:", data);
     },
     onError: (error: ErrorType) => {
@@ -298,7 +311,10 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
             })}
           </Stepper>
           {/* state template */}
-          {submitRsvpsMutation.isPending || submitRsvpsMutation.isError || submitRsvpsMutation.isSuccess ? (
+          {submitRsvpsMutation.isPending ||
+          submitRsvpsMutation.isError ||
+          submitRsvpsMutation.isSuccess ||
+          submitFlag ? (
             <div>
               {submitRsvpsMutation.isPending && (
                 <div>
@@ -314,15 +330,51 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                   />
                 </div>
               )}
-              {submitRsvpsMutation.isSuccess && (
+              {(submitFlag || submitRsvpsMutation.isSuccess) && (
                 <div>
-                  <p>Your RSVPs were succesfully submitted. Thank you!</p>
+                  <p>Your RSVP(s) were successfully submitted. Thank you!</p>
+                  {/* if child or dependent -> prioritize rsvp menu (RSVP Home) */}
+                  {/* else prioritize registry */}
                   <p>
                     Better message here (about visiting the portal to edit certain things and show message about
                     registry)
                   </p>
+                  {directToRegistry ? (
+                    <div>
+                      <div>
+                        <p>
+                          If you are looking for gift ideas, our registry is available through the button below or you
+                          can use the menu above.
+                        </p>
+                        <button>Registry</button>
+                      </div>
+                      <div>
+                        <p>
+                          Want to make a song request, update your email, or view your confirmation? Head over to our
+                          RSVP portal.
+                        </p>
+                        <button onClick={sendRefresh}>RSVP Portal</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div>
+                        <p>
+                          Ready to add a plus-one or child to your RSVP? You can do that, make a song request, update
+                          your email, or view your confirmation by heading over to our RSVP portal.
+                        </p>
+                        <button onClick={sendRefresh}>RSVP Portal</button>
+                      </div>
+                      <div>
+                        <p>
+                          If you are looking for gift ideas, our registry is available through the button below or you
+                          can use the menu above.
+                        </p>
+                        <button>Registry</button>
+                      </div>
+                    </div>
+                  )}
                   {/* temporary */}
-                  <button onClick={sendRefresh}>RSVP Home</button>
                 </div>
               )}
             </div>
