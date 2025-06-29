@@ -1,6 +1,14 @@
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#646440",
+    },
+    secondary: {
+      main: "#646440",
+    },
+  },
   components: {
     MuiTabs: {
       styleOverrides: {

@@ -3,10 +3,7 @@ import {
   Stepper,
   Step,
   StepLabel,
-  RadioGroup,
-  Radio,
   FormControl,
-  FormControlLabel,
   FormLabel,
   TextField,
   ToggleButtonGroup,
@@ -286,6 +283,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     <>
       <div id="rsvp-form-container">
         <div>
+          {/* stepper */}
           <Stepper activeStep={activeStep}>
             {steps.map((label, index) => {
               const stepProps: { completed?: boolean; disabled?: boolean } = {};
@@ -299,6 +297,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
               );
             })}
           </Stepper>
+          {/* state template */}
           {submitRsvpsMutation.isPending || submitRsvpsMutation.isError || submitRsvpsMutation.isSuccess ? (
             <div>
               {submitRsvpsMutation.isPending && (
@@ -329,9 +328,9 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
             </div>
           ) : (
             <div id="rsvp-card-container">
+              {/* RSVP Card */}
               {activeStep === 0 && (
-                // Guest RSVP Question
-                <div id="rsvp-form-card-container">
+                <div id="rsvp-form-card-container" className="rsvp-card">
                   <p className="font-sm-med">Wedding Day</p>
                   <div id="event-icon-container" className="flex-row-gap">
                     <EventIcon />
@@ -413,7 +412,14 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
               )}
               {activeStep === 1 && (
                 // song request card
-                <div id="song-request-card-container">
+                <div id="song-request-card-container" className="rsvp-card">
+                  <div id="song-request-header" className="flex-col">
+                    <p className="font-sm-med">Add Song Requests</p>
+                    <p className="font-xs-sm">
+                      Undecided? You can always add songs later after submitting your RSVP via the RSVP Portal!
+                    </p>
+                  </div>
+
                   {rsvps
                     .filter((rsvp) => rsvp.attendance === true)
                     .map((rsvp) => {
@@ -421,8 +427,8 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                       const requestsLeft = (guest?.song_requests || 0) - (songInputsCount[rsvp.guestId] || 0);
 
                       return (
-                        <div key={`song-container-${rsvp.guestId}-guest`} className="guest-song-container">
-                          <FormControl key={`rsvp-guest-${rsvp.guestId}`}>
+                        <FormControl key={`rsvp-guest-${rsvp.guestId}`}>
+                          <div className="guest-song-container">
                             <FormLabel>
                               {guest?.name} - {requestsLeft} song requests left
                             </FormLabel>
@@ -436,7 +442,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                               };
 
                               return (
-                                <div key={index} className="song-request-container">
+                                <div key={index} className="song-form-inputs flex-row-gap" style={{ gap: "2rem" }}>
                                   <TextField
                                     onChange={(e) =>
                                       handleSongRequestChange(rsvp.guestId, index, "title", e.target.value)
@@ -446,6 +452,8 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                                     label="Song Title"
                                     error={errors.title}
                                     helperText={errors.title ? errors.message : ""}
+                                    variant="standard"
+                                    sx={{ width: "17rem" }}
                                   />
                                   <TextField
                                     onChange={(e) =>
@@ -456,30 +464,40 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                                     label="Song Artist"
                                     error={errors.artist}
                                     helperText={errors.artist ? errors.message : ""}
+                                    variant="standard"
+                                    sx={{ width: "17rem" }}
                                   />
                                 </div>
                               );
                             })}
-
-                            <button
-                              onClick={() => handleAddSong(rsvp.guestId, guest?.song_requests || 0)}
-                              disabled={
-                                requestsLeft <= 0 ||
-                                songValidationErrors[rsvp.guestId]?.some((error) => error.title || error.artist)
-                              }
-                            >
-                              Add Song
-                            </button>
-                          </FormControl>
-                        </div>
+                            <div>
+                              <button
+                                onClick={() => handleAddSong(rsvp.guestId, guest?.song_requests || 0)}
+                                disabled={
+                                  requestsLeft <= 0 ||
+                                  songValidationErrors[rsvp.guestId]?.some((error) => error.title || error.artist)
+                                }
+                                className="btn-rsvp-sm"
+                                style={{ fontSize: "1rem", padding: ".25rem 1.25rem" }}
+                              >
+                                Add Song
+                              </button>
+                            </div>
+                          </div>
+                        </FormControl>
                       );
                     })}
 
-                  <div className="btn-container">
-                    <button className="btn-link" onClick={handleBack}>
+                  <div className="btn-container" style={{ gap: "2rem" }}>
+                    <button className="btn-rsvp-sm" style={{ padding: ".5rem 10%", flexGrow: 1 }} onClick={handleBack}>
                       Back
                     </button>
-                    <button disabled={isSongTabInvalid} className="btn-link" onClick={handleNext}>
+                    <button
+                      disabled={isSongTabInvalid}
+                      className="btn-rsvp-sm"
+                      style={{ padding: ".5rem 10%", flexGrow: 1 }}
+                      onClick={handleNext}
+                    >
                       Next
                     </button>
                   </div>
