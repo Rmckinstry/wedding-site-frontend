@@ -231,6 +231,21 @@ button:hover {
     font-weight: 500;
 }
 
+#rsvp-status-menu-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#status-menu-grid{
+    display: flex;
+    justify-content: start;
+    row-gap: 4rem;
+    column-gap: 10%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
 
 /* classes */
 .App {
@@ -492,7 +507,36 @@ button:hover {
     text-underline-offset: 2px;
 }
 
+.status-menu-btn-container{
+    width: 18rem;
+}
 
+button.status-menu-btn {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+button.status-menu-btn:hover {
+    transform: scale(1.1);
+
+    .status-menu-text{
+        text-decoration: underline;
+    }
+}
+
+.status-menu-icon{
+    font-size: 5rem;
+}
+
+.status-menu-text{
+    color: var(--default-text);
+    font-family: Cormorant Garamond, serif;
+}
 /* Media Queries */
 
 /* Small devices (phones, 600px and below) */

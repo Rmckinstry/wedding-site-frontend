@@ -5,6 +5,11 @@ import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import Error from "../utility/Error.tsx";
 import Loading from "../utility/Loading.tsx";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import ChildFriendlyIcon from "@mui/icons-material/ChildFriendly";
+import EmailIcon from "@mui/icons-material/Email";
+import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
+import ChecklistIcon from "@mui/icons-material/Checklist";
 
 type additionalPost = {
   additionalGuests: string[];
@@ -23,13 +28,23 @@ const GridOption = ({
   handleMenuClick: ({ key }) => void;
 }) => {
   return (
-    <div>
+    <div className="status-menu-btn-container">
       <button
         onClick={() => {
           handleMenuClick(menuKey);
         }}
+        className="status-menu-btn"
       >
-        {optionName}
+        {optionName === "Add Plus One" && <GroupAddIcon sx={{ fontSize: "12rem" }} className="status-menu-icon" />}
+        {optionName === "Add Child/Dependent" && (
+          <ChildFriendlyIcon sx={{ fontSize: "12rem" }} className="status-menu-icon" />
+        )}
+        {optionName === "Song Requests" && <LibraryMusicIcon sx={{ fontSize: "12rem" }} className="status-menu-icon" />}
+        {optionName === "Add/Edit Email" && <EmailIcon sx={{ fontSize: "12rem" }} className="status-menu-icon" />}
+        {optionName === "RSVP Confirmation" && (
+          <ChecklistIcon sx={{ fontSize: "12rem" }} className="status-menu-icon" />
+        )}
+        <span className="status-menu-text font-med">{optionName}</span>
       </button>
     </div>
   );
@@ -509,15 +524,14 @@ function RSVPStatusMenu({
               <GridOption optionName={"Add Plus One"} menuKey={"plusOne"} handleMenuClick={handleMenuClick} />
             )}
             {dependentsEnabled && (
-              <GridOption optionName={"Add Children"} menuKey={"dependent"} handleMenuClick={handleMenuClick} />
+              <GridOption optionName={"Add Child/Dependent"} menuKey={"dependent"} handleMenuClick={handleMenuClick} />
             )}
-            <GridOption optionName={"Add Song Requests"} menuKey={"song"} handleMenuClick={handleMenuClick} />
+            <GridOption optionName={"Song Requests"} menuKey={"song"} handleMenuClick={handleMenuClick} />
             <GridOption optionName={"Add/Edit Email"} menuKey={"email"} handleMenuClick={handleMenuClick} />
-            <GridOption
-              optionName={"RSVP Confirmation & Overview"}
-              menuKey={"overview"}
-              handleMenuClick={handleMenuClick}
-            />
+            <GridOption optionName={"RSVP Confirmation"} menuKey={"overview"} handleMenuClick={handleMenuClick} />
+            {/* LOL what a bullshit way to make this grid looks nice - didnt want to fight css */}
+            {/* replace with 6th grid option if one is needed */}
+            <span style={{ width: "18rem" }}></span>
           </div>
         )}
         {menuState === "plusOne" && (
