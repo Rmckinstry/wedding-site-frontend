@@ -2,7 +2,9 @@
 :root {
     --base-background: #FFFDFB;
     --default-text: #646440;
-    --btn-disabled: #A3A39b
+    --btn-disabled: #A3A39b;
+    --default-text-transparent: #64644042;
+
 }
 
 body {
@@ -470,6 +472,24 @@ button:hover {
     outline-style: solid;
     padding: .5rem 1rem;
     border-radius: 1rem;
+}
+
+.user-confirm-rsvp-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 1rem;
+    outline-style: solid;
+    outline-width: .125rem;
+    outline-color: var(--default-text-transparent);
+    padding: .5rem 2rem;
+    border-radius: .5rem;
+}
+
+.confirmation-header{
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
 }
 
 

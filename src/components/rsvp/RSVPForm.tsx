@@ -505,39 +505,54 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
               )}
               {activeStep === 2 && (
                 //Confirmation card
-                <div id="confirmation-card-container">
-                  <p>Please confirm that all information shown below is correct, if not please go back and edit it.</p>
+                <div id="confirmation-card-container" className="rsvp-card" style={{ width: "80%" }}>
+                  <div className="flex-col">
+                    <p className="font-sm-med">RSVP Confirmation</p>
+                    <p className="font-xs">Please confirm that all information shown below is correct.</p>
+                  </div>
 
-                  <div>
-                    <p>Group Name: {groupData.group_name}</p>
+                  <div className="flex-row-gap" style={{ justifyContent: "center" }}>
+                    <p className="font-sm strong-text confirmation-header">Group Name: </p>
+                    <p className="font-sm">{groupData.group_name}</p>
                   </div>
                   {rsvps.map((rsvp, index) => {
                     const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
                     const hasSongs = rsvp.spotify.some((index) => index !== "");
                     return (
-                      <div key={index}>
-                        <p>Name: {guest?.name}</p>
-                        <p>Attending: {rsvp.attendance ? "Yes" : "No"}</p>
+                      <div key={index} className="user-confirm-rsvp-container">
+                        <div className="flex-row-gap">
+                          <p className="strong-text font-sm confirmation-header">Guest: </p>
+                          <p className="font-sm">{guest?.name}</p>
+                        </div>
+                        <div className="flex-row-gap">
+                          <p className="strong-text font-sm confirmation-header">Attending: </p>
+                          <p className="font-sm">{rsvp.attendance ? "Yes!" : "No"}</p>
+                        </div>
                         {rsvp.attendance && hasSongs && (
                           <div>
-                            <p>Requested Songs</p>
+                            <p className="strong-text font-sm confirmation-header">Requested Songs:</p>
                             {rsvp.spotify
                               .filter((song) => song !== "")
-                              .map((song) => (
-                                <p>{song}</p>
+                              .map((song, index) => (
+                                <p
+                                  className="font-sm"
+                                  style={{ marginLeft: "1rem", marginTop: "1rem" }}
+                                  key={index + song}
+                                >
+                                  • {song}
+                                </p>
                               ))}
                           </div>
                         )}
                         {rsvp.attendance && !hasSongs && (
-                          <div>
-                            <p>No songs requested yet! (This can be done after you submit the rsvp as well!)</p>
-                          </div>
+                          <p className="font-sm secondary-text">
+                            No songs requested yet! This can be done after you submit your RSVP via the RSVP Portal.
+                          </p>
                         )}
                         {rsvp.attendance && guest?.plus_one_allowed && (
-                          <p>
-                            <strong>NOTE:</strong> {guest.name} has a plus one available. Plus ones can be added{" "}
-                            <strong style={{ textDecoration: "underline" }}>after the RSVP is submitted</strong> by
-                            entering your name again in the RSVP portal.
+                          <p className="font-sm secondary-text">
+                            Plus one <strong>available</strong> for {guest.name}! You can add the extra RSVP{" "}
+                            <span className="confirmation-header">after</span> submitting this one via the RSVP Portal.
                           </p>
                         )}
                       </div>
@@ -548,20 +563,40 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                       rsvp.attendance === true &&
                       groupData.guests.find((guest) => guest.guest_id === rsvp.guestId)?.has_dependents
                   ) && (
-                    <p>
-                      Note: One or more guests can bring children or dependents. Children/dependents{" "}
-                      <strong style={{ textDecoration: "underline" }}>have to be added</strong> after submitting the
-                      RSVP.
-                    </p>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                      <p className="font-sm secondary-text">
+                        One or more guests in this group are able to add child/dependent RSVPS. These can be added
+                        <span className="confirmation-header"> after</span> your RSVP is submitted via the RSVP Portal.
+                      </p>
+                      <p className="font-sm secondary-text">
+                        <strong>Note: </strong>It is required to add these RSVPs prior to the deadline for your
+                        children/dpendents to be counted.
+                      </p>
+                    </div>
                   )}
-                  <div className="btn-container">
-                    <button className="btn-link" onClick={handleBack} disabled={submitRsvpsMutation.isPending}>
+                  <div className="btn-container" style={{ gap: "2rem" }}>
+                    <button
+                      className="btn-rsvp-sm"
+                      style={{ flexGrow: 1, width: "10%" }}
+                      onClick={handleBack}
+                      disabled={submitRsvpsMutation.isPending}
+                    >
                       Back
                     </button>
-                    <button className="btn-link" onClick={handleReset} disabled={submitRsvpsMutation.isPending}>
+                    <button
+                      className="btn-rsvp-sm"
+                      style={{ flexGrow: 1, width: "10%" }}
+                      onClick={handleReset}
+                      disabled={submitRsvpsMutation.isPending}
+                    >
                       Reset
                     </button>
-                    <button className="btn-link" onClick={handleSubmit} disabled={submitRsvpsMutation.isPending}>
+                    <button
+                      className="btn-rsvp-sm"
+                      style={{ flexGrow: 1, width: "10%" }}
+                      onClick={handleSubmit}
+                      disabled={submitRsvpsMutation.isPending}
+                    >
                       Submit RSVP
                     </button>
                   </div>
