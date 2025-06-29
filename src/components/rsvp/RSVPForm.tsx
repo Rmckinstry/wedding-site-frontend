@@ -14,9 +14,7 @@ import { useMutation } from "@tanstack/react-query";
 import Error from "../utility/Error.tsx";
 import Loading from "../utility/Loading.tsx";
 import EventIcon from "@mui/icons-material/Event";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CelebrationIcon from "@mui/icons-material/Celebration";
-import RedeemIcon from "@mui/icons-material/Redeem";
+import { useNavigation } from "../../context/NavigationContext.tsx";
 
 type RSVPPost = {
   guestId: number;
@@ -43,7 +41,8 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
 
   const allGuestsAttendingFalse = rsvps.every((rsvp) => rsvp.attendance === false);
 
-  const submitFlag = false;
+  //used for navigation context
+  const { navigateTo } = useNavigation();
 
   // Determine if the "Song Requests" step should be disabled
   const isSongRequestTabDisabled = allGuestsAttendingFalse;
@@ -71,6 +70,11 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
   useEffect(() => {
     resetRSVPs();
   }, [groupData, resetRSVPs]);
+
+  const handleRegistryButtonClick = () => {
+    navigateTo(3);
+    //registry
+  };
 
   //#region  stepper controls
   const handleNext = () => {
@@ -311,10 +315,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
             })}
           </Stepper>
           {/* state template */}
-          {submitRsvpsMutation.isPending ||
-          submitRsvpsMutation.isError ||
-          submitRsvpsMutation.isSuccess ||
-          submitFlag ? (
+          {submitRsvpsMutation.isPending || submitRsvpsMutation.isError || submitRsvpsMutation.isSuccess ? (
             <div>
               {submitRsvpsMutation.isPending && (
                 <div>
@@ -330,47 +331,49 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                   />
                 </div>
               )}
-              {(submitFlag || submitRsvpsMutation.isSuccess) && (
-                <div>
-                  <p>Your RSVP(s) were successfully submitted. Thank you!</p>
-                  {/* if child or dependent -> prioritize rsvp menu (RSVP Home) */}
-                  {/* else prioritize registry */}
-                  <p>
-                    Better message here (about visiting the portal to edit certain things and show message about
-                    registry)
-                  </p>
+              {submitRsvpsMutation.isSuccess && (
+                <div className="flex-col" style={{ gap: "2rem", marginTop: "2rem" }}>
+                  <p className="font-med contain-text-center">Your RSVP(s) were successfully submitted. Thank you!</p>
                   {directToRegistry ? (
-                    <div>
-                      <div>
-                        <p>
+                    <div className="flex-col" style={{ gap: "2rem" }}>
+                      <div className="flex-col">
+                        <p className="font-sm-med contain-text-center">
                           If you are looking for gift ideas, our registry is available through the button below or you
                           can use the menu above.
                         </p>
-                        <button>Registry</button>
+                        <button className="btn-rsvp-sm" onClick={handleRegistryButtonClick}>
+                          Registry
+                        </button>
                       </div>
-                      <div>
-                        <p>
+                      <div className="flex-col">
+                        <p className="font-sm contain-text-center">
                           Want to make a song request, update your email, or view your confirmation? Head over to our
                           RSVP portal.
                         </p>
-                        <button onClick={sendRefresh}>RSVP Portal</button>
+                        <button className="btn-rsvp-sm" onClick={sendRefresh}>
+                          RSVP Portal
+                        </button>
                       </div>
                     </div>
                   ) : (
-                    <div>
-                      <div>
-                        <p>
+                    <div className="flex-col" style={{ gap: "2rem" }}>
+                      <div className="flex-col">
+                        <p className="font-sm-med contain-text-center">
                           Ready to add a plus-one or child to your RSVP? You can do that, make a song request, update
                           your email, or view your confirmation by heading over to our RSVP portal.
                         </p>
-                        <button onClick={sendRefresh}>RSVP Portal</button>
+                        <button className="btn-rsvp-sm" onClick={sendRefresh}>
+                          RSVP Portal
+                        </button>
                       </div>
-                      <div>
-                        <p>
+                      <div className="flex-col">
+                        <p className="font-sm contain-text-center">
                           If you are looking for gift ideas, our registry is available through the button below or you
                           can use the menu above.
                         </p>
-                        <button>Registry</button>
+                        <button className="btn-rsvp-sm" onClick={handleRegistryButtonClick}>
+                          Registry
+                        </button>
                       </div>
                     </div>
                   )}
