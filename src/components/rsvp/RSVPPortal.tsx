@@ -65,7 +65,9 @@ function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string
   // possible location for the flashing bug
   return (
     <div id="rsvp-portal-container">
-      <p>{groupName} RSVP Portal</p>
+      <p className="strong-text font-med contain-text-center" style={{ marginBottom: "2rem" }}>
+        {groupName}'s RSVP Portal
+      </p>
       {groupRSVPs.data.length > 0 && (
         <RSVPStatusMenu groupData={groupData.data} groupRSVPs={groupRSVPs.data} refreshData={refreshData} />
       )}

@@ -5,23 +5,23 @@ const theme = createTheme({
     MuiTabs: {
       styleOverrides: {
         indicator: {
-          backgroundColor: "var(--default-text)", // Indicator color
+          backgroundColor: "var(--default-text)",
         },
       },
     },
     MuiTab: {
       styleOverrides: {
         root: {
-          color: "var(--default-text)", // Default text color
+          color: "var(--default-text)",
           fontSize: "1.5rem",
           marginRight: "1rem",
           marginLeft: "1rem",
           fontFamily: "Cormorant Garamond",
           "&.Mui-selected": {
-            color: "var(--default-text)", // Selected text color
+            color: "var(--default-text)",
           },
           "&:hover": {
-            color: "var(--default-text)", // Hover text color
+            color: "var(--default-text)",
             fontWeight: "600",
           },
         },
@@ -30,7 +30,7 @@ const theme = createTheme({
     MuiAccordionSummary: {
       styleOverrides: {
         root: {
-          color: "var(--default-text)", // Default text color
+          color: "var(--default-text)",
         },
       },
     },
@@ -52,7 +52,7 @@ const theme = createTheme({
     MuiNativeSelect: {
       styleOverrides: {
         root: {
-          color: "var(--default-text)", // Default text color
+          color: "var(--default-text)",
           fontSize: "1.25rem",
           fontFamily: "Cormorant Garamond",
         },
@@ -66,13 +66,13 @@ const theme = createTheme({
         },
         label: {
           "&.Mui-active": {
-            color: "var(--default-text)", // Active step label color
+            color: "var(--default-text)",
           },
           "&.Mui-completed": {
-            color: "var(--default-text)", // Completed step label color
+            color: "var(--default-text)",
           },
           "&.Mui-disabled": {
-            color: "gray", // Disabled step label color
+            color: "gray",
           },
         },
       },
@@ -83,13 +83,13 @@ const theme = createTheme({
           fontFamily: "Cormorant Garamond",
           fontWeight: "600",
           "&.Mui-focused": {
-            color: "var(--default-text)", // Active step label color
+            color: "var(--default-text)",
           },
           "&.Mui-completed": {
-            color: "var(--default-text)", // Completed step label color
+            color: "var(--default-text)",
           },
           "&.Mui-disabled": {
-            color: "gray", // Disabled step label color
+            color: "gray",
           },
         },
       },
@@ -99,7 +99,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: "var(--default-text)", // Your desired focus color
+            borderColor: "var(--default-text)",
           },
         },
         notchedOutline: {
@@ -111,7 +111,76 @@ const theme = createTheme({
     MuiCircularProgress: {
       styleOverrides: {
         root: {
-          color: "var(--default-text)", // This sets the default color
+          color: "var(--default-text)",
+        },
+      },
+    },
+
+    MuiToggleButton: {
+      // Target the ToggleButton component
+      styleOverrides: {
+        root: {
+          // Default state (not selected)
+          backgroundColor: "var(--base-background)",
+          color: "var(--default-text)",
+          borderColor: "var(--default-text)",
+
+          // Selected state
+          "&.Mui-selected": {
+            backgroundColor: "var(--default-text)",
+            color: "var(--base-background)",
+            borderColor: "var(--default-text)",
+            "&:hover": {
+              backgroundColor: "var(--default-text)",
+              color: "var(--base-background)",
+            },
+          },
+
+          "&:hover": {
+            backgroundColor: "#EEE",
+          },
+
+          "& + &.MuiToggleButton-root": {
+            borderColor: "var(--default-text)",
+            marginLeft: "-1px",
+          },
+          "&.Mui-selected + &.MuiToggleButton-root": {
+            borderColor: "var(--default-text)",
+          },
+        },
+      },
+    },
+
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          color: "var(--default-text)",
+          "&.Mui-active": {
+            color: "var(--default-text)",
+          },
+        },
+      },
+    },
+
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          color: "var(--default-text)",
+          fontSize: "1.25rem",
+          fontFamily: "Cormorant Garamond",
+        },
+      },
+    },
+
+    MuiStepIcon: {
+      styleOverrides: {
+        root: {
+          "&.Mui-active": {
+            color: "var(--default-text)",
+          },
+          "&.Mui-completed": {
+            color: "var(--default-text)",
+          },
         },
       },
     },

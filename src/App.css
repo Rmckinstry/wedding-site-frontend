@@ -95,7 +95,7 @@ button:hover {
 
 /* IDs */
 #page-container {
-    margin: 1rem 0;
+    margin: 1rem 5%;
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -192,6 +192,48 @@ button:hover {
     width: 12rem;
     height: 4rem;
 }
+#rsvp-card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3rem;
+    padding: 1rem;
+}
+
+#rsvp-form-card-container{
+    width: 37rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+#rsvp-form-continue-btn{
+    display: block;
+    background-color: var(--default-text);
+    color: var(--base-background);
+    font-family: Cormorant Garamond, serif;
+    border-style: none;
+    border-radius: .25rem;
+    font-size: 1.25rem;
+    padding: .5rem 0rem;
+    width: 100%;
+}
+
+#rsvp-form-continue-btn:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    font-weight: 600;
+}
+
+#rsvp-form-continue-btn:disabled {
+    background-color: var(--btn-disabled);
+}
+
+#rsvp-form-continue-btn:disabled:hover {
+    cursor: not-allowed;
+    transform: scale(1.0);
+    font-weight: 500;
+}
 
 
 /* classes */
@@ -216,6 +258,16 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.flex-row-gap {
+    display: flex;
+    gap: 1rem;
+}
+
+.flex-row-gap-lg {
+    display: flex;
+    gap: 2rem;
 }
 
 /* ---FONT SIZES--- */
@@ -402,6 +454,12 @@ button:hover {
     margin-top: 0px;
 }
 
+.rsvp-form-action-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 /* Media Queries */
 
 /* Small devices (phones, 600px and below) */
@@ -468,7 +526,7 @@ button:hover {
 }
 
 /* Super-large devices (large monitors, 1921px and above) */
-@media (min-width: 1921px) {
+@media (min-width: 1920px) {
     .App {
         max-width: 1920px;
         /* Limit width for extra-large screens */
@@ -478,5 +536,9 @@ button:hover {
 
     #faq-data-desktop-container {
         padding: 0 10rem;
+    }
+
+    #page-container{
+        margin: 1rem 10%;
     }
 }

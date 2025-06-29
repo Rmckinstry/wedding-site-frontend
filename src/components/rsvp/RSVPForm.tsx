@@ -9,11 +9,14 @@ import {
   FormControlLabel,
   FormLabel,
   TextField,
+  ToggleButtonGroup,
+  ToggleButton,
 } from "@mui/material";
 import { ErrorType, GroupData, SongRequestError } from "../../utility/types";
 import { useMutation } from "@tanstack/react-query";
 import Error from "../utility/Error.tsx";
 import Loading from "../utility/Loading.tsx";
+import EventIcon from "@mui/icons-material/Event";
 
 type RSVPPost = {
   guestId: number;
@@ -325,29 +328,62 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
               )}
             </div>
           ) : (
-            <div>
+            <div id="rsvp-card-container">
               {activeStep === 0 && (
                 // Guest RSVP Question
-                <div id="rsvp-card-container">
+                <div id="rsvp-form-card-container">
+                  <p className="font-sm-med">Wedding Day</p>
+                  <div id="event-icon-container" className="flex-row-gap">
+                    <EventIcon />
+                    <p className="font-sm">Saturday, November 15, 2025</p>
+                  </div>
                   {rsvps.map((rsvp) => {
-                    const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
+                    const guest = groupData.guests.find((g) => g.guest_id === rsvp.guestId);
+                    const attendanceToggleValue =
+                      rsvp.attendance === true ? "accept" : rsvp.attendance === false ? "decline" : null;
+
+                    const handleToggleChange = (event, newToggleValue) => {
+                      if (newToggleValue !== null) {
+                        handleAttendanceChange(rsvp.guestId, newToggleValue === "accept" ? true : false);
+                      }
+                    };
+
                     return (
                       <div key={`rsvp-guest-${rsvp.guestId}`}>
-                        <FormControl key={`rsvp-guest-${rsvp.guestId}`}>
-                          <FormLabel>{guest?.name}</FormLabel>
-                          <RadioGroup
-                            name={`rsvp-${rsvp.guestId}-group`}
-                            value={rsvp.attendance}
-                            onChange={(e) =>
-                              handleAttendanceChange(rsvp.guestId, e.target.value === "true" ? true : false)
-                            }
-                          >
-                            <FormControlLabel value={true} control={<Radio />} label="Attending" />
-                            <FormControlLabel value={false} control={<Radio />} label="Not Attending" />
-                          </RadioGroup>
+                        <FormControl component="fieldset" fullWidth>
+                          <div className="rsvp-form-action-container">
+                            <FormLabel component="legend">{guest?.name}</FormLabel>
+                            <ToggleButtonGroup
+                              sx={{
+                                display: "flex",
+                                gap: "2rem",
+                              }}
+                              value={attendanceToggleValue}
+                              exclusive
+                              onChange={handleToggleChange}
+                              aria-label={`RSVP for ${guest?.name}`}
+                              color="primary"
+                            >
+                              <ToggleButton
+                                sx={{ width: "10rem", height: "2.5rem" }}
+                                value="accept"
+                                aria-label="Accept Invitation"
+                              >
+                                {rsvp.attendance === true ? "Accepted" : "Accept"}
+                              </ToggleButton>
+                              <ToggleButton
+                                sx={{ width: "10rem", height: "2.5rem" }}
+                                value="decline"
+                                aria-label="Decline Invitation"
+                              >
+                                {rsvp.attendance === false ? "Declined" : "Decline"}
+                              </ToggleButton>
+                            </ToggleButtonGroup>
+                          </div>
                         </FormControl>
+
                         {rsvp.attendance && guest?.plus_one_allowed && (
-                          <p>
+                          <p style={{ marginTop: "1rem" }}>
                             {guest.name} has a plus one for this invitation. Plus ones can be added{" "}
                             <strong style={{ textDecoration: "underline" }}>after the RSVP is submitted</strong> by
                             entering your name again in the RSVP portal.
@@ -361,17 +397,18 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                       rsvp.attendance === true &&
                       groupData.guests.find((guest) => guest.guest_id === rsvp.guestId)?.has_dependents
                   ) && (
-                    <p>
-                      Note: One or more guests can bring children or dependents. Children/dependents{" "}
-                      <strong style={{ textDecoration: "underline" }}>have to be added</strong> after submitting the
-                      RSVP.
-                    </p>
+                    <div>
+                      <p>
+                        Note: One or more guests can bring children or dependents. Children/dependents{" "}
+                        <strong style={{ textDecoration: "underline" }}>have to be added</strong> after submitting the
+                        RSVP.
+                      </p>
+                    </div>
                   )}
-                  <div className="btn-container">
-                    <button disabled={!isRSVPStepValid} className="btn-link" onClick={handleNext}>
-                      Next
-                    </button>
-                  </div>
+
+                  <button id="rsvp-form-continue-btn" disabled={!isRSVPStepValid} onClick={handleNext}>
+                    Continue
+                  </button>
                 </div>
               )}
               {activeStep === 1 && (
