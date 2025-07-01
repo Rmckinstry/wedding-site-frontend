@@ -614,6 +614,9 @@ button.status-menu-btn:hover {
     border-radius: 3rem;
 }
 
+.state-container{
+    width: 100%;
+}
 /* Media Queries */
 
 /* Small devices (phones, 600px and below) */

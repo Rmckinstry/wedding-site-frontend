@@ -10,6 +10,7 @@ import ChildFriendlyIcon from "@mui/icons-material/ChildFriendly";
 import EmailIcon from "@mui/icons-material/Email";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import ChecklistIcon from "@mui/icons-material/Checklist";
+import Success from "../utility/Success.tsx";
 
 type additionalPost = {
   additionalGuests: string[];
@@ -153,7 +154,7 @@ const SongEditForm = ({
     },
     onSuccess: (data) => {
       console.log("Response from server:", data);
-      handleDataRefresh();
+      // handleDataRefresh();
       // possible success snackbar trigger
     },
     onError: (error: ErrorType) => {
@@ -161,6 +162,11 @@ const SongEditForm = ({
       console.error("Error submitting songs:", error.message);
     },
   });
+
+  const handleSongSuccess = () => {
+    handleDataRefresh();
+    songSubmitMutation.reset();
+  };
 
   //#region song template
   return (
@@ -180,19 +186,24 @@ const SongEditForm = ({
       )}
 
       {submittedSongs.length !== guest.song_requests && (
-        <div>
-          {songSubmitMutation.isPending && (
-            <div>
-              <Loading loadingText={"Submitting song requests. Please Wait..."} />
+        <>
+          {songSubmitMutation.isPending || songSubmitMutation.isError || songSubmitMutation.isSuccess ? (
+            <div className="state-container">
+              {songSubmitMutation.isPending && <Loading loadingText={"Submitting song requests. Please Wait..."} />}
+              {songSubmitMutation.isError && (
+                <Error errorInfo={songSubmitMutation.error} tryEnabled={true} handleRetry={songSubmitMutation.reset} />
+              )}
+              {songSubmitMutation.isSuccess && (
+                <Success
+                  message={
+                    "Your song requests were successfully submitted. If you have remaining requests, you can add them at any point before Oct. 1st!"
+                  }
+                  btnMessage="Okay!"
+                  handleAction={handleSongSuccess}
+                />
+              )}
             </div>
-          )}
-          {songSubmitMutation.isError && (
-            <div>
-              <Error errorInfo={songSubmitMutation.error} tryEnabled={true} handleRetry={songSubmitMutation.reset} />
-            </div>
-          )}
-
-          {!songSubmitMutation.isPending && !songSubmitMutation.isError && (
+          ) : (
             <div className="flex-col-start">
               {emptySongs.map((song, index) => {
                 const [title, artist] = song ? song.split(" - ") : ["", ""];
@@ -236,7 +247,7 @@ const SongEditForm = ({
               </div>
             </div>
           )}
-        </div>
+        </>
       )}
     </div>
   );
@@ -315,7 +326,7 @@ const EmailForm = ({ guest, rsvp, handleDataRefresh }: { guest: Guest; rsvp: RSV
     },
     onSuccess: (data) => {
       console.log("Response from server:", data);
-      handleDataRefresh();
+      // handleDataRefresh();
     },
     onError: (error: ErrorType) => {
       console.log(error);
@@ -327,33 +338,26 @@ const EmailForm = ({ guest, rsvp, handleDataRefresh }: { guest: Guest; rsvp: RSV
   // #region email template
   return (
     <>
-      <div className="email-form-container flex-col-start">
-        {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
-        {emailSubmitMutation.isPending || emailSubmitMutation.isError ? (
-          <div>
-            {emailSubmitMutation.isPending && (
-              <div>
-                <p>Saving email. Please Wait...</p>
-              </div>
-            )}
-            {emailSubmitMutation.isError && (
-              <div>
-                <Error
-                  errorInfo={emailSubmitMutation.error}
-                  tryEnabled={true}
-                  handleRetry={emailSubmitMutation.reset}
-                />
-              </div>
-            )}
-            {/* redo this - maybe use the mutation hook above to make this a popup snack bar or modal pop up */}
-            {/* {emailSubmitMutation.isSuccess && (
-                    <div>
-                      <p>Your email was updated!</p>
-                    </div>
-                  )} */}
-          </div>
-        ) : (
-          <div key={rsvp.rsvp_id} className="flex-col-start" style={{ gap: "1rem" }}>
+      {emailSubmitMutation.isPending || emailSubmitMutation.isError || emailSubmitMutation.isSuccess ? (
+        <div className="state-container">
+          {emailSubmitMutation.isPending && <Loading loadingText={"Saving email. Please Wait..."} />}
+          {emailSubmitMutation.isError && (
+            <Error errorInfo={emailSubmitMutation.error} tryEnabled={true} handleRetry={emailSubmitMutation.reset} />
+          )}
+          {emailSubmitMutation.isSuccess && (
+            <Success
+              message={"Your email was successfully updated!"}
+              btnMessage={"Okay"}
+              handleAction={() => {
+                handleDataRefresh();
+                emailSubmitMutation.reset();
+              }}
+            />
+          )}
+        </div>
+      ) : (
+        <div key={rsvp.rsvp_id} className="email-form-container flex-col-start" style={{ gap: "1rem" }}>
+          <div className="flex-col-start">
             <p className="font-sm">{guest.name}'s Email</p>
             <TextField
               value={emails[guest.guest_id] || ""}
@@ -384,8 +388,8 @@ const EmailForm = ({ guest, rsvp, handleDataRefresh }: { guest: Guest; rsvp: RSV
               </button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 };
@@ -543,25 +547,19 @@ function RSVPStatusMenu({
             {additionalGuestMutation.isPending ||
             additionalGuestMutation.isError ||
             additionalGuestMutation.isSuccess ? (
-              <div>
+              <div className="state-container">
                 {additionalGuestMutation.isPending && (
-                  <div>
-                    <Loading loadingText={"Creating Plus One RSVP. Please Wait..."} />
-                  </div>
+                  <Loading loadingText={"Creating Plus One RSVP. Please Wait..."} />
                 )}
                 {additionalGuestMutation.isError && (
-                  <div>
-                    <Error
-                      errorInfo={additionalGuestMutation.error}
-                      tryEnabled={true}
-                      handleRetry={additionalGuestMutation.reset}
-                    />
-                  </div>
+                  <Error
+                    errorInfo={additionalGuestMutation.error}
+                    tryEnabled={true}
+                    handleRetry={additionalGuestMutation.reset}
+                  />
                 )}
                 {additionalGuestMutation.isSuccess && (
-                  <div>
-                    <p>Your Plus One RSVP was created!</p>
-                  </div>
+                  <Success message={"Your Plus One RSVP was successfully submitted!"} />
                 )}
               </div>
             ) : (
@@ -611,25 +609,23 @@ function RSVPStatusMenu({
             {additionalGuestMutation.isPending ||
             additionalGuestMutation.isError ||
             additionalGuestMutation.isSuccess ? (
-              <div>
+              <div className="state-container">
                 {additionalGuestMutation.isPending && (
-                  <div>
-                    <Loading loadingText={"Creating child RSVP(s). Please wait..."} />
-                  </div>
+                  <Loading loadingText={"Creating child RSVP(s). Please wait..."} />
                 )}
                 {additionalGuestMutation.isError && (
-                  <div>
-                    <Error
-                      errorInfo={additionalGuestMutation.error}
-                      tryEnabled={true}
-                      handleRetry={additionalGuestMutation.reset}
-                    />
-                  </div>
+                  <Error
+                    errorInfo={additionalGuestMutation.error}
+                    tryEnabled={true}
+                    handleRetry={additionalGuestMutation.reset}
+                  />
                 )}
                 {additionalGuestMutation.isSuccess && (
-                  <div>
-                    <p>Your child RSVP(s) was created!</p>
-                  </div>
+                  <Success
+                    message={"Your child RSVP(s) have been created!"}
+                    btnMessage="Okay"
+                    handleAction={additionalGuestMutation.reset}
+                  />
                 )}
               </div>
             ) : (
@@ -755,7 +751,7 @@ function RSVPStatusMenu({
                 if (guest) {
                   return (
                     <div className="guest-status-container" style={{ width: "100%" }} key={guest.guest_id}>
-                      <div className="overview-guest-info">
+                      <div className="overview-guest-info flex-col-start" style={{ gap: "1rem" }}>
                         <div className="guest-name flex-row-start flex-row-gap">
                           <p className="font-sm strong-text" style={{ textDecoration: "underline" }}>
                             Guest:
