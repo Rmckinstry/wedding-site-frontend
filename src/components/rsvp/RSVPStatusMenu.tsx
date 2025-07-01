@@ -122,11 +122,21 @@ const SongEditForm = ({
 
   const handleSongSubmit = async () => {
     const oldSongsString: string = submittedSongs.reduce((acc, song) => {
-      return acc.length === 0 ? song : acc + separator + song;
+      if (song.trim().length < 2) {
+        //checks if song isn't just white space (plus dash)
+        return acc.length === 0 ? separator : acc + separator;
+      } else {
+        return acc.length === 0 ? song.trim() : acc + separator + song.trim();
+      }
     }, "");
 
     const newSongsString: string = emptySongs.reduce((acc, song) => {
-      return acc.length === 0 ? song : acc + separator + song;
+      if (song.trim().length < 2) {
+        //checks if song isn't just white space (plus dash)
+        return acc.length === 0 ? separator : acc + separator;
+      } else {
+        return acc.length === 0 ? song.trim() : acc + separator + song.trim();
+      }
     }, "");
 
     const songString = oldSongsString.length === 0 ? newSongsString : oldSongsString + separator + newSongsString;
