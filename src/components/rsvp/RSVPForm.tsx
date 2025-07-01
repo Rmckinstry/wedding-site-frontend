@@ -15,6 +15,7 @@ import Error from "../utility/Error.tsx";
 import Loading from "../utility/Loading.tsx";
 import EventIcon from "@mui/icons-material/Event";
 import { useNavigation } from "../../context/NavigationContext.tsx";
+import { isValidInput } from "../../utility/util.ts";
 
 type RSVPPost = {
   guestId: number;
@@ -63,6 +64,16 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
         // spotify: Array(guest.song_requests).fill(""),
       }));
       setRsvps(newRsvps);
+
+      // Initialize song inputs count when groupData changes
+      const initialCounts = groupData.guests.reduce(
+        (acc, guest) => ({
+          ...acc,
+          [guest.guest_id]: 0,
+        }),
+        {}
+      );
+      setSongInputsCount(initialCounts);
     }
   }, [groupData, setRsvps]);
 
@@ -201,6 +212,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
 
         const updatedTitle = key === "title" ? value : currentTitle;
         const updatedArtist = key === "artist" ? value : currentArtist;
+
         newSpotify[index] = updatedTitle || updatedArtist ? `${updatedTitle || ""} - ${updatedArtist || ""}` : "";
 
         const newErrorsForGuest = [...(songValidationErrors[guestId] || [])];
@@ -208,19 +220,37 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
         let artistError = false;
         let errorMessage = "";
 
-        // Check for empty inputs or partial inputs
-        if (!updatedTitle && !updatedArtist) {
-          titleError = true;
+        const isTitleEmpty = updatedTitle.length === 0;
+        const isArtistEmpty = updatedArtist.length === 0;
+
+        const isTitleInvalid = !isValidInput(updatedTitle);
+        const isArtistInvalid = !isValidInput(updatedArtist);
+
+        //only check for errors is either title or artist is not empty
+        // both being empty is valid as song requests are not required
+        if (isTitleEmpty && isArtistEmpty) {
+        } else if (!isTitleEmpty && isArtistEmpty) {
+          //Title has content, Artist is empty
           artistError = true;
-          errorMessage = "Both song title and artist are required.";
-        } else if (updatedTitle && !updatedArtist) {
-          titleError = false;
-          artistError = true;
-          errorMessage = "Artist is required when a song title is entered.";
-        } else if (!updatedTitle && updatedArtist) {
+          errorMessage = "Artist is required when a song name is entered.";
+        }
+        //Artist has content, Title is empty
+        else if (isTitleEmpty && !isArtistEmpty) {
           titleError = true;
-          artistError = false;
-          errorMessage = "Song title is required when an artist is entered.";
+          errorMessage = "Song name is required when an artist is entered.";
+        }
+        //Both have content, check for valid input characters
+        else {
+          if (isTitleInvalid) {
+            titleError = true;
+            errorMessage = "Song name must contain letters or numbers.";
+          }
+          if (isArtistInvalid) {
+            artistError = true;
+            errorMessage = errorMessage
+              ? errorMessage + " Artist must contain letters or numbers."
+              : "Artist must contain letters or numbers.";
+          }
         }
 
         newErrorsForGuest[index] = {
@@ -275,18 +305,6 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
       }));
     }
   };
-
-  // Initialize song inputs count when groupData changes
-  useEffect(() => {
-    const initialCounts = groupData.guests.reduce(
-      (acc, guest) => ({
-        ...acc,
-        [guest.guest_id]: 0,
-      }),
-      {}
-    );
-    setSongInputsCount(initialCounts);
-  }, [groupData]);
 
   //for debugging
   useEffect(() => {
@@ -487,44 +505,46 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                               {guest?.name} - {requestsLeft} song requests left
                             </FormLabel>
 
-                            {rsvp.spotify.map((request, index) => {
-                              const [title, artist] = request ? request.split(" - ") : ["", ""];
-                              const errors = songValidationErrors[rsvp.guestId]?.[index] || {
-                                title: false,
-                                artist: false,
-                                message: "",
-                              };
+                            <div className="flex-col-start">
+                              {rsvp.spotify.map((request, index) => {
+                                const [title, artist] = request ? request.split(" - ") : ["", ""];
+                                const errors = songValidationErrors[rsvp.guestId]?.[index] || {
+                                  title: false,
+                                  artist: false,
+                                  message: "",
+                                };
+                                return (
+                                  <div key={index} className="song-form-inputs flex-row-gap" style={{ gap: "2rem" }}>
+                                    <TextField
+                                      onChange={(e) =>
+                                        handleSongRequestChange(rsvp.guestId, index, "title", e.target.value)
+                                      }
+                                      value={title || ""}
+                                      id={`song-request-title-${index}`}
+                                      label="Song Title"
+                                      error={errors.title}
+                                      helperText={errors.title ? errors.message : ""}
+                                      variant="standard"
+                                      sx={{ width: "17rem" }}
+                                    />
+                                    <TextField
+                                      onChange={(e) =>
+                                        handleSongRequestChange(rsvp.guestId, index, "artist", e.target.value)
+                                      }
+                                      value={artist || ""}
+                                      id={`song-request-artist-${index}`}
+                                      label="Song Artist"
+                                      error={errors.artist}
+                                      helperText={errors.artist ? errors.message : ""}
+                                      variant="standard"
+                                      sx={{ width: "17rem" }}
+                                    />
+                                  </div>
+                                );
+                              })}
+                            </div>
 
-                              return (
-                                <div key={index} className="song-form-inputs flex-row-gap" style={{ gap: "2rem" }}>
-                                  <TextField
-                                    onChange={(e) =>
-                                      handleSongRequestChange(rsvp.guestId, index, "title", e.target.value)
-                                    }
-                                    value={title || ""}
-                                    id={`song-request-title-${index}`}
-                                    label="Song Title"
-                                    error={errors.title}
-                                    helperText={errors.title ? errors.message : ""}
-                                    variant="standard"
-                                    sx={{ width: "17rem" }}
-                                  />
-                                  <TextField
-                                    onChange={(e) =>
-                                      handleSongRequestChange(rsvp.guestId, index, "artist", e.target.value)
-                                    }
-                                    value={artist || ""}
-                                    id={`song-request-artist-${index}`}
-                                    label="Song Artist"
-                                    error={errors.artist}
-                                    helperText={errors.artist ? errors.message : ""}
-                                    variant="standard"
-                                    sx={{ width: "17rem" }}
-                                  />
-                                </div>
-                              );
-                            })}
-                            <div>
+                            <div style={{ marginTop: "1rem" }}>
                               <button
                                 onClick={() => handleAddSong(rsvp.guestId, guest?.song_requests || 0)}
                                 disabled={

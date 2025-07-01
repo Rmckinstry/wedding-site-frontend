@@ -144,10 +144,6 @@ const SongEditForm = ({
 
       setSongValidationErrors((prevErrors) => {
         const updatedErrors = [...prevErrors];
-        console.log("errors", updatedErrors);
-        console.log("index", index);
-        console.log("updatedErrors[index]", updatedErrors[index]);
-        console.log("----------------------------");
         updatedErrors[index] = newErrorsForIndex;
         return updatedErrors;
       });
