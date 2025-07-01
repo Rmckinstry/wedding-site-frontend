@@ -74,6 +74,15 @@ const SongEditForm = ({
   useEffect(() => {
     const submittedSongs = rsvp.spotify.split(separator).filter((song) => song !== "");
     setEmptySongs(Array(guest.song_requests - submittedSongs.length).fill(""));
+    //initalizing validation array to protect from errors when users add songs out of order
+    setSongValidationErrors(
+      Array(guest.song_requests - submittedSongs.length).fill({
+        // Create the error object for the current index
+        title: false,
+        artist: false,
+        message: "",
+      })
+    );
   }, [guest, rsvp]);
 
   //#region song methods
@@ -135,6 +144,10 @@ const SongEditForm = ({
 
       setSongValidationErrors((prevErrors) => {
         const updatedErrors = [...prevErrors];
+        console.log("errors", updatedErrors);
+        console.log("index", index);
+        console.log("updatedErrors[index]", updatedErrors[index]);
+        console.log("----------------------------");
         updatedErrors[index] = newErrorsForIndex;
         return updatedErrors;
       });
