@@ -605,6 +605,10 @@ function RSVPStatusMenu({
             <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
               Child / Dependent Menu
             </p>
+            <p className="font-xs contain-text-center">
+              Child RSVPs are meant for kids <strong style={{ textDecoration: "underline" }}>15 years</strong> and
+              younger.
+            </p>
             {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
             {additionalGuestMutation.isPending ||
             additionalGuestMutation.isError ||
