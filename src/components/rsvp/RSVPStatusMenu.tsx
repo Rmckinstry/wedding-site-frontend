@@ -11,6 +11,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import Success from "../utility/Success.tsx";
+import { isValidInput } from "../../utility/util.ts";
 
 type additionalPost = {
   additionalGuests: string[];
@@ -99,15 +100,37 @@ const SongEditForm = ({
         message: "",
       };
 
-      // setting errors and flags
-      if (updatedTitle && !updatedArtist) {
-        newErrorsForIndex.title = false;
+      const isTitleEmpty = updatedTitle.length === 0;
+      const isArtistEmpty = updatedArtist.length === 0;
+
+      const isTitleInvalid = !isValidInput(updatedTitle);
+      const isArtistInvalid = !isValidInput(updatedArtist);
+
+      //only check for errors is either title or artist is not empty
+      // both being empty is valid as song requests are not required
+      if (isTitleEmpty && isArtistEmpty) {
+      } else if (!isTitleEmpty && isArtistEmpty) {
+        //Title has content, Artist is empty
         newErrorsForIndex.artist = true;
         newErrorsForIndex.message = "Artist is required when a song title is entered.";
-      } else if (!updatedTitle && updatedArtist) {
+      }
+      //Artist has content, Title is empty
+      else if (isTitleEmpty && !isArtistEmpty) {
         newErrorsForIndex.title = true;
-        newErrorsForIndex.artist = false;
         newErrorsForIndex.message = "Song title is required when an artist is entered.";
+      }
+      //Both have content, check for valid input characters
+      else {
+        if (isTitleInvalid) {
+          newErrorsForIndex.title = true;
+          newErrorsForIndex.message = "Song title must contain letters or numbers.";
+        }
+        if (isArtistInvalid) {
+          newErrorsForIndex.artist = true;
+          newErrorsForIndex.message = newErrorsForIndex.message
+            ? newErrorsForIndex.message + " Artist must contain letters or numbers."
+            : "Artist must contain letters or numbers.";
+        }
       }
 
       setSongValidationErrors((prevErrors) => {
