@@ -155,8 +155,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
         return rsvp.attendance && (guest?.has_dependents || guest?.plus_one_allowed);
       });
 
-      setDirectToRegistry(!hasChildOrDep || true);
-      console.log(hasChildOrDep);
+      setDirectToRegistry(!hasChildOrDep);
       console.log("Response from server:", data);
     },
     onError: (error: ErrorType) => {
@@ -631,6 +630,14 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                   )}
                   <div className="btn-container" style={{ gap: "2rem" }}>
                     <button
+                      className="btn-rsvp-sm btn-alt"
+                      style={{ flexGrow: 1, width: "10%" }}
+                      onClick={handleReset}
+                      disabled={submitRsvpsMutation.isPending}
+                    >
+                      Reset
+                    </button>
+                    <button
                       className="btn-rsvp-sm"
                       style={{ flexGrow: 1, width: "10%" }}
                       onClick={handleBack}
@@ -638,14 +645,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                     >
                       Back
                     </button>
-                    <button
-                      className="btn-rsvp-sm"
-                      style={{ flexGrow: 1, width: "10%" }}
-                      onClick={handleReset}
-                      disabled={submitRsvpsMutation.isPending}
-                    >
-                      Reset
-                    </button>
+
                     <button
                       className="btn-rsvp-sm"
                       style={{ flexGrow: 1, width: "10%" }}
