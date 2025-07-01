@@ -164,7 +164,7 @@ const SongEditForm = ({
 
   //#region song template
   return (
-    <div className="guest-song-container flex-col-start" style={{ width: "fit-content", gap: "1rem" }}>
+    <div className="guest-status-container flex-col-start" style={{ width: "fit-content", gap: "1rem" }}>
       {/* already submitted song display */}
       <p className="font-sm strong-text">{guest.name} Song Requests</p>
       {submittedSongs.length !== 0 && (
@@ -709,7 +709,7 @@ function RSVPStatusMenu({
             <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
               Song Request Menu
             </p>
-            <div id="song-edit-form-container flex-col-start">
+            <div id="song-edit-form-container" className="flex-col-start">
               {/* eslint-disable-next-line array-callback-return */}
               {groupRSVPs.map((rsvp) => {
                 const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
@@ -745,46 +745,54 @@ function RSVPStatusMenu({
           </div>
         )}
         {menuState === "overview" && (
-          <div id="overview-status-container">
+          <div id="overview-status-container" className="status-menu-card" style={{ width: "70%" }}>
             <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
-              RSVP Confirmation Menu
+              Confirmation Menu
             </p>
-            <div id="overview-staus-container">
+            <div id="overview-staus-container" className="flex-col-start">
               {groupRSVPs.map((rsvp) => {
                 const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
                 if (guest) {
                   return (
-                    <div className="overview-guest-container" key={guest.guest_id}>
+                    <div className="guest-status-container" style={{ width: "100%" }} key={guest.guest_id}>
                       <div className="overview-guest-info">
-                        <div className="guest-name">
-                          <p style={{ textDecoration: "underline" }}>Guest:</p>
-                          <p>{guest.name}</p>
-                          {guest.additional_guest_type === "plus_one" && <p>(Plus One)</p>}
-                          {guest.additional_guest_type === "dependent" && <p>(Child RSVP)</p>}
+                        <div className="guest-name flex-row-start flex-row-gap">
+                          <p className="font-sm strong-text" style={{ textDecoration: "underline" }}>
+                            Guest:
+                          </p>
+                          <p className="font-sm">{guest.name}</p>
+                          {guest.additional_guest_type === "plus_one" && <p className="font-sm">(Plus One)</p>}
+                          {guest.additional_guest_type === "dependent" && <p className="font-sm">(Child RSVP)</p>}
                         </div>
-                        <div className="guest-attending">
-                          <p style={{ textDecoration: "underline" }}>Attending: </p>
-                          {rsvp.attendance && <p>Yes!</p>}
-                          {!rsvp.attendance && <p>No.</p>}
+                        <div className="guest-attending flex-row-start flex-row-gap">
+                          <p className="font-sm strong-text" style={{ textDecoration: "underline" }}>
+                            Attending:{" "}
+                          </p>
+                          {rsvp.attendance && <p className="font-sm">Yes!</p>}
+                          {!rsvp.attendance && <p className="font-sm">No.</p>}
                         </div>
                         {guest.email && (
-                          <div className="guest-email">
-                            <p style={{ textDecoration: "underline" }}>Email:</p>
-                            <p>{guest.email}</p>
+                          <div className="guest-email flex-row-start flex-row-gap">
+                            <p className="font-sm strong-text" style={{ textDecoration: "underline" }}>
+                              Email:
+                            </p>
+                            <p className="font-sm">{guest.email}</p>
                           </div>
                         )}
                       </div>
                       {rsvp.spotify && rsvp.spotify.split(separator).length > 0 ? (
                         <div className="overview-guest-song">
-                          <p style={{ textDecoration: "underline" }}>Requested Songs</p>
+                          <p className="font-sm strong-text" style={{ textDecoration: "underline" }}>
+                            Requested Songs
+                          </p>
                           {rsvp.spotify.split(separator).map((song, index) => (
-                            <p style={{ marginLeft: "1rem", marginTop: "1rem" }} key={index}>
+                            <p className="font-sm" style={{ marginLeft: "1rem", marginTop: "1rem" }} key={index}>
                               • {song}
                             </p>
                           ))}
                         </div>
                       ) : (
-                        <p className="overview-guest-no-song">
+                        <p className="overview-guest-no-song font-xs">
                           No songs yet. This can be done in the 'Song Request' menu.
                         </p>
                       )}
@@ -801,24 +809,21 @@ function RSVPStatusMenu({
               })}
               {/* has dependents message */}
               {groupData.guests.some((guest) => guest.has_dependents) && (
-                <div>
+                <div className="font-sm">
                   <p>
-                    Children & dependent RSVP's can be added from the{" "}
-                    <strong
-                      onClick={() => {
-                        handleMenuClick("dependent");
-                      }}
-                      style={{ textDecoration: "underline" }}
-                    >
-                      "Add Children"
-                    </strong>{" "}
-                    menu.
+                    One or more guests in this group are able to add child/dependent RSVPs/ These can be added in the
+                    'Add Child/Dependent Menu'.
+                  </p>
+                  <p>
+                    <strong>Note:</strong> It is required to add these RSVPs for your children/dependents to be{" "}
+                    <span style={{ textDecoration: "underline" }}>counted</span>. If you do not see their name on this
+                    confirmation screen it means they haven't been added and counted.
                   </p>
                 </div>
               )}
               {/* no email message */}
               {groupData.guests.some((guest) => !guest.email && !guest.additional_guest_type) && (
-                <div>
+                <div className="font-sm">
                   <p>
                     At least one attending guest in your group does not have an email associated with their RSVP. While
                     this is completely optional - it is recommended to keep up to date with the event and to get first
