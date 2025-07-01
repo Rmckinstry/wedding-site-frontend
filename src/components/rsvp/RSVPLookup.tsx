@@ -258,23 +258,12 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
   return (
     <div id="rsvp-lookup-container">
       {!showConfirmation ? (
-        <div className="flex-col" style={{ gap: "2rem" }}>
+        <div className="flex-col flex-col-lg">
           <p className="font-med">Lookup your name to access your / your groups RSVP Guest Portal.</p>
           <Autocomplete
             //current open logic doesn't fully work, when clicking a name it doesn't close the list
             // open={inputValue.length > 0}
-            // might move sorting to backend - because might combine it with duplication handling
-            options={reducedData.sort((a, b) => {
-              const nameA = a.name.toUpperCase();
-              const nameB = b.name.toUpperCase();
-              if (nameA < nameB) {
-                return -1;
-              } else if (nameA > nameB) {
-                return 1;
-              } else {
-                return 0;
-              }
-            })}
+            options={reducedData}
             getOptionLabel={(option: any) =>
               option.name === "Anne Marie McKinstry" ? "Anne Marie McKinstry *" : option.name
             }

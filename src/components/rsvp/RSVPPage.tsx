@@ -26,7 +26,18 @@ function RSVPPage() {
         const errorData: ErrorType = await response.json();
         throw errorData;
       }
-      return await response.json();
+      const results = await response.json();
+      return results.sort((a, b) => {
+        const nameA = a.name.toUpperCase();
+        const nameB = b.name.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        } else if (nameA > nameB) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
     },
   });
 

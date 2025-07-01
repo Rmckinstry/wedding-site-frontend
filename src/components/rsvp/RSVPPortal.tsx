@@ -19,7 +19,18 @@ function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string
         const errorData: ErrorType = await response.json();
         throw errorData;
       }
-      return await response.json();
+      const results = await response.json();
+      return results.sort((a, b) => {
+        const idA = a.guest_id;
+        const idB = b.guest_id;
+        if (idA < idB) {
+          return -1;
+        } else if (idA > idB) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
     },
   });
 
