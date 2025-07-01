@@ -785,11 +785,15 @@ function RSVPStatusMenu({
                           <p className="font-sm strong-text" style={{ textDecoration: "underline" }}>
                             Requested Songs
                           </p>
-                          {rsvp.spotify.split(separator).map((song, index) => (
-                            <p className="font-sm" style={{ marginLeft: "1rem", marginTop: "1rem" }} key={index}>
-                              • {song}
-                            </p>
-                          ))}
+                          {/* filtering out empty song slots */}
+                          {rsvp.spotify
+                            .split(separator)
+                            .filter((song) => song !== "")
+                            .map((song, index) => (
+                              <p className="font-sm" style={{ marginLeft: "1rem", marginTop: "1rem" }} key={index}>
+                                • {song}
+                              </p>
+                            ))}
                         </div>
                       ) : (
                         <p className="overview-guest-no-song font-xs">
