@@ -509,6 +509,13 @@ function RSVPStatusMenu({
     setCurrentChild("");
   };
 
+  const isDuplicate = () => {
+    const submittedNames = groupData.guests.filter((guest) => guest.additional_guest_type === "dependent");
+    return (
+      childrenNames.some((name) => name === currentChild) || submittedNames.some((guest) => guest.name === currentChild)
+    );
+  };
+
   const handleAdditionalSubmit = async (
     plusOneName: string | string[],
     guestId: number,
@@ -585,7 +592,6 @@ function RSVPStatusMenu({
             <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
               Plus One Menu
             </p>
-            {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
             {additionalGuestMutation.isPending ||
             additionalGuestMutation.isError ||
             additionalGuestMutation.isSuccess ? (
@@ -651,7 +657,6 @@ function RSVPStatusMenu({
               Child RSVPs are meant for kids <strong style={{ textDecoration: "underline" }}>15 years</strong> and
               younger.
             </p>
-            {/* TODO make is loading better than this maybe a modal or rearrange so les popping in */}
             {additionalGuestMutation.isPending ||
             additionalGuestMutation.isError ||
             additionalGuestMutation.isSuccess ? (
@@ -713,10 +718,16 @@ function RSVPStatusMenu({
                     value={currentChild || ""}
                     sx={{ width: "20rem" }}
                   ></TextField>
-                  <button className="btn-stripped" onClick={handleChildAdd} disabled={currentChild === ""}>
+                  <button
+                    className="btn-stripped"
+                    onClick={handleChildAdd}
+                    disabled={currentChild === "" || isDuplicate()}
+                  >
                     Add Child
                   </button>
                 </div>
+                {isDuplicate() && <p style={{ color: "red" }}>Name is already pending or submitted.</p>}
+
                 <div className="btn-container">
                   <button
                     onClick={() => {
