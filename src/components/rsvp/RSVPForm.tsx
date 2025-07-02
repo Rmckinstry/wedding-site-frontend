@@ -395,13 +395,13 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                 <div className="flex-col" style={{ gap: "2rem", marginTop: "2rem" }}>
                   <p className="font-med contain-text-center">Your RSVP(s) were successfully submitted. Thank you!</p>
                   {directToRegistry ? (
-                    <div className="flex-col" style={{ gap: "2rem" }}>
+                    <div className="flex-col outline" style={{ gap: "2rem" }}>
                       <div className="flex-col">
                         <p className="font-sm-med contain-text-center">
                           If you are looking for gift ideas, our registry is available through the button below or you
                           can use the menu above.
                         </p>
-                        <button className="btn-rsvp-sm" onClick={handleRegistryButtonClick}>
+                        <button className="btn-rsvp" onClick={handleRegistryButtonClick}>
                           Registry
                         </button>
                       </div>
@@ -416,13 +416,13 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                       </div>
                     </div>
                   ) : (
-                    <div className="flex-col" style={{ gap: "2rem" }}>
+                    <div className="flex-col outline" style={{ gap: "2rem" }}>
                       <div className="flex-col">
                         <p className="font-sm-med contain-text-center">
                           Ready to add a plus-one or child to your RSVP? You can do that, make a song request, update
                           your email, or view your confirmation by heading over to our RSVP portal.
                         </p>
-                        <button className="btn-rsvp-sm" onClick={sendRefresh}>
+                        <button className="btn-rsvp" onClick={sendRefresh}>
                           RSVP Portal
                         </button>
                       </div>

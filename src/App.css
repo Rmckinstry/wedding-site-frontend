@@ -537,6 +537,13 @@ button:hover {
     gap: 2rem;
 }
 
+.outline{
+    outline-color: #6464401f;
+    outline-style: solid;
+    padding: .5rem 1rem;
+    border-radius: 1rem;
+}
+
 .guest-status-container {
     display: flex;
     flex-direction: column;
