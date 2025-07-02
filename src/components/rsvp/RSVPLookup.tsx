@@ -233,6 +233,7 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
   const [inputValue, setInputValue] = useState("");
   const [selectedGuest, setSelectedGuest] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [openPopper, setOpenPopper] = useState(false);
 
   let anneMarieData: Guest[] = [];
 
@@ -268,19 +269,34 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
         <div className="flex-col flex-col-lg">
           <p className="font-med">Lookup your name to access your / your groups RSVP Guest Portal.</p>
           <Autocomplete
-            //current open logic doesn't fully work, when clicking a name it doesn't close the list
-            // open={inputValue.length > 0}
+            open={openPopper}
+            onOpen={() => {
+              // Open only if there's input value
+              if (inputValue.length > 0) {
+                setOpenPopper(true);
+              }
+            }}
+            onClose={() => setOpenPopper(false)}
             options={reducedData}
-            getOptionLabel={(option: any) =>
+            getOptionLabel={(option) =>
               option.name === "Anne Marie McKinstry" ? "Anne Marie McKinstry *" : option.name
             }
             value={selectedGuest}
             onChange={(event: any, newValue: any) => {
               setSelectedGuest(newValue);
+              setOpenPopper(false);
+              if (newValue === null) {
+                setInputValue("");
+              }
             }}
             inputValue={inputValue}
             onInputChange={(event, newInputValue) => {
               setInputValue(newInputValue);
+              if (newInputValue.length > 0) {
+                setOpenPopper(true);
+              } else {
+                setOpenPopper(false);
+              }
             }}
             disablePortal
             sx={{ width: "30%" }}
