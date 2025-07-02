@@ -39,6 +39,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
   const [songInputsCount, setSongInputsCount] = useState<{ [guestId: string]: number }>({});
   const [directToRegistry, setDirectToRegistry] = useState<boolean>(false);
 
+  // tracking if every guest has responded to rsvp form step 1
   const isRSVPStepValid = rsvps.every((rsvp) => rsvp.attendance !== "");
 
   const allGuestsAttendingFalse = rsvps.every((rsvp) => rsvp.attendance === false);
@@ -62,7 +63,6 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
         guestId: guest.guest_id,
         attendance: "",
         spotify: [],
-        // spotify: Array(guest.song_requests).fill(""),
       }));
       setRsvps(newRsvps);
 
