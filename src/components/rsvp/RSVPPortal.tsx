@@ -66,11 +66,11 @@ function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string
   // }
 
   if (groupRSVPs.isError) {
-    return <Error errorInfo={groupRSVPs.error} />;
+    return <Error errorInfo={groupRSVPs.error} tryEnabled={true} handleRetry={refreshData} />;
   }
 
   if (groupData.isError) {
-    return <Error errorInfo={groupData.error} />;
+    return <Error errorInfo={groupData.error} tryEnabled={true} handleRetry={refreshData} />;
   }
 
   // possible location for the flashing bug

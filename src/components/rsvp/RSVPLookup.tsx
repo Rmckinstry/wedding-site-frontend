@@ -38,6 +38,11 @@ function RSVPConfirmation({
       .filter((query) => query.isSuccess && query.data !== undefined)
       .map((query) => query.data as GroupData);
 
+    const refetchAllAnneMarieQueries = () => {
+      anneMarieQueries.forEach((queryResult) => {
+        queryResult.refetch();
+      });
+    };
     if (isPending || isFetching) {
       return <Loading loadingText={`Loading ${guest["name"]}'s group information. Please wait...`} />;
     }
@@ -50,6 +55,8 @@ function RSVPConfirmation({
             message: "There was an unexpected error while pulling guest data. Please try again later.",
             error: error?.message,
           }}
+          tryEnabled={true}
+          handleRetry={refetchAllAnneMarieQueries}
         />
       );
     }
@@ -120,7 +127,7 @@ function RSVPConfirmation({
   };
 
   //#region rsvp confirm queries
-  const { isPending, isFetching, isError, data, error } = useQuery<GroupData, ErrorType>({
+  const { isPending, isFetching, isError, data, error, refetch } = useQuery<GroupData, ErrorType>({
     queryKey: ["groupData"],
     queryFn: async () => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/guests/group/${guest["group_id"]}`);
@@ -139,7 +146,7 @@ function RSVPConfirmation({
   }
 
   if (isError) {
-    return <Error errorInfo={error} />;
+    return <Error errorInfo={error} tryEnabled={true} handleRetry={refetch} />;
   }
 
   //#region rsvp confirmaion tmeplate
