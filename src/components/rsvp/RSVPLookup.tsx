@@ -301,6 +301,7 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
             disablePortal
             sx={{ width: "30%" }}
             renderInput={(params) => <TextField {...params} label="Enter Guest Name" />}
+            forcePopupIcon={false}
           />
           <div className="btn-container">
             <button disabled={!selectedGuest} className="btn-rsvp" onClick={() => setShowConfirmation(true)}>

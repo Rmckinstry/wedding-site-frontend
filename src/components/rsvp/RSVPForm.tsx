@@ -639,7 +639,9 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                 <div id="confirmation-card-container" className="rsvp-card" style={{ width: "80%" }}>
                   <div className="flex-col">
                     <p className="font-sm-med">RSVP Confirmation</p>
-                    <p className="font-xs">Please confirm that all information shown below is correct.</p>
+                    <p className="font-sm strong-text contain-text-center" style={{ textDecoration: "underline" }}>
+                      Please confirm that all information shown below is correct and submit.
+                    </p>
                   </div>
 
                   <div className="flex-row-gap" style={{ justifyContent: "center" }}>
