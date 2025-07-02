@@ -529,9 +529,12 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                 // song request card
                 <div id="song-request-card-container" className="rsvp-card">
                   <div id="song-request-header" className="flex-col">
-                    <p className="font-sm-med">Add Song Requests</p>
-                    <p className="font-xs-sm">
-                      Undecided? You can always add songs later after submitting your RSVP via the RSVP Portal!
+                    <p className="font-sm-med strong-text" style={{ marginBottom: "1rem" }}>
+                      Add Song Requests
+                    </p>
+                    <p className="font-sm contain-text-center secondary-text">
+                      <span style={{ textDecoration: "underline" }}>Undecided? </span>You can always add songs later
+                      after submitting your RSVP via the RSVP Portal!
                     </p>
                   </div>
 
