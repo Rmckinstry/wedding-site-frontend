@@ -16,6 +16,7 @@ import Loading from "../utility/Loading.tsx";
 import EventIcon from "@mui/icons-material/Event";
 import { useNavigation } from "../../context/NavigationContext.tsx";
 import { isValidInput } from "../../utility/util.ts";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 type RSVPPost = {
   guestId: number;
@@ -306,6 +307,47 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     }
   };
 
+  const handleDeleteSong = (guestId: number, index: number) => {
+    //remove song from rsvps spotify property
+    setRsvps((prev) =>
+      prev.map((rsvp) => {
+        if (rsvp.guestId !== guestId) return rsvp;
+        // removing song based off of index
+        const updatedSpotify = rsvp.spotify.filter((_, idx) => idx !== index);
+        return { ...rsvp, spotify: updatedSpotify };
+      })
+    );
+
+    //reset error index
+    setSongValidationErrors((prevErrors) => {
+      const currentErrors = prevErrors[guestId] || [];
+
+      const updatedErrors = currentErrors.map((error, idx) => {
+        if (idx === index) {
+          return {
+            title: false,
+            artist: false,
+            message: "",
+          };
+        }
+        return error;
+      });
+
+      return {
+        ...prevErrors, // Keep all other guest errors as they are
+        [guestId]: updatedErrors, // Update the errors for this specific guestId
+      };
+    });
+
+    //add 1 to input count
+    const currentInputs = songInputsCount[guestId] || 0;
+
+    setSongInputsCount((prev) => ({
+      ...prev,
+      [guestId]: currentInputs + -1,
+    }));
+  };
+
   //for debugging
   useEffect(() => {
     console.log("RSVP useEffect debugger");
@@ -539,6 +581,15 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                                       variant="standard"
                                       sx={{ width: "17rem" }}
                                     />
+                                    <button
+                                      className="btn-stripped icon"
+                                      aria-label="delete song"
+                                      onClick={() => {
+                                        handleDeleteSong(rsvp.guestId, index);
+                                      }}
+                                    >
+                                      <DeleteForeverIcon />
+                                    </button>
                                   </div>
                                 );
                               })}

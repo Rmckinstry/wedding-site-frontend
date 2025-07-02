@@ -617,6 +617,14 @@ button.status-menu-btn:hover {
 .state-container{
     width: 100%;
 }
+
+.song-form-inputs{
+    align-items: end;
+}
+
+.icon:hover{
+    transform: scale(1.1);
+}
 /* Media Queries */
 
 /* Small devices (phones, 600px and below) */
