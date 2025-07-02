@@ -509,6 +509,14 @@ function RSVPStatusMenu({
     setCurrentChild("");
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      if (currentChild !== "" && !isDuplicate()) {
+        handleChildAdd();
+      }
+    }
+  };
+
   const isDuplicate = () => {
     const submittedNames = groupData.guests.filter((guest) => guest.additional_guest_type === "dependent");
     return (
@@ -717,6 +725,7 @@ function RSVPStatusMenu({
                     label="Add Child/Dependent Full Name"
                     value={currentChild || ""}
                     sx={{ width: "20rem" }}
+                    onKeyDown={handleKeyDown}
                   ></TextField>
                   <Tooltip title="Add Child to Pending list">
                     <button
