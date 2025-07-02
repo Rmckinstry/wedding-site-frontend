@@ -458,7 +458,7 @@ button:hover {
 .btn-rsvp:hover,
 .btn-rsvp-sm:hover {
     cursor: pointer;
-    transform: scale(1.1);
+    transform: scale(1.05);
     font-weight: 600;
 }
 

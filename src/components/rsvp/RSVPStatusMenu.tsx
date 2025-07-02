@@ -1,5 +1,5 @@
 /* eslint-disable array-callback-return */
-import { TextField } from "@mui/material";
+import { TextField, Tooltip } from "@mui/material";
 import { CustomResponseType, ErrorType, GroupData, Guest, RSVP, SongRequestError } from "../../utility/types";
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -718,40 +718,47 @@ function RSVPStatusMenu({
                     value={currentChild || ""}
                     sx={{ width: "20rem" }}
                   ></TextField>
-                  <button
-                    className="btn-stripped"
-                    onClick={handleChildAdd}
-                    disabled={currentChild === "" || isDuplicate()}
-                  >
-                    Add Child
-                  </button>
+                  <Tooltip title="Add Child to Pending list">
+                    <button
+                      className="btn-stripped"
+                      onClick={handleChildAdd}
+                      disabled={currentChild === "" || isDuplicate()}
+                    >
+                      Add Child
+                    </button>
+                  </Tooltip>
                 </div>
                 {isDuplicate() && <p style={{ color: "red" }}>Name is already pending or submitted.</p>}
 
                 <div className="btn-container">
-                  <button
-                    onClick={() => {
-                      handleChildReset();
-                    }}
-                    className="btn-rsvp-sm btn-alt"
-                  >
-                    Reset
-                  </button>
-                  <button
-                    disabled={childrenNames.length === 0}
-                    onClick={() => {
-                      const validParent = groupData.guests.find((guest) => guest.has_dependents === true);
-                      handleAdditionalSubmit(
-                        childrenNames,
-                        validParent?.guest_id !== undefined ? validParent.guest_id : 0,
-                        validParent?.group_id !== undefined ? validParent.group_id : groupData.guests[0].group_id,
-                        "dependent"
-                      );
-                    }}
-                    className="btn-rsvp-sm"
-                  >
-                    Submit
-                  </button>
+                  <Tooltip enterDelay={500} title="Reset all 'Pending' child RSVPs">
+                    <button
+                      onClick={() => {
+                        handleChildReset();
+                      }}
+                      className="btn-rsvp-sm btn-alt"
+                    >
+                      Reset
+                    </button>
+                  </Tooltip>
+
+                  <Tooltip enterDelay={500} title="Submit Pending Child RSVPs">
+                    <button
+                      disabled={childrenNames.length === 0}
+                      onClick={() => {
+                        const validParent = groupData.guests.find((guest) => guest.has_dependents === true);
+                        handleAdditionalSubmit(
+                          childrenNames,
+                          validParent?.guest_id !== undefined ? validParent.guest_id : 0,
+                          validParent?.group_id !== undefined ? validParent.group_id : groupData.guests[0].group_id,
+                          "dependent"
+                        );
+                      }}
+                      className="btn-rsvp-sm"
+                    >
+                      Submit
+                    </button>
+                  </Tooltip>
                 </div>
               </div>
             )}
@@ -893,15 +900,17 @@ function RSVPStatusMenu({
         )}
         {menuState !== "main" && (
           <div className="btn-container">
-            <button
-              onClick={() => {
-                handleMenuClick("main");
-              }}
-              className="btn-rsvp-sm"
-              style={{ padding: ".25rem 3rem", marginTop: "2rem" }}
-            >
-              Back
-            </button>
+            <Tooltip title="Back to RSVP Menu">
+              <button
+                onClick={() => {
+                  handleMenuClick("main");
+                }}
+                className="btn-rsvp-sm"
+                style={{ padding: ".25rem 3rem", marginTop: "2rem" }}
+              >
+                Back
+              </button>
+            </Tooltip>
           </div>
         )}
       </div>

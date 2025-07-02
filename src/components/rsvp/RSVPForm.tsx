@@ -8,6 +8,7 @@ import {
   TextField,
   ToggleButtonGroup,
   ToggleButton,
+  Tooltip,
 } from "@mui/material";
 import { ErrorType, GroupData, RSVPResponseType, SongRequestError } from "../../utility/types";
 import { useMutation } from "@tanstack/react-query";
@@ -581,15 +582,17 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                                       variant="standard"
                                       sx={{ width: "17rem" }}
                                     />
-                                    <button
-                                      className="btn-stripped icon"
-                                      aria-label="delete song"
-                                      onClick={() => {
-                                        handleDeleteSong(rsvp.guestId, index);
-                                      }}
-                                    >
-                                      <DeleteForeverIcon />
-                                    </button>
+                                    <Tooltip title="Remove Song">
+                                      <button
+                                        className="btn-stripped icon"
+                                        aria-label="delete song"
+                                        onClick={() => {
+                                          handleDeleteSong(rsvp.guestId, index);
+                                        }}
+                                      >
+                                        <DeleteForeverIcon />
+                                      </button>
+                                    </Tooltip>
                                   </div>
                                 );
                               })}
