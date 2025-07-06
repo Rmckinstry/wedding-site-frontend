@@ -7,7 +7,9 @@ function Header() {
       <div className="header-container">
         <img id="header-img" src={HeaderImage} alt={"Green Vines"} />
         <div id="header-info-container" className="flex-col">
-          <h1 id="header-name">BAILEY & RYAN</h1>
+          <h1 id="header-name" className="contain-text-center">
+            BAILEY & RYAN
+          </h1>
           <p id="header-event-info" className="font-med-lg">
             November 15, 2025 • Rossville, TN
           </p>

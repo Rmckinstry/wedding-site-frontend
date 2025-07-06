@@ -97,7 +97,7 @@ button:hover {
 
 /* IDs */
 #page-container {
-    margin: 1rem 5%;
+    margin: 1rem 3%;
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -673,6 +673,14 @@ button.status-menu-btn:hover {
         padding: 0 3rem;
     }
 
+    #confirmation-card-container{
+        width: 100% !important;
+    }
+
+    #status-menu-grid{
+        padding: 1rem 0;
+    }
+
 }
 
 /* Medium devices (tablets, 601px to 900px) */
@@ -683,6 +691,14 @@ button.status-menu-btn:hover {
 
     a {
         text-underline-offset: 7px;
+    }
+
+    #confirmation-card-container{
+        width: 100% !important;
+    }
+
+    #status-menu-grid{
+        padding: 1rem 1rem;
     }
 }
 

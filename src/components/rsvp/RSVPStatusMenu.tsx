@@ -30,7 +30,7 @@ const GridOption = ({
   handleMenuClick: ({ key }) => void;
 }) => {
   return (
-    <div className="status-menu-btn-container">
+    <div className="status-menu-btn-container flex-col">
       <button
         onClick={() => {
           handleMenuClick(menuKey);

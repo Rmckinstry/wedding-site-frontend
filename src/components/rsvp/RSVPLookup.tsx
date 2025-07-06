@@ -65,7 +65,7 @@ function RSVPConfirmation({
       <>
         <div id="anne-marie-container" className="flex-col" style={{ gap: "2.5rem" }}>
           {anneGroups && anneGroups.length > 0 && (
-            <p className="secondary-text font-sm-med">
+            <p className="secondary-text font-sm-med contain-text-center">
               The name you selected shows up more than once. Please select which group you are trying to access:
             </p>
           )}
@@ -73,7 +73,7 @@ function RSVPConfirmation({
             {anneGroups &&
               anneGroups.map((group) => (
                 <div className="flex-col" key={group?.group_name}>
-                  <p className="font-sm-med strong-text">Group: {group?.group_name}</p>
+                  <p className="font-sm-med strong-text contain-text-center">Group: {group?.group_name}</p>
                   <div>
                     <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
                       Guests:
@@ -158,7 +158,7 @@ function RSVPConfirmation({
         </div>
       ) : (
         <div className="flex-col" style={{ gap: "2rem" }} id="no-duplicate">
-          <p className="secondary-text font-sm-med">
+          <p className="secondary-text font-sm-med contain-text-center">
             Please confirm that this is the correct group information that you are trying to RSVP for:
           </p>
           <p className="font-sm-med strong-text">Group Name: {data["group_name"]}</p>
@@ -267,7 +267,9 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
     <div id="rsvp-lookup-container">
       {!showConfirmation ? (
         <div className="flex-col flex-col-lg">
-          <p className="font-med">Lookup your name to access your / your groups RSVP Guest Portal.</p>
+          <p className="font-med contain-text-center">
+            Lookup your name to access your / your groups RSVP Guest Portal.
+          </p>
           <Autocomplete
             open={openPopper}
             onOpen={() => {
