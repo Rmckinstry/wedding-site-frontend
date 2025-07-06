@@ -657,7 +657,7 @@ function RSVPStatusMenu({
         {menuState === "dependent" && (
           <div id="dependent-status-container" className="status-menu-card">
             <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
-              Child / Dependent Menu
+              Child RSVP Menu
             </p>
             <p className="font-xs contain-text-center">
               Child RSVPs are meant for kids <strong style={{ textDecoration: "underline" }}>15 years</strong> and
@@ -882,11 +882,11 @@ function RSVPStatusMenu({
               {groupData.guests.some((guest) => guest.has_dependents) && (
                 <div className="font-sm">
                   <p>
-                    One or more guests in this group are able to add child/dependent RSVPs/ These can be added in the
-                    'Add Child Menu'.
+                    One or more guests in this group are able to add child RSVPs. These can be added in the 'Add Child
+                    Menu'.
                   </p>
                   <p>
-                    <strong>Note:</strong> It is required to add these RSVPs for your children/dependents to be{" "}
+                    <strong>Note:</strong> It is required to add these RSVPs for your children to be{" "}
                     <span style={{ textDecoration: "underline" }}>counted</span>. If you do not see their name on this
                     confirmation screen it means they haven't been added and counted.
                   </p>

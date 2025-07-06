@@ -192,6 +192,15 @@ const theme = createTheme({
         },
       },
     },
+
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          // This targets the actual <input> element within MuiInputBase
+          fontSize: "16px",
+        },
+      },
+    },
   },
   breakpoints: {
     values: {

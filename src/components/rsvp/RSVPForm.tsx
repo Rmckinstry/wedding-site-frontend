@@ -513,9 +513,9 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                   ) && (
                     <div>
                       <p>
-                        Note: One or more guests can bring children or dependents. Children/dependents{" "}
+                        Note: One or more guests can submit children RSVPS. Children{" "}
                         <strong style={{ textDecoration: "underline" }}>have to be added</strong> after submitting the
-                        RSVP.
+                        RSVP via the menu.
                       </p>
                     </div>
                   )}

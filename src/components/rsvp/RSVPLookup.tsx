@@ -82,7 +82,7 @@ function RSVPConfirmation({
                       if (guest.additional_guest_type === "dependent") {
                         return (
                           <p className="font-sm-med" key={guest.guest_id}>
-                            {guest.name} - Child/Dependent RSVP
+                            {guest.name} - Child RSVP
                           </p>
                         );
                       }
@@ -301,7 +301,7 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
               }
             }}
             disablePortal
-            sx={{ width: "30%" }}
+            sx={{ width: "27rem" }}
             renderInput={(params) => <TextField {...params} label="Enter Guest Name" />}
             forcePopupIcon={false}
           />
