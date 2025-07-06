@@ -38,9 +38,7 @@ const GridOption = ({
         className="status-menu-btn"
       >
         {optionName === "Add Plus One" && <GroupAddIcon sx={{ fontSize: "10rem" }} className="status-menu-icon" />}
-        {optionName === "Add Child/Dependent" && (
-          <ChildFriendlyIcon sx={{ fontSize: "10rem" }} className="status-menu-icon" />
-        )}
+        {optionName === "Add Child" && <ChildFriendlyIcon sx={{ fontSize: "10rem" }} className="status-menu-icon" />}
         {optionName === "Song Requests" && <LibraryMusicIcon sx={{ fontSize: "10rem" }} className="status-menu-icon" />}
         {optionName === "Add/Edit Email" && <EmailIcon sx={{ fontSize: "10rem" }} className="status-menu-icon" />}
         {optionName === "RSVP Confirmation" && (
@@ -588,7 +586,7 @@ function RSVPStatusMenu({
               <GridOption optionName={"Add Plus One"} menuKey={"plusOne"} handleMenuClick={handleMenuClick} />
             )}
             {dependentsEnabled && (
-              <GridOption optionName={"Add Child/Dependent"} menuKey={"dependent"} handleMenuClick={handleMenuClick} />
+              <GridOption optionName={"Add Child"} menuKey={"dependent"} handleMenuClick={handleMenuClick} />
             )}
             <GridOption optionName={"Song Requests"} menuKey={"song"} handleMenuClick={handleMenuClick} />
             <GridOption optionName={"Add/Edit Email"} menuKey={"email"} handleMenuClick={handleMenuClick} />
@@ -722,7 +720,7 @@ function RSVPStatusMenu({
                     onChange={(e) => {
                       setCurrentChild(e.target.value);
                     }}
-                    label="Add Child/Dependent Full Name"
+                    label="Add Child Full Name"
                     value={currentChild || ""}
                     sx={{ width: "20rem" }}
                     onKeyDown={handleKeyDown}
@@ -885,7 +883,7 @@ function RSVPStatusMenu({
                 <div className="font-sm">
                   <p>
                     One or more guests in this group are able to add child/dependent RSVPs/ These can be added in the
-                    'Add Child/Dependent Menu'.
+                    'Add Child Menu'.
                   </p>
                   <p>
                     <strong>Note:</strong> It is required to add these RSVPs for your children/dependents to be{" "}

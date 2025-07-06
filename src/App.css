@@ -678,7 +678,11 @@ button.status-menu-btn:hover {
     }
 
     #status-menu-grid{
-        padding: 1rem 0;
+        padding: 1rem .5rem;
+    }
+
+    #overview-status-container{
+        width: 100% !important;
     }
 
 }

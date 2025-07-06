@@ -698,7 +698,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                   ) && (
                     <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
                       <p className="font-sm secondary-text">
-                        One or more guests in this group are able to add child/dependent RSVPS. These can be added
+                        One or more guests in this group are able to add child RSVPS. These can be added
                         <span className="confirmation-header"> after</span> your RSVP is submitted via the RSVP Portal.
                       </p>
                       <p className="font-sm secondary-text">
