@@ -27,8 +27,8 @@ function TravelPage() {
               <p className="secondary-text font-med">(Recommended)</p>
             </div>
             <div className="info-container contain-text-center">
-              <p className="primary-text font-med-lg">Nashille International Airport</p>
-              <p className="secondary-text font-med">(Note: 3 hour drive to Memphis.)</p>
+              <p className="primary-text">Nashville International Airport</p>
+              <p className="secondary-text">(Note: 3 hour drive to Memphis.)</p>
             </div>
             <div className="info-container contain-text-center">
               <p className="primary-text font-med-lg">Memphis Airport Rental Cars</p>
@@ -84,6 +84,7 @@ function TravelPage() {
                 <p className="font-sm">The Courtyard Memphis is located in the Carriage Crossing Outdoor Mall.</p>
                 <p className="font-sm">
                   The mall has several restaraunts, bars, and shops all in walking distance of the hotel for you to
+
                   enjoy.
                 </p>
               </div>
