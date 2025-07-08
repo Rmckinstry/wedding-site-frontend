@@ -2,6 +2,7 @@
 :root {
     --base-background: #FFFDFB;
     --default-text: #646440;
+    --secondary-text: #606060;
     --btn-disabled: #A3A39b;
     --default-text-transparent: #64644042;
 
@@ -371,6 +372,7 @@ button:hover {
 }
 
 .secondary-text {
+    color: var(--secondary-text);
     font-family: Cormorant Upright, serif;
     margin: 0px;
 }
