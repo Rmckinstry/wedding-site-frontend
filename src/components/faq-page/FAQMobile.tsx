@@ -8,8 +8,8 @@ function FAQMobile({ faq }) {
       <Card className="faq-mobile-container">
         <CardContent>
           <div className="faq-content-mobile">
-            <p className="faq-title-mobile">{faq.question}</p>
-            <p className="faq-answer-mobile">{faq.answer}</p>
+            <p className="faq-title-mobile font-med">{faq.question}</p>
+            <p className="faq-answer-mobile font-sm-med">{faq.answer}</p>
           </div>
         </CardContent>
       </Card>

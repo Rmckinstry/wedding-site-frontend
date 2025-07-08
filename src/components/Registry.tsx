@@ -6,11 +6,11 @@ function Registry() {
       <div id="registry-page-container" className="flex-col">
         <div id="registry-info-container" className="flex-col">
           <h3>We are using WithJoy as our registry provider.</h3>
-          <p className="registry-text">Click the button below to visit our registry portal.</p>
+          <p className="registry-text font-sm-med">Click the button below to visit our registry portal.</p>
         </div>
         <div id="registry-btn-container" className="btn-container contain-text-center">
           <a
-            href="https://withjoy.com/bailey-and-ryan-nov-25/registry"
+            href="https://withjoy.com/bailey-and-ryan-nov-15/registry"
             target="_blank"
             id="registry-btn"
             className="btn-link"
@@ -19,8 +19,7 @@ function Registry() {
             Bailey & Ryan's WithJoy Registry
           </a>
         </div>
-
-        <p className="registry-text" style={{ padding: "1rem 15%", textAlign: "center" }}>
+        <p className="registry-text font-sm-med" style={{ padding: "1rem 15%", textAlign: "center" }}>
           <strong>Please note: </strong>To ensure items are not duplicated, when you have purchased an item/donated on
           WithJoy, please make sure to finish the prompt and mark the item as "purchased".
         </p>
