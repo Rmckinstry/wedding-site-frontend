@@ -196,6 +196,12 @@ button:hover {
     height: 4rem;
 }
 
+#rsvp-form-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #rsvp-portal-container {
     padding-bottom: 1rem;
 }

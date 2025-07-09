@@ -201,6 +201,17 @@ const theme = createTheme({
         },
       },
     },
+
+    MuiMobileStepper: {
+      styleOverrides: {
+        root: {
+          position: "unset",
+        },
+        progress: {
+          width: "100%",
+        },
+      },
+    },
   },
   breakpoints: {
     values: {
