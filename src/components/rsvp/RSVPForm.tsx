@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  Stepper,
-  Step,
-  StepLabel,
   FormControl,
   FormLabel,
   TextField,
@@ -35,7 +32,7 @@ type SubmitData = {
 function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefresh: () => void }) {
   //used for stepper
   const [activeStep, setActiveStep] = useState(0);
-  const [steps, setSteps] = useState(["RSVPs", "Song Requests", "Confirmation"]);
+  const [steps, setSteps] = useState(["RSVPs", "Plus One", "Children", "Song Requests", "Confirmation"]);
 
   const [rsvps, setRsvps] = useState<RSVPPost[]>([]);
   const [songValidationErrors, setSongValidationErrors] = useState<{ [guestId: string]: SongRequestError[] }>({});
@@ -50,8 +47,17 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
   //used for navigation context
   const { navigateTo } = useNavigation();
 
-  // Determine if the "Song Requests" step should be disabled
+  //Tab checks
   const isSongRequestTabDisabled = allGuestsAttendingFalse;
+
+  const isPlusOneTabEnabled = groupData.guests.some((guest) => {
+    const rsvp = rsvps.find((rsvp) => rsvp.guestId === guest.guest_id);
+    return guest.plus_one_allowed && rsvp?.attendance;
+  });
+  const isChildrenTabEnabled = groupData.guests.some((guest) => {
+    const rsvp = rsvps.find((rsvp) => rsvp.guestId === guest.guest_id);
+    return guest.has_dependents && rsvp?.attendance;
+  });
 
   const isSongTabInvalid = Object.values(songValidationErrors)
     .map((errorObject) => errorObject.some((combo) => combo.title || combo.artist))
@@ -96,25 +102,44 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     //default behavior
     let newActiveStep = activeStep + 1;
 
+    // plus one tab skip check
+    if (newActiveStep === 1 && !isPlusOneTabEnabled) {
+      newActiveStep = newActiveStep + 1;
+    }
+
+    // children tab skip check
+    if (newActiveStep === 2 && !isChildrenTabEnabled) {
+      newActiveStep = newActiveStep + 1;
+    }
+
     // If the next step would be "Song Requests" AND it's disabled, skip it
-    if (steps[newActiveStep] === "Song Requests" && isSongRequestTabDisabled) {
-      newActiveStep = newActiveStep + 1; // Skip "Song Requests", go to "Confirmation"
+    if (newActiveStep === 3 && isSongRequestTabDisabled) {
+      newActiveStep = newActiveStep + 1;
     }
 
     setActiveStep(newActiveStep);
   };
 
   const handleBack = () => {
-    //default behavior
+    // default behavior: move one step back
     let newActiveStep = activeStep - 1;
 
-    // If we're going back from "Confirmation" and "Song Requests" was skipped
-    if (
-      steps[activeStep] === "Confirmation" &&
-      isSongRequestTabDisabled &&
-      steps[newActiveStep] === "Song Requests" // This means we would normally go to Song Requests
-    ) {
-      newActiveStep = newActiveStep - 1; // Skip back past "Song Requests", go to "Guests"
+    // If we are currently on 'Song Requests' (index 3) or beyond,
+    // and 'Song Requests' was disabled, then when moving back, skip it again.
+    if (activeStep >= 3 && isSongRequestTabDisabled && newActiveStep === 3) {
+      newActiveStep--;
+    }
+
+    // If we are currently on 'Children' (index 2) or beyond,
+    // and 'Children' was disabled, then when moving back, skip it again.
+    if (activeStep >= 2 && !isChildrenTabEnabled && newActiveStep === 2) {
+      newActiveStep--;
+    }
+
+    // If we are currently on 'Plus One' (index 1) or beyond,
+    // and 'Plus One' was disabled, then when moving back, skip it again.
+    if (activeStep >= 1 && !isPlusOneTabEnabled && newActiveStep === 1) {
+      newActiveStep--;
     }
 
     setActiveStep(newActiveStep);
@@ -511,8 +536,20 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                 </button>
               </div>
             )}
+            {/* Plus One Card */}
             {activeStep === 1 && (
-              // song request card
+              <div>
+                <p>Add Plus One</p>
+              </div>
+            )}
+            {/* Children RSVP Card */}
+            {activeStep === 2 && (
+              <div>
+                <p>Add Children</p>
+              </div>
+            )}
+            {/* Song Request Card */}
+            {activeStep === 3 && (
               <div id="song-request-card-container" className="rsvp-card">
                 <div id="song-request-header" className="flex-col">
                   <p className="font-sm-med strong-text" style={{ marginBottom: "1rem" }}>
@@ -620,20 +657,16 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                 </div>
               </div>
             )}
-            {activeStep === 2 && (
-              //Confirmation card
+            {/* Confirmation Card */}
+            {activeStep === 4 && (
               <div id="confirmation-card-container" className="rsvp-card" style={{ width: "80%" }}>
                 <div className="flex-col">
-                  <p className="font-sm-med">RSVP Confirmation</p>
+                  <p className="font-sm-med strong-text">RSVP Confirmation</p>
                   <p className="font-sm strong-text contain-text-center" style={{ textDecoration: "underline" }}>
                     Please confirm that all information shown below is correct and submit.
                   </p>
                 </div>
 
-                <div className="flex-row-gap" style={{ justifyContent: "center" }}>
-                  <p className="font-sm strong-text confirmation-header">Group Name: </p>
-                  <p className="font-sm">{groupData.group_name}</p>
-                </div>
                 {rsvps.map((rsvp, index) => {
                   const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
                   const hasSongs = rsvp.spotify.some((index) => index !== "");
@@ -722,7 +755,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                 </div>
               </div>
             )}
-            <div>
+            <div id="rsvp-stepper-container">
               {/* stepper */}
               <MobileStepper
                 steps={steps.length}
@@ -732,6 +765,12 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                 backButton={null}
                 sx={{ width: "39rem" }}
               ></MobileStepper>
+            </div>
+            <div className="btn-container">
+              <button disabled={activeStep === 0} onClick={handleBack}>
+                Back
+              </button>
+              <button onClick={handleNext}>Continue</button>
             </div>
           </div>
         )}
