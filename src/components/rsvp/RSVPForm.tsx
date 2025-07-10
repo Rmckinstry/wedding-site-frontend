@@ -14,7 +14,7 @@ import Error from "../utility/Error.tsx";
 import Loading from "../utility/Loading.tsx";
 import EventIcon from "@mui/icons-material/Event";
 import { useNavigation } from "../../context/NavigationContext.tsx";
-import { isValidInput } from "../../utility/util.ts";
+import { isValidInput, isValidName } from "../../utility/util.ts";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 type AdditionalGuestType = "plus_one" | "dependent";
@@ -74,9 +74,16 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     return guest.has_dependents && rsvp?.attendance;
   });
 
+  //validity checks
   const isSongTabInvalid = Object.values(songValidationErrors)
     .map((errorObject) => errorObject.some((combo) => combo.title || combo.artist))
     .some((value) => value);
+
+  const isPlusOneInvalid = rsvps.some(
+    (rsvp) => rsvp.additionalGuests.length > 0 && !isValidName(rsvp.additionalGuests[0].name)
+  );
+
+  const isChildrenInvalid = childrenRsvps.some((rsvp) => !isValidName(rsvp.name));
 
   const separator = "\u00A7";
 
@@ -675,6 +682,24 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                       return null;
                     }
                   })}
+                {isPlusOneInvalid && (
+                  <p className="contain-text-center" style={{ color: "red" }}>
+                    All Plus One's must be a first & last name.
+                  </p>
+                )}
+                <div className="btn-container" style={{ gap: "2rem" }}>
+                  <button className="btn-rsvp-sm" style={{ padding: ".5rem 10%", flexGrow: 1 }} onClick={handleBack}>
+                    Back
+                  </button>
+                  <button
+                    disabled={isPlusOneInvalid}
+                    className="btn-rsvp-sm"
+                    style={{ padding: ".5rem 10%", flexGrow: 1 }}
+                    onClick={handleNext}
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
             )}
             {/* Children RSVP Card */}
@@ -710,6 +735,24 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                     }}
                   >
                     Add Child
+                  </button>
+                </div>
+                {isChildrenInvalid && (
+                  <p className="contain-text-center" style={{ color: "red" }}>
+                    All children names must be first & last.
+                  </p>
+                )}
+                <div className="btn-container" style={{ gap: "2rem" }}>
+                  <button className="btn-rsvp-sm" style={{ padding: ".5rem 10%", flexGrow: 1 }} onClick={handleBack}>
+                    Back
+                  </button>
+                  <button
+                    disabled={isChildrenInvalid}
+                    className="btn-rsvp-sm"
+                    style={{ padding: ".5rem 10%", flexGrow: 1 }}
+                    onClick={handleNext}
+                  >
+                    Next
                   </button>
                 </div>
               </div>

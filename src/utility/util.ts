@@ -7,6 +7,10 @@ export const isValidInput = (input: string) => {
 
 export const isValidName = (input: string): boolean => {
   const trimmedInput = input.trim();
+
+  //currently counting empty string as Valid name - this could be changed later if it calls for it
+  if (trimmedInput.length === 0) return true;
+
   const nameRegex = /^[a-zA-Z\s]+$/;
   const hasSpace = /\s/.test(trimmedInput);
   // very loose check to make sure its onnly letters and at least one space (assumes first and last name)
