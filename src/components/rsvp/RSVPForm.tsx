@@ -46,6 +46,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
   const [activeStep, setActiveStep] = useState(0);
 
   const [rsvps, setRsvps] = useState<RSVPPost[]>([]);
+  const [childrenRsvps, setChildrenRsvps] = useState<AdditionalGuest[]>([]);
 
   const [songValidationErrors, setSongValidationErrors] = useState<{ [guestId: string]: SongRequestError[] }>({});
   const [songInputsCount, setSongInputsCount] = useState<{ [guestId: string]: number }>({});
@@ -78,6 +79,16 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     .some((value) => value);
 
   const separator = "\u00A7";
+
+  const designatedDependentGuest = groupData.guests.find(
+    (guest) => guest.has_dependents && rsvps.some((rsvp) => rsvp.guestId === guest.guest_id && rsvp.attendance === true)
+  );
+
+  const isAddNewChildDisabled = () => {
+    if (childrenRsvps.length === 0) return false;
+
+    return childrenRsvps.some((rsvp) => rsvp.name === "");
+  };
 
   // Memoize resetRSVPs
   const resetRSVPs = useCallback(() => {
@@ -160,12 +171,13 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     setActiveStep(newActiveStep);
   };
 
-  // resets errything for the form
-
+  // resets everything for the form
   const handleReset = () => {
     resetRSVPs();
     setActiveStep(0);
+    setChildrenRsvps([]);
   };
+  //#endregion stepper controls
 
   //#region  submit
   const handleSubmit = async () => {
@@ -178,6 +190,8 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
       const songString: string = rsvp.spotify.reduce((acc, song) => {
         return acc.length === 0 ? song : acc + separator + song;
       }, "");
+
+      // need to filter out any empty childrenrsvps
 
       return {
         attendance,
@@ -222,6 +236,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
       console.error("Error submitting RSVP:", error.message);
     },
   });
+  //#endregion submit
 
   //#region handle change
   const handleAttendanceChange = (guestId: number, attendance: boolean) => {
@@ -232,6 +247,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
               ...rsvp,
               attendance: attendance,
               spotify: !attendance ? Array(rsvp.spotify.length).fill("") : rsvp.spotify,
+              additionalGuests: [],
             }
           : rsvp
       )
@@ -243,10 +259,13 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
         return newErrors;
       });
     }
+
+    if (childrenRsvps.length !== 0 && guestId === childrenRsvps[0].guestId) {
+      setChildrenRsvps([]);
+    }
   };
 
   const handlePlusOneNameChange = (guestId: number, value: string) => {
-    console.log("guestID: ", guestId, "--- value: ", value);
     setRsvps((prev) =>
       prev.map((rsvp) => {
         if (rsvp.guestId === guestId) {
@@ -274,6 +293,28 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
         }
       })
     );
+  };
+
+  const handleChildNameChange = (value: string, index: number) => {
+    setChildrenRsvps((prev) =>
+      prev.map((child, i) => {
+        if (i === index) {
+          return { ...child, name: value };
+        }
+        return child;
+      })
+    );
+  };
+
+  const handleAddNewChild = (guestId: number) => {
+    const newChildRsvp: AdditionalGuest = {
+      name: "",
+      type: "dependent",
+      guestId: guestId,
+    };
+    setChildrenRsvps((prev) => {
+      return [...prev, newChildRsvp];
+    });
   };
 
   const handleSongRequestChange = (guestId: number, index: number, key: string, value: string) => {
@@ -620,7 +661,6 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                               label="Add Plus One's Full Name"
                               sx={{ width: "20rem" }}
                             />
-                            <button>Add Plus One</button>
                           </div>
                         </div>
                       );
@@ -631,9 +671,40 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
               </div>
             )}
             {/* Children RSVP Card */}
-            {activeStep === 2 && (
-              <div>
-                <p>Add Children</p>
+            {activeStep === 2 && designatedDependentGuest && (
+              <div id="children-card-container" className="rsvp-card">
+                <div id="children-request-header" className="flex-col">
+                  <p className="font-sm-med strong-text" style={{ marginBottom: "1rem" }}>
+                    Add Child RSVPs
+                  </p>
+                  <p className="font-sm contain-text-center secondary-text">
+                    <span style={{ textDecoration: "underline" }}>Undecided?</span> You can always add your child RSVPs
+                    later after submitting your RSVP via the RSVP Portal!
+                  </p>
+                  {/* add text here about child age rule */}
+                </div>
+                {childrenRsvps.map((child, index) => {
+                  return (
+                    <div>
+                      <TextField
+                        value={child.name}
+                        onChange={(e) => handleChildNameChange(e.target.value, index)}
+                        label="Add Childs First & Last Name"
+                        sx={{ width: "20rem" }}
+                      />
+                    </div>
+                  );
+                })}
+                <div>
+                  <button
+                    disabled={isAddNewChildDisabled()}
+                    onClick={() => {
+                      handleAddNewChild(designatedDependentGuest.guest_id);
+                    }}
+                  >
+                    Add Child
+                  </button>
+                </div>
               </div>
             )}
             {/* Song Request Card */}

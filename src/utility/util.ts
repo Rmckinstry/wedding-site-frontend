@@ -4,3 +4,13 @@ export const isValidInput = (input: string) => {
   const trimmedInput = input.trim();
   return trimmedInput.length > 0 && validInputRegex.test(trimmedInput);
 };
+
+export const isValidName = (input: string): boolean => {
+  const trimmedInput = input.trim();
+  const nameRegex = /^[a-zA-Z\s]+$/;
+  const hasSpace = /\s/.test(trimmedInput);
+  // very loose check to make sure its onnly letters and at least one space (assumes first and last name)
+  // does handle 3 word+ names
+
+  return trimmedInput.length > 0 && nameRegex.test(trimmedInput) && hasSpace;
+};
