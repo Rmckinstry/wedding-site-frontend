@@ -17,24 +17,36 @@ import { useNavigation } from "../../context/NavigationContext.tsx";
 import { isValidInput } from "../../utility/util.ts";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
+type AdditionalGuestType = "plus_one" | "dependent";
+
+type AdditionalGuest = {
+  name: string;
+  type: AdditionalGuestType;
+  guestId: number;
+};
+
 type RSVPPost = {
   guestId: number;
   attendance: boolean | "";
   spotify: string[];
+  additionalGuests: AdditionalGuest[];
 };
 
 type SubmitData = {
+  groupId: number;
   guestId: number;
   attendance: boolean | "";
   spotify: string;
+  plusOne?: AdditionalGuest;
+  children?: AdditionalGuest[];
 };
 
 function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefresh: () => void }) {
   //used for stepper
   const [activeStep, setActiveStep] = useState(0);
-  const [steps, setSteps] = useState(["RSVPs", "Plus One", "Children", "Song Requests", "Confirmation"]);
 
   const [rsvps, setRsvps] = useState<RSVPPost[]>([]);
+
   const [songValidationErrors, setSongValidationErrors] = useState<{ [guestId: string]: SongRequestError[] }>({});
   const [songInputsCount, setSongInputsCount] = useState<{ [guestId: string]: number }>({});
   const [directToRegistry, setDirectToRegistry] = useState<boolean>(false);
@@ -46,6 +58,8 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
 
   //used for navigation context
   const { navigateTo } = useNavigation();
+  //steps for stepper component
+  const steps = ["RSVPs", "Plus One", "Children", "Song Requests", "Confirmation"];
 
   //Tab checks
   const isSongRequestTabDisabled = allGuestsAttendingFalse;
@@ -72,6 +86,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
         guestId: guest.guest_id,
         attendance: "",
         spotify: [],
+        additionalGuests: [],
       }));
       setRsvps(newRsvps);
 
@@ -155,6 +170,8 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
   //#region  submit
   const handleSubmit = async () => {
     const submitData: SubmitData[] = rsvps.map((rsvp: RSVPPost) => {
+      const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
+
       // Convert attendance to boolean
       const attendance = typeof rsvp.attendance === "string" ? rsvp.attendance !== "" : rsvp.attendance;
 
@@ -166,10 +183,12 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
         attendance,
         guestId: rsvp.guestId,
         spotify: songString,
+        groupId: guest!.group_id,
       };
     });
 
-    submitRsvpsMutation.mutate({ rsvpList: submitData });
+    console.log(submitData);
+    // submitRsvpsMutation.mutate({ rsvpList: submitData });
   };
 
   const submitRsvpsMutation = useMutation<RSVPResponseType, ErrorType, { rsvpList: SubmitData[] }>({
@@ -538,8 +557,41 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
             )}
             {/* Plus One Card */}
             {activeStep === 1 && (
-              <div>
-                <p>Add Plus One</p>
+              <div id="plus-one-card-container" className="rsvp-card">
+                <div id="plus-one-request-header" className="flex-col">
+                  <p className="font-sm-med strong-text" style={{ marginBottom: "1rem" }}>
+                    Add Plus One
+                  </p>
+                  <p className="font-sm contain-text-center secondary-text">
+                    <span style={{ textDecoration: "underline" }}>Undecided? </span>You can always add your plus one
+                    later after submitting your RSVP via the RSVP Portal!
+                  </p>
+                </div>
+
+                {rsvps
+                  .filter((rsvp) => rsvp.attendance === true)
+                  .map((rsvp) => {
+                    const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
+
+                    if (guest?.plus_one_allowed) {
+                      return (
+                        <div>
+                          <p>Add {guest.name} Plus One</p>
+                          <div>
+                            <TextField
+                              // value={plusOneNames[guest.guest_id] || ""} // Controlled component
+                              // onChange={(e) => handlePlusOneNameChange(guest.guest_id, e.target.value)}
+                              label="Add Plus One's Full Name"
+                              sx={{ width: "20rem" }}
+                            />
+                            <button>Add Plus One</button>
+                          </div>
+                        </div>
+                      );
+                    } else {
+                      return null;
+                    }
+                  })}
               </div>
             )}
             {/* Children RSVP Card */}
@@ -770,7 +822,12 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
               <button disabled={activeStep === 0} onClick={handleBack}>
                 Back
               </button>
-              <button onClick={handleNext}>Continue</button>
+              <button
+                disabled={activeStep === steps.length - 1 || !isRSVPStepValid || isSongTabInvalid}
+                onClick={handleNext}
+              >
+                Continue
+              </button>
             </div>
           </div>
         )}
