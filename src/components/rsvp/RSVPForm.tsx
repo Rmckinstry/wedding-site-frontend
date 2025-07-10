@@ -245,6 +245,37 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     }
   };
 
+  const handlePlusOneNameChange = (guestId: number, value: string) => {
+    console.log("guestID: ", guestId, "--- value: ", value);
+    setRsvps((prev) =>
+      prev.map((rsvp) => {
+        if (rsvp.guestId === guestId) {
+          const existingPlusOneIndex = rsvp.additionalGuests.findIndex((guest) => guest.type === "plus_one");
+          let updatedAdditionalGuests: AdditionalGuest[];
+
+          //plus one value for guest exists - replace name with new value
+          if (existingPlusOneIndex !== -1) {
+            if (value.trim().length === 0) {
+              updatedAdditionalGuests = rsvp.additionalGuests.filter((_, index) => index !== existingPlusOneIndex);
+            } else {
+              updatedAdditionalGuests = rsvp.additionalGuests.map((additionalGuest, index) =>
+                index === existingPlusOneIndex ? { ...additionalGuest, name: value } : additionalGuest
+              );
+            }
+          } else {
+            // need to create new plus one in additional guests
+            const newPlusOne: AdditionalGuest = { name: value, type: "plus_one", guestId: guestId };
+
+            updatedAdditionalGuests = [...rsvp.additionalGuests, newPlusOne];
+          }
+          return { ...rsvp, additionalGuests: updatedAdditionalGuests };
+        } else {
+          return rsvp;
+        }
+      })
+    );
+  };
+
   const handleSongRequestChange = (guestId: number, index: number, key: string, value: string) => {
     setRsvps((prev) =>
       prev.map((rsvp) => {
@@ -573,14 +604,19 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                   .map((rsvp) => {
                     const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
 
+                    const plusOneGuest = rsvp.additionalGuests.find((ag) => ag.type === "plus_one");
+
+                    // Get the name of the plus_one, or an empty string if not found
+                    const plusOneName = plusOneGuest ? plusOneGuest.name : "";
+
                     if (guest?.plus_one_allowed) {
                       return (
                         <div>
                           <p>Add {guest.name} Plus One</p>
                           <div>
                             <TextField
-                              // value={plusOneNames[guest.guest_id] || ""} // Controlled component
-                              // onChange={(e) => handlePlusOneNameChange(guest.guest_id, e.target.value)}
+                              value={plusOneName}
+                              onChange={(e) => handlePlusOneNameChange(guest.guest_id, e.target.value)}
                               label="Add Plus One's Full Name"
                               sx={{ width: "20rem" }}
                             />
