@@ -860,7 +860,13 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                           No songs requested yet! This can be done after you submit your RSVP via the RSVP Portal.
                         </p>
                       )}
-                      {rsvp.attendance && guest?.plus_one_allowed && (
+                      {rsvp.attendance && guest?.plus_one_allowed && rsvp.additionalGuests.length > 0 && (
+                        <div className="flex-row-gap">
+                          <p className="strong-text font-sm confirmation-header">Plus One: </p>
+                          <p className="font-sm">{rsvp.additionalGuests[0].name}</p>
+                        </div>
+                      )}
+                      {rsvp.attendance && guest?.plus_one_allowed && rsvp.additionalGuests.length === 0 && (
                         <p className="font-sm secondary-text">
                           Plus one <strong>available</strong> for {guest.name}! You can add the extra RSVP{" "}
                           <span className="confirmation-header">after</span> submitting this one via the RSVP Portal.
@@ -869,20 +875,44 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                     </div>
                   );
                 })}
-                {rsvps.some(
-                  (rsvp) =>
-                    rsvp.attendance === true &&
-                    groupData.guests.find((guest) => guest.guest_id === rsvp.guestId)?.has_dependents
-                ) && (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-                    <p className="font-sm secondary-text">
-                      One or more guests in this group are able to add child RSVPs. These can be added
-                      <span className="confirmation-header"> after</span> your RSVP is submitted via the RSVP Portal.
-                    </p>
-                    <p className="font-sm secondary-text">
-                      <strong>Note: </strong>It is required to add these RSVPs prior to the deadline for your
-                      children/dpendents to be counted.
-                    </p>
+
+                {/* --- children confirmation template --- */}
+                {childrenRsvps.length > 0 && childrenRsvps[0].name !== "" ? (
+                  <div id="rsvp-confirm-curr-kids-container">
+                    {childrenRsvps.map((children, index) => {
+                      return (
+                        <div key={index} className="user-confirm-rsvp-container">
+                          <div className="flex-row-gap">
+                            <p className="strong-text font-sm confirmation-header">Child: </p>
+                            <p className="font-sm">{children.name}</p>
+                          </div>
+                          <div className="flex-row-gap">
+                            <p className="strong-text font-sm confirmation-header">Attending: </p>
+                            <p className="font-sm">Yes</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div id="rsvp-confirm-no-curr-kids-container">
+                    {rsvps.some(
+                      (rsvp) =>
+                        rsvp.attendance === true &&
+                        groupData.guests.find((guest) => guest.guest_id === rsvp.guestId)?.has_dependents
+                    ) && (
+                      <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                        <p className="font-sm secondary-text">
+                          One or more guests in this group are able to add child RSVPs. These can be added
+                          <span className="confirmation-header"> after</span> your RSVP is submitted via the RSVP
+                          Portal.
+                        </p>
+                        <p className="font-sm secondary-text">
+                          <strong>Note: </strong>It is required to add these RSVPs prior to the deadline for your
+                          children/dpendents to be counted.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
                 <div className="btn-container" style={{ gap: "2rem" }}>
