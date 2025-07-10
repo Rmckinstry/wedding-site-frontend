@@ -181,23 +181,30 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
 
   //#region  submit
   const handleSubmit = async () => {
+    // filtering out any children rsvps that have empty names (happens when add name is clicked and no name is entered or its deleted)
+    const filteredChildren = childrenRsvps.length > 0 ? childrenRsvps.filter((rsvp) => rsvp.name !== "") : [];
+
     const submitData: SubmitData[] = rsvps.map((rsvp: RSVPPost) => {
       const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
 
       // Convert attendance to boolean
       const attendance = typeof rsvp.attendance === "string" ? rsvp.attendance !== "" : rsvp.attendance;
 
+      //reduce song array into one long song string
       const songString: string = rsvp.spotify.reduce((acc, song) => {
         return acc.length === 0 ? song : acc + separator + song;
       }, "");
-
-      // need to filter out any empty childrenrsvps
 
       return {
         attendance,
         guestId: rsvp.guestId,
         spotify: songString,
         groupId: guest!.group_id,
+        //conditional plus one property
+        ...(rsvp.additionalGuests.length !== 0 && { plusOne: rsvp.additionalGuests[0] }),
+        //conditional children property
+        ...(rsvp.guestId === designatedDependentGuest?.guest_id &&
+          filteredChildren.length > 0 && { children: childrenRsvps }),
       };
     });
 
