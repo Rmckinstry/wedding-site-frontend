@@ -849,7 +849,11 @@ function RSVPStatusMenu({
           </div>
         )}
         {menuState === "overview" && (
-          <div id="overview-status-container" className="status-menu-card" style={{ width: "70%" }}>
+          <div
+            id="overview-status-container"
+            className="status-menu-card"
+            style={{ width: "80%", padding: "2rem 3rem" }}
+          >
             <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
               Confirmation Menu
             </p>
