@@ -9,7 +9,7 @@ import {
   RSVP,
   SongRequestError,
 } from "../../utility/types";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import Error from "../utility/Error.tsx";
 import Loading from "../utility/Loading.tsx";
@@ -760,6 +760,16 @@ function RSVPStatusMenu({
                 )}
                 {isChildrenInvalid && <p style={{ color: "red" }}>Must be first and last name.</p>}
 
+                {childrenNames.length !== 0 && (
+                  <p className="font-sm">
+                    <strong style={{ textDecoration: "underline" }}>Please Note:</strong> While kids are allowed to help
+                    celebrate our special day we kindly ask all infants/toddlers to{" "}
+                    <span style={{ textDecoration: "underline" }}>not be</span> present at the ceremony. There are
+                    several areas around the property for one of your guests to accompany them. They are of course
+                    welcome afterwards for the cocktail hour and reception. For more information visit the 'FAQ' tab.
+                  </p>
+                )}
+
                 <div className="btn-container">
                   <Tooltip enterDelay={500} title="Reset all 'Pending' child RSVPs">
                     <button
@@ -901,18 +911,31 @@ function RSVPStatusMenu({
                 }
                 return null;
               })}
-              {/* has dependents message */}
-              {groupData.guests.some((guest) => guest.has_dependents) && (
-                <div className="font-sm">
-                  <p>
-                    One or more guests in this group are able to add child RSVPs. These can be added in the 'Add Child
-                    Menu'.
-                  </p>
-                  <p>
-                    <strong>Note:</strong> It is <strong>required</strong> to add these RSVPs for your children to be{" "}
-                    <span style={{ textDecoration: "underline" }}>counted</span>. If you do not see their name on this
-                    confirmation screen it means they <span style={{ textDecoration: "underline" }}>haven't</span> been
-                    added and counted.
+              {/* has dependents message - no children added yet */}
+              {groupData.guests.some((guest) => guest.has_dependents) &&
+                groupData.guests.every((guest) => guest.additional_guest_type !== "dependent") && (
+                  <div className="font-sm">
+                    <p>
+                      One or more guests in this group are able to add child RSVPs. These can be added in the 'Add Child
+                      Menu'.
+                    </p>
+                    <p style={{ marginTop: "1rem" }}>
+                      <strong>Note:</strong> It is <strong>required</strong> to add these RSVPs for your children to be{" "}
+                      <span style={{ textDecoration: "underline" }}>counted</span>. If you do not see their name on this
+                      confirmation screen it means they <span style={{ textDecoration: "underline" }}>haven't</span>{" "}
+                      been added and counted.
+                    </p>
+                  </div>
+                )}
+              {/* has dependents message - yes children added */}
+              {groupData.guests.some((guest) => guest.additional_guest_type === "dependent") && (
+                <div>
+                  <p className="font-sm">
+                    <strong style={{ textDecoration: "underline" }}>Please Note:</strong> While kids are allowed to help
+                    celebrate our special day we kindly ask all infants/toddlers to{" "}
+                    <span style={{ textDecoration: "underline" }}>not be</span> present at the ceremony. There are
+                    several areas around the property for one of your guests to accompany them. They are of course
+                    welcome afterwards for the cocktail hour and reception. For more information visit the 'FAQ' tab.
                   </p>
                 </div>
               )}
