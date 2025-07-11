@@ -25,32 +25,36 @@ type AdditionalGuest = {
   guestId: number;
 };
 
-type RSVPPost = {
+type RSVPForm = {
   guestId: number;
   attendance: boolean | "";
   spotify: string[];
   additionalGuests: AdditionalGuest[];
 };
 
-type SubmitData = {
-  groupId: number;
+type RSVPPostObject = {
   guestId: number;
   attendance: boolean | "";
   spotify: string;
-  plusOne?: AdditionalGuest;
-  children?: AdditionalGuest[];
+};
+
+type RSVPPostBody = {
+  groupId: number;
+  rsvps: RSVPPostObject[];
+  additional?: AdditionalGuest[];
 };
 
 function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefresh: () => void }) {
   //used for stepper
   const [activeStep, setActiveStep] = useState(0);
 
-  const [rsvps, setRsvps] = useState<RSVPPost[]>([]);
+  const [rsvps, setRsvps] = useState<RSVPForm[]>([]);
   const [childrenRsvps, setChildrenRsvps] = useState<AdditionalGuest[]>([]);
 
   const [songValidationErrors, setSongValidationErrors] = useState<{ [guestId: string]: SongRequestError[] }>({});
   const [songInputsCount, setSongInputsCount] = useState<{ [guestId: string]: number }>({});
   const [directToRegistry, setDirectToRegistry] = useState<boolean>(false);
+  const [anyAdditionalSubbmited, setAnyAdditionalSubbmited] = useState<boolean>(false);
 
   // tracking if every guest has responded to rsvp form step 1
   const isRSVPStepValid = rsvps.every((rsvp) => rsvp.attendance !== "");
@@ -100,7 +104,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
   // Memoize resetRSVPs
   const resetRSVPs = useCallback(() => {
     if (groupData && groupData.guests) {
-      const newRsvps: RSVPPost[] = groupData.guests.map((guest) => ({
+      const newRsvps: RSVPForm[] = groupData.guests.map((guest) => ({
         guestId: guest.guest_id,
         attendance: "",
         spotify: [],
@@ -188,10 +192,18 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
 
   //#region  submit
   const handleSubmit = async () => {
+    setAnyAdditionalSubbmited(false);
+
     // filtering out any children rsvps that have empty names (happens when add name is clicked and no name is entered or its deleted)
     const filteredChildren = childrenRsvps.length > 0 ? childrenRsvps.filter((rsvp) => rsvp.name !== "") : [];
 
-    const submitData: SubmitData[] = rsvps.map((rsvp: RSVPPost) => {
+    const submitBody: RSVPPostBody = {
+      groupId: groupData.guests[0].group_id,
+      rsvps: [],
+      additional: [],
+    };
+
+    rsvps.map((rsvp: RSVPForm) => {
       const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
 
       // Convert attendance to boolean
@@ -202,24 +214,27 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
         return acc.length === 0 ? song : acc + separator + song;
       }, "");
 
-      return {
-        attendance,
-        guestId: rsvp.guestId,
+      submitBody.rsvps.push({
+        attendance: attendance,
+        guestId: guest!.guest_id,
         spotify: songString,
-        groupId: guest!.group_id,
-        //conditional plus one property
-        ...(rsvp.additionalGuests.length !== 0 && { plusOne: rsvp.additionalGuests[0] }),
-        //conditional children property
-        ...(rsvp.guestId === designatedDependentGuest?.guest_id &&
-          filteredChildren.length > 0 && { children: childrenRsvps }),
-      };
+      });
+
+      if (rsvp.guestId === designatedDependentGuest?.guest_id && filteredChildren.length > 0) {
+        filteredChildren.forEach((child) => submitBody.additional?.push(child));
+        setAnyAdditionalSubbmited(true);
+      }
+
+      if (rsvp.additionalGuests.length !== 0) {
+        submitBody.additional?.push(rsvp.additionalGuests[0]);
+        setAnyAdditionalSubbmited(true);
+      }
     });
 
-    console.log(submitData);
-    // submitRsvpsMutation.mutate({ rsvpList: submitData });
+    submitRsvpsMutation.mutate({ rsvpList: submitBody });
   };
 
-  const submitRsvpsMutation = useMutation<RSVPResponseType, ErrorType, { rsvpList: SubmitData[] }>({
+  const submitRsvpsMutation = useMutation<RSVPResponseType, ErrorType, { rsvpList: RSVPPostBody }>({
     mutationFn: async (data) => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/rsvps`, {
         method: "POST",
@@ -237,12 +252,19 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
       return response.json() as Promise<RSVPResponseType>;
     },
     onSuccess: (data) => {
-      const hasChildOrDep = data["data"]?.some((rsvp) => {
-        const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
-        return rsvp.attendance && (guest?.has_dependents || guest?.plus_one_allowed);
-      });
+      if (anyAdditionalSubbmited) {
+        setDirectToRegistry(true);
+      } else {
+        const createdRSVPs = data.data?.createdRSVPs;
 
-      setDirectToRegistry(!hasChildOrDep);
+        const hasChildOrDep = createdRSVPs?.some((rsvp) => {
+          const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
+          return rsvp.attendance && (guest?.has_dependents || guest?.plus_one_allowed);
+        });
+
+        setDirectToRegistry(!hasChildOrDep);
+      }
+
       console.log("Response from server:", data);
     },
     onError: (error: ErrorType) => {
