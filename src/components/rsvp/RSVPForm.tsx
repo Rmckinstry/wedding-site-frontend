@@ -8,7 +8,7 @@ import {
   Tooltip,
   MobileStepper,
 } from "@mui/material";
-import { ErrorType, GroupData, RSVPResponseType, SongRequestError } from "../../utility/types";
+import { AdditionalGuest, ErrorType, GroupData, RSVPResponseType, SongRequestError } from "../../utility/types";
 import { useMutation } from "@tanstack/react-query";
 import Error from "../utility/Error.tsx";
 import Loading from "../utility/Loading.tsx";
@@ -17,15 +17,7 @@ import { useNavigation } from "../../context/NavigationContext.tsx";
 import { isValidInput, isValidName } from "../../utility/util.ts";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-type AdditionalGuestType = "plus_one" | "dependent";
-
-type AdditionalGuest = {
-  name: string;
-  type: AdditionalGuestType;
-  guestId: number;
-};
-
-type RSVPForm = {
+type RSVPFormObject = {
   guestId: number;
   attendance: boolean | "";
   spotify: string[];
@@ -48,7 +40,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
   //used for stepper
   const [activeStep, setActiveStep] = useState(0);
 
-  const [rsvps, setRsvps] = useState<RSVPForm[]>([]);
+  const [rsvps, setRsvps] = useState<RSVPFormObject[]>([]);
   const [childrenRsvps, setChildrenRsvps] = useState<AdditionalGuest[]>([]);
 
   const [songValidationErrors, setSongValidationErrors] = useState<{ [guestId: string]: SongRequestError[] }>({});
@@ -104,7 +96,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
   // Memoize resetRSVPs
   const resetRSVPs = useCallback(() => {
     if (groupData && groupData.guests) {
-      const newRsvps: RSVPForm[] = groupData.guests.map((guest) => ({
+      const newRsvps: RSVPFormObject[] = groupData.guests.map((guest) => ({
         guestId: guest.guest_id,
         attendance: "",
         spotify: [],
@@ -203,7 +195,8 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
       additional: [],
     };
 
-    rsvps.map((rsvp: RSVPForm) => {
+    // eslint-disable-next-line array-callback-return
+    rsvps.map((rsvp: RSVPFormObject) => {
       const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
 
       // Convert attendance to boolean

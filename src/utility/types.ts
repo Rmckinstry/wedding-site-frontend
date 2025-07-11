@@ -60,3 +60,16 @@ export type SongRequestError = {
   artist: boolean;
   message: string;
 };
+
+export type AdditionalGuestType = "plus_one" | "dependent";
+
+export type AdditionalGuest = {
+  name: string;
+  type: AdditionalGuestType;
+  guestId: number;
+};
+
+export type AdditionalGuestBodyType = {
+  groupId: number;
+  additional: AdditionalGuest[];
+};

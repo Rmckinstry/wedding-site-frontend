@@ -1,6 +1,14 @@
 /* eslint-disable array-callback-return */
 import { TextField, Tooltip } from "@mui/material";
-import { CustomResponseType, ErrorType, GroupData, Guest, RSVP, SongRequestError } from "../../utility/types";
+import {
+  AdditionalGuestBodyType,
+  CustomResponseType,
+  ErrorType,
+  GroupData,
+  Guest,
+  RSVP,
+  SongRequestError,
+} from "../../utility/types";
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import Error from "../utility/Error.tsx";
@@ -13,12 +21,6 @@ import ChecklistIcon from "@mui/icons-material/Checklist";
 import Success from "../utility/Success.tsx";
 import { isValidInput } from "../../utility/util.ts";
 
-type additionalPost = {
-  additionalGuests: string[];
-  guestId: number;
-  groupId: number;
-  additionalType: "plus_one" | "dependent";
-};
 //#region grid option
 const GridOption = ({
   optionName,
@@ -528,19 +530,25 @@ function RSVPStatusMenu({
     groupId: number,
     additionalType: "plus_one" | "dependent"
   ) => {
-    const postData: additionalPost = {
-      additionalGuests: typeof plusOneName === "string" ? [plusOneName] : plusOneName,
-      guestId: guestId,
+    const postData: AdditionalGuestBodyType = {
       groupId: groupId,
-      additionalType: additionalType,
+      additional: [],
     };
+
+    if (typeof plusOneName === "object") {
+      plusOneName.forEach((name) => {
+        postData.additional.push({ name: name, type: additionalType, guestId: guestId });
+      });
+    } else {
+      postData.additional.push({ name: plusOneName, type: additionalType, guestId: guestId });
+    }
     additionalGuestMutation.mutate({ postData: postData, type: additionalType });
   };
 
   const additionalGuestMutation = useMutation<
     CustomResponseType,
     ErrorType,
-    { postData: additionalPost; type: "plus_one" | "dependent" }
+    { postData: AdditionalGuestBodyType; type: "plus_one" | "dependent" }
   >({
     mutationFn: async ({ postData, type }) => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/rsvps/additional`, {
