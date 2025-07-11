@@ -9,7 +9,7 @@ import {
   RSVP,
   SongRequestError,
 } from "../../utility/types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import Error from "../utility/Error.tsx";
 import Loading from "../utility/Loading.tsx";
@@ -442,10 +442,12 @@ function RSVPStatusMenu({
   groupData,
   groupRSVPs,
   refreshData,
+  handleScroll,
 }: {
   groupData: GroupData;
   groupRSVPs: RSVP[];
   refreshData: () => void;
+  handleScroll: () => void;
 }) {
   const [plusOneEnabled, setPlusOneEnabled] = useState<boolean>(false);
   const [dependentsEnabled, setDependentsEnabled] = useState<boolean>(false);
@@ -457,6 +459,8 @@ function RSVPStatusMenu({
   const [childrenNames, setChildrenNames] = useState<string[]>([]);
 
   const isChildrenInvalid = !isValidName(currentChild);
+
+  // const targetRef = useRef<HTMLDivElement>(null);
 
   // song seperator code
   const separator = "\u00A7";
@@ -492,6 +496,10 @@ function RSVPStatusMenu({
     if (key === "dependent") handleChildReset();
     // if (key === "email") handleEmailReset();
     setMenuState(key);
+
+    if (key === "main") {
+      handleScroll();
+    }
   };
 
   //#region additional guest logic

@@ -204,6 +204,7 @@ button:hover {
 
 #rsvp-portal-container {
     padding-bottom: 1rem;
+    scroll-margin-top: 54px;
 }
 
 #rsvp-card-container {

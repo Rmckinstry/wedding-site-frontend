@@ -890,7 +890,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
             {activeStep === 4 && (
               <div id="confirmation-card-container" className="rsvp-card">
                 <div className="flex-col">
-                  <p className="font-sm-med strong-text">RSVP Confirmation</p>
+                  <p className="font-sm-med strong-text">RSVP Submit & Confirmation</p>
                   <p className="font-sm strong-text contain-text-center" style={{ textDecoration: "underline" }}>
                     Please confirm that all information shown below is correct and submit.
                   </p>
