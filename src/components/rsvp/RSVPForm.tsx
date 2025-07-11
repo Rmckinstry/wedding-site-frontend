@@ -833,19 +833,21 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                             })}
                           </div>
 
-                          <div style={{ marginTop: "1rem" }}>
-                            <button
-                              onClick={() => handleAddSong(rsvp.guestId, guest?.song_requests || 0)}
-                              disabled={
-                                requestsLeft <= 0 ||
-                                songValidationErrors[rsvp.guestId]?.some((error) => error.title || error.artist)
-                              }
-                              className="btn-rsvp-sm"
-                              style={{ fontSize: "1rem", padding: ".25rem 1.25rem" }}
-                            >
-                              Add Song
-                            </button>
-                          </div>
+                          {requestsLeft !== 0 && (
+                            <div style={{ marginTop: "1rem" }}>
+                              <button
+                                onClick={() => handleAddSong(rsvp.guestId, guest?.song_requests || 0)}
+                                disabled={
+                                  requestsLeft <= 0 ||
+                                  songValidationErrors[rsvp.guestId]?.some((error) => error.title || error.artist)
+                                }
+                                className="btn-rsvp-sm"
+                                style={{ fontSize: "1rem", padding: ".25rem 1.25rem" }}
+                              >
+                                Add Song
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </FormControl>
                     );
