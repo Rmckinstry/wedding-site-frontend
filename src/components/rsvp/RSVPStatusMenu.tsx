@@ -894,9 +894,10 @@ function RSVPStatusMenu({
                     Menu'.
                   </p>
                   <p>
-                    <strong>Note:</strong> It is required to add these RSVPs for your children to be{" "}
+                    <strong>Note:</strong> It is <strong>required</strong> to add these RSVPs for your children to be{" "}
                     <span style={{ textDecoration: "underline" }}>counted</span>. If you do not see their name on this
-                    confirmation screen it means they haven't been added and counted.
+                    confirmation screen it means they <span style={{ textDecoration: "underline" }}>haven't</span> been
+                    added and counted.
                   </p>
                 </div>
               )}

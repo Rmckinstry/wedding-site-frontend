@@ -245,7 +245,9 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
       return response.json() as Promise<RSVPResponseType>;
     },
     onSuccess: (data) => {
-      if (anyAdditionalSubbmited) {
+      if (anyAdditionalSubbmited || rsvps.every((rsvp) => rsvp.attendance !== true)) {
+        //if children or plus ones already submitted direct to registry
+        //if everyone said no in the group direct to registry
         setDirectToRegistry(true);
       } else {
         const createdRSVPs = data.data?.createdRSVPs;
@@ -537,15 +539,18 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                         Registry
                       </button>
                     </div>
-                    <div className="flex-col">
-                      <p className="font-sm contain-text-center">
-                        Want to make a song request, update your email, or view your confirmation? Head over to our RSVP
-                        portal.
-                      </p>
-                      <button className="btn-rsvp-sm" onClick={sendRefresh}>
-                        RSVP Portal
-                      </button>
-                    </div>
+                    {/* only show portal msg if there is at least one person attending */}
+                    {rsvps.some((rsvp) => rsvp.attendance === true) && (
+                      <div className="flex-col">
+                        <p className="font-sm contain-text-center">
+                          Want to make a song request, update your email, or view your confirmation? Head over to our
+                          RSVP portal.
+                        </p>
+                        <button className="btn-rsvp-sm" onClick={sendRefresh}>
+                          RSVP Portal
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="flex-col outline" style={{ gap: "2rem" }}>
@@ -967,8 +972,9 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                           Portal.
                         </p>
                         <p className="font-sm secondary-text">
-                          <strong>Note: </strong>It is required to add these RSVPs prior to the deadline for your
-                          children/dpendents to be counted.
+                          <strong>Note: </strong>It is <strong>required</strong> to add these RSVPs prior to the
+                          deadline for your children/dpendents to be{" "}
+                          <span style={{ textDecoration: "underline" }}>counted</span>
                         </p>
                       </div>
                     )}
