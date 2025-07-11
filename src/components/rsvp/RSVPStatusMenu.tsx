@@ -19,7 +19,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import Success from "../utility/Success.tsx";
-import { isValidInput } from "../../utility/util.ts";
+import { isValidInput, isValidName } from "../../utility/util.ts";
 
 //#region grid option
 const GridOption = ({
@@ -456,6 +456,8 @@ function RSVPStatusMenu({
   const [currentChild, setCurrentChild] = useState<string>("");
   const [childrenNames, setChildrenNames] = useState<string[]>([]);
 
+  const isChildrenInvalid = !isValidName(currentChild);
+
   // song seperator code
   const separator = "\u00A7";
 
@@ -719,7 +721,9 @@ function RSVPStatusMenu({
                         </p>
                       );
                     })}
-                    <p style={{ marginTop: "1rem" }}>Press 'Submit' to finalize 'Pending' RSVPs."</p>
+                    <p style={{ marginTop: "1rem", textDecoration: "underline", fontWeight: "700", color: "darkred" }}>
+                      Press 'Submit' to finalize 'Pending' RSVPs."
+                    </p>
                   </div>
                 )}
 
@@ -737,13 +741,16 @@ function RSVPStatusMenu({
                     <button
                       className="btn-stripped"
                       onClick={handleChildAdd}
-                      disabled={currentChild === "" || isDuplicate()}
+                      disabled={currentChild === "" || isDuplicate() || isChildrenInvalid}
                     >
                       Add Child
                     </button>
                   </Tooltip>
                 </div>
-                {isDuplicate() && <p style={{ color: "red" }}>Name is already pending or submitted.</p>}
+                {isDuplicate() && (
+                  <p style={{ color: "red", marginTop: "1rem" }}>Name is already pending or submitted.</p>
+                )}
+                {isChildrenInvalid && <p style={{ color: "red" }}>Must be first and last name.</p>}
 
                 <div className="btn-container">
                   <Tooltip enterDelay={500} title="Reset all 'Pending' child RSVPs">
@@ -759,7 +766,7 @@ function RSVPStatusMenu({
 
                   <Tooltip enterDelay={500} title="Submit Pending Child RSVPs">
                     <button
-                      disabled={childrenNames.length === 0}
+                      disabled={childrenNames.length === 0 || isChildrenInvalid}
                       onClick={() => {
                         const validParent = groupData.guests.find((guest) => guest.has_dependents === true);
                         handleAdditionalSubmit(
@@ -771,7 +778,7 @@ function RSVPStatusMenu({
                       }}
                       className="btn-rsvp-sm"
                     >
-                      Submit
+                      Submit RSVPs
                     </button>
                   </Tooltip>
                 </div>
@@ -924,7 +931,7 @@ function RSVPStatusMenu({
                 className="btn-rsvp-sm"
                 style={{ padding: ".25rem 3rem", marginTop: "2rem" }}
               >
-                Back
+                Back to RSVP Portal
               </button>
             </Tooltip>
           </div>

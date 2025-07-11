@@ -710,6 +710,10 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                   <p className="font-sm-med strong-text" style={{ marginBottom: "1rem" }}>
                     Add Child RSVPs
                   </p>
+                  <p className="font-xs contain-text-center">
+                    Child RSVPs are meant for kids <strong style={{ textDecoration: "underline" }}>15 years</strong> and
+                    younger.
+                  </p>
                   <p className="font-sm contain-text-center secondary-text">
                     <strong>
                       <span style={{ textDecoration: "underline" }}>Undecided?</span>
