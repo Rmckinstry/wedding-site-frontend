@@ -204,7 +204,7 @@ button:hover {
 
 #rsvp-portal-container {
     padding-bottom: 1rem;
-    scroll-margin-top: 54px;
+    scroll-margin-top: 6rem;
 }
 
 #rsvp-card-container {
@@ -693,6 +693,11 @@ button.status-menu-btn:hover {
 
     #overview-status-container{
         width: 100% !important;
+    }
+
+    #page-container{
+        padding-top: 2rem;
+        padding-bottom: 1rem;
     }
 
 }

@@ -36,7 +36,15 @@ type RSVPPostBody = {
   additional?: AdditionalGuest[];
 };
 
-function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefresh: () => void }) {
+function RSVPForm({
+  groupData,
+  sendRefresh,
+  handleScroll,
+}: {
+  groupData: GroupData;
+  sendRefresh: () => void;
+  handleScroll: () => void;
+}) {
   //used for stepper
   const [activeStep, setActiveStep] = useState(0);
 
@@ -148,8 +156,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
 
     setActiveStep(newActiveStep);
 
-    const element = document.getElementById("rsvp-portal-container");
-    element?.scrollIntoView({ block: "center", behavior: "smooth" });
+    handleScroll();
   };
 
   const handleBack = () => {
@@ -176,8 +183,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
 
     setActiveStep(newActiveStep);
 
-    const element = document.getElementById("rsvp-portal-container");
-    element?.scrollIntoView({ block: "center", behavior: "smooth" });
+    handleScroll();
   };
 
   // resets everything for the form
@@ -186,8 +192,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     setActiveStep(0);
     setChildrenRsvps([]);
 
-    const element = document.getElementById("rsvp-page-container");
-    element?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    handleScroll();
   };
   //#endregion stepper controls
 

@@ -92,7 +92,9 @@ function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string
           handleScroll={resetScroll}
         />
       )}
-      {groupRSVPs.data.length === 0 && <RSVPForm groupData={groupData.data} sendRefresh={refreshData} />}
+      {groupRSVPs.data.length === 0 && (
+        <RSVPForm groupData={groupData.data} sendRefresh={refreshData} handleScroll={resetScroll} />
+      )}
     </div>
   );
 }
