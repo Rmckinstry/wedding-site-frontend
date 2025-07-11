@@ -147,6 +147,9 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     }
 
     setActiveStep(newActiveStep);
+
+    const element = document.getElementById("rsvp-portal-container");
+    element?.scrollIntoView({ block: "center", behavior: "smooth" });
   };
 
   const handleBack = () => {
@@ -172,6 +175,9 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     }
 
     setActiveStep(newActiveStep);
+
+    const element = document.getElementById("rsvp-portal-container");
+    element?.scrollIntoView({ block: "center", behavior: "smooth" });
   };
 
   // resets everything for the form
@@ -179,6 +185,9 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     resetRSVPs();
     setActiveStep(0);
     setChildrenRsvps([]);
+
+    const element = document.getElementById("rsvp-page-container");
+    element?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   };
   //#endregion stepper controls
 
