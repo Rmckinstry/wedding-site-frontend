@@ -4,7 +4,11 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 function MobileSelectNav({ tabValue = 0, handleChange }) {
   return (
     <>
-      <div className="flex-row">
+      <div
+        id="mobile-nav-bar-container"
+        className="flex-row"
+        style={{ borderBottomStyle: "solid", borderColor: "#64644015", borderWidth: "3px" }}
+      >
         <FormControl fullWidth>
           <NativeSelect
             value={tabValue}
