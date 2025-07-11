@@ -460,7 +460,7 @@ function RSVPStatusMenu({
 
   const isChildrenInvalid = !isValidName(currentChild);
 
-  // const targetRef = useRef<HTMLDivElement>(null);
+  const everyAttendanceNo = groupRSVPs.every((rsvp) => rsvp.attendance === false);
 
   // song seperator code
   const separator = "\u00A7";
@@ -606,8 +606,12 @@ function RSVPStatusMenu({
             {dependentsEnabled && (
               <GridOption optionName={"Add Child"} menuKey={"dependent"} handleMenuClick={handleMenuClick} />
             )}
-            <GridOption optionName={"Song Requests"} menuKey={"song"} handleMenuClick={handleMenuClick} />
-            <GridOption optionName={"Add/Edit Email"} menuKey={"email"} handleMenuClick={handleMenuClick} />
+            {!everyAttendanceNo && (
+              <GridOption optionName={"Song Requests"} menuKey={"song"} handleMenuClick={handleMenuClick} />
+            )}
+            {!everyAttendanceNo && (
+              <GridOption optionName={"Add/Edit Email"} menuKey={"email"} handleMenuClick={handleMenuClick} />
+            )}
             <GridOption optionName={"RSVP Confirmation"} menuKey={"overview"} handleMenuClick={handleMenuClick} />
           </div>
         )}
@@ -880,7 +884,7 @@ function RSVPStatusMenu({
                           </div>
                         )}
                       </div>
-                      {rsvp.spotify && rsvp.spotify.split(separator).length > 0 ? (
+                      {rsvp.spotify && rsvp.spotify.split(separator).length > 0 && (
                         <div className="overview-guest-song">
                           <p className="font-sm strong-text" style={{ textDecoration: "underline" }}>
                             Requested Songs
@@ -895,12 +899,13 @@ function RSVPStatusMenu({
                               </p>
                             ))}
                         </div>
-                      ) : (
+                      )}
+                      {!everyAttendanceNo && (
                         <p className="overview-guest-no-song font-xs">
                           No songs yet. This can be done in the 'Song Request' menu.
                         </p>
                       )}
-                      {rsvp.attendance && guest.plus_one_allowed && (
+                      {!everyAttendanceNo && rsvp.attendance && guest.plus_one_allowed && (
                         <p>
                           Plus one <strong>available</strong> for {guest.name}. This can be added in the 'Plus One'
                           menu.
@@ -912,7 +917,8 @@ function RSVPStatusMenu({
                 return null;
               })}
               {/* has dependents message - no children added yet */}
-              {groupData.guests.some((guest) => guest.has_dependents) &&
+              {!everyAttendanceNo &&
+                groupData.guests.some((guest) => guest.has_dependents) &&
                 groupData.guests.every((guest) => guest.additional_guest_type !== "dependent") && (
                   <div className="font-sm">
                     <p>
@@ -928,7 +934,7 @@ function RSVPStatusMenu({
                   </div>
                 )}
               {/* has dependents message - yes children added */}
-              {groupData.guests.some((guest) => guest.additional_guest_type === "dependent") && (
+              {!everyAttendanceNo && groupData.guests.some((guest) => guest.additional_guest_type === "dependent") && (
                 <div>
                   <p className="font-sm">
                     <strong style={{ textDecoration: "underline" }}>Please Note:</strong> While kids are allowed to help
@@ -940,7 +946,7 @@ function RSVPStatusMenu({
                 </div>
               )}
               {/* no email message */}
-              {groupData.guests.some((guest) => !guest.email && !guest.additional_guest_type) && (
+              {!everyAttendanceNo && groupData.guests.some((guest) => !guest.email && !guest.additional_guest_type) && (
                 <div className="font-sm">
                   <p>
                     At least one attending guest in your group does not have an email associated with their RSVP. While
