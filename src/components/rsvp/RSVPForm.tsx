@@ -187,7 +187,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
     setAnyAdditionalSubbmited(false);
 
     // filtering out any children rsvps that have empty names (happens when add name is clicked and no name is entered or its deleted)
-    const filteredChildren = childrenRsvps.length > 0 ? childrenRsvps.filter((rsvp) => rsvp.name !== "") : [];
+    const filteredChildren = childrenRsvps.length > 0 ? childrenRsvps.filter((rsvp) => rsvp.name.trim() !== "") : [];
 
     const submitBody: RSVPPostBody = {
       groupId: groupData.guests[0].group_id,
@@ -626,31 +626,9 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                           </ToggleButtonGroup>
                         </div>
                       </FormControl>
-
-                      {rsvp.attendance && guest?.plus_one_allowed && (
-                        <p style={{ marginTop: "1rem" }}>
-                          {guest.name} has a plus one for this invitation. Plus ones can be added{" "}
-                          <strong style={{ textDecoration: "underline" }}>after the RSVP is submitted</strong> by
-                          entering your name again in the RSVP portal.
-                        </p>
-                      )}
                     </div>
                   );
                 })}
-                {rsvps.some(
-                  (rsvp) =>
-                    rsvp.attendance === true &&
-                    groupData.guests.find((guest) => guest.guest_id === rsvp.guestId)?.has_dependents
-                ) && (
-                  <div>
-                    <p>
-                      Note: One or more guests can submit children RSVPs. Children{" "}
-                      <strong style={{ textDecoration: "underline" }}>have to be added</strong> after submitting the
-                      RSVP via the menu.
-                    </p>
-                  </div>
-                )}
-
                 <button id="rsvp-form-continue-btn" disabled={!isRSVPStepValid} onClick={handleNext}>
                   Continue
                 </button>
@@ -664,14 +642,17 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                     Add Plus One
                   </p>
                   <p className="font-sm contain-text-center secondary-text">
-                    <span style={{ textDecoration: "underline" }}>Undecided? </span>You can always add your plus one
-                    later after submitting your RSVP via the RSVP Portal!
+                    <strong>
+                      <span style={{ textDecoration: "underline" }}>Undecided? </span>
+                    </strong>
+                    You can always add your plus one later after submitting your RSVP via the{" "}
+                    <strong>RSVP Portal</strong>!
                   </p>
                 </div>
 
                 {rsvps
                   .filter((rsvp) => rsvp.attendance === true)
-                  .map((rsvp) => {
+                  .map((rsvp, index) => {
                     const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guestId);
 
                     const plusOneGuest = rsvp.additionalGuests.find((ag) => ag.type === "plus_one");
@@ -681,8 +662,8 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
 
                     if (guest?.plus_one_allowed) {
                       return (
-                        <div>
-                          <p>Add {guest.name} Plus One</p>
+                        <div key={index} className="flex-col-start" style={{ gap: "1rem", marginBottom: "1rem" }}>
+                          <p className="font-sm">{guest.name} Plus One</p>
                           <div>
                             <TextField
                               value={plusOneName}
@@ -725,18 +706,20 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                     Add Child RSVPs
                   </p>
                   <p className="font-sm contain-text-center secondary-text">
-                    <span style={{ textDecoration: "underline" }}>Undecided?</span> You can always add your child RSVPs
-                    later after submitting your RSVP via the RSVP Portal!
+                    <strong>
+                      <span style={{ textDecoration: "underline" }}>Undecided?</span>
+                    </strong>{" "}
+                    You can always add your child RSVPs later after submitting your RSVP via the{" "}
+                    <strong>RSVP Portal</strong>!
                   </p>
-                  {/* add text here about child age rule */}
                 </div>
                 {childrenRsvps.map((child, index) => {
                   return (
-                    <div>
+                    <div key={index}>
                       <TextField
                         value={child.name}
                         onChange={(e) => handleChildNameChange(e.target.value, index)}
-                        label="Add Childs First & Last Name"
+                        label="Add First & Last Name"
                         sx={{ width: "20rem" }}
                       />
                     </div>
@@ -748,12 +731,14 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                     onClick={() => {
                       handleAddNewChild(designatedDependentGuest.guest_id);
                     }}
+                    className="btn-rsvp-sm"
+                    style={{ fontSize: "1rem", padding: ".25rem 1.25rem" }}
                   >
                     Add Child
                   </button>
                 </div>
                 {isChildrenInvalid && (
-                  <p className="contain-text-center" style={{ color: "red" }}>
+                  <p className="contain-text-center" style={{ color: "red", textDecoration: "underline" }}>
                     All children names must be first & last.
                   </p>
                 )}
@@ -883,7 +868,7 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
             )}
             {/* Confirmation Card */}
             {activeStep === 4 && (
-              <div id="confirmation-card-container" className="rsvp-card" style={{ width: "80%" }}>
+              <div id="confirmation-card-container" className="rsvp-card">
                 <div className="flex-col">
                   <p className="font-sm-med strong-text">RSVP Confirmation</p>
                   <p className="font-sm strong-text contain-text-center" style={{ textDecoration: "underline" }}>
@@ -943,10 +928,10 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
 
                 {/* --- children confirmation template --- */}
                 {childrenRsvps.length > 0 && childrenRsvps[0].name !== "" ? (
-                  <div id="rsvp-confirm-curr-kids-container">
+                  <div id="rsvp-confirm-curr-kids-container" className="flex-col-start">
                     {childrenRsvps.map((children, index) => {
                       return (
-                        <div key={index} className="user-confirm-rsvp-container">
+                        <div key={index} className="user-confirm-rsvp-container" style={{ width: "stretch" }}>
                           <div className="flex-row-gap">
                             <p className="strong-text font-sm confirmation-header">Child: </p>
                             <p className="font-sm">{children.name}</p>
@@ -958,6 +943,13 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                         </div>
                       );
                     })}
+                    <p className="font-sm">
+                      <strong style={{ textDecoration: "underline" }}>Please Note:</strong> While kids are allowed to
+                      help celebrate our special day we kindly ask all infants/toddlers to{" "}
+                      <span style={{ textDecoration: "underline" }}>not be</span> present at the ceremony. There are
+                      several areas around the property for one of your guests to accompany them. They are of course
+                      welcome afterwards for the cocktail hour and reception. For more information visit the 'FAQ' tab.
+                    </p>
                   </div>
                 ) : (
                   <div id="rsvp-confirm-no-curr-kids-container">
@@ -1017,19 +1009,8 @@ function RSVPForm({ groupData, sendRefresh }: { groupData: GroupData; sendRefres
                 variant="progress"
                 nextButton={null}
                 backButton={null}
-                sx={{ width: "39rem" }}
+                sx={{ width: "40rem" }}
               ></MobileStepper>
-            </div>
-            <div className="btn-container">
-              <button disabled={activeStep === 0} onClick={handleBack}>
-                Back
-              </button>
-              <button
-                disabled={activeStep === steps.length - 1 || !isRSVPStepValid || isSongTabInvalid}
-                onClick={handleNext}
-              >
-                Continue
-              </button>
             </div>
           </div>
         )}

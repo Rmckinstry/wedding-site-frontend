@@ -211,7 +211,8 @@ button:hover {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 3rem;
+    gap: 1rem;
+    margin-top: 2rem;
     padding: 1rem;
 }
 
@@ -241,6 +242,10 @@ button:hover {
     cursor: not-allowed;
     transform: scale(1.0);
     font-weight: 500;
+}
+
+#confirmation-card-container{
+    width: 100%;
 }
 
 #rsvp-status-menu-container {
@@ -681,10 +686,6 @@ button.status-menu-btn:hover {
         padding: 0 3rem;
     }
 
-    #confirmation-card-container{
-        width: 100% !important;
-    }
-
     #status-menu-grid{
         padding: 1rem .5rem;
     }
@@ -705,10 +706,6 @@ button.status-menu-btn:hover {
         text-underline-offset: 7px;
     }
 
-    #confirmation-card-container{
-        width: 100% !important;
-    }
-
     #status-menu-grid{
         padding: 1rem 1rem;
     }
@@ -722,6 +719,20 @@ button.status-menu-btn:hover {
 
     #faq-data-desktop-container {
         padding: 0 10%;
+    }
+}
+
+@media (min-width: 1000px) {
+    html {
+        font-size: 16px;
+    }
+
+    #faq-data-desktop-container {
+        padding: 0 10%;
+    }
+
+    #confirmation-card-container{
+        width: 80% !important;
     }
 }
 
