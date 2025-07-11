@@ -15,7 +15,7 @@ function MobileSelectNav({ tabValue = 0, handleChange }) {
               fontFamily: "Cormorant Garamond",
               fontWeight: 600,
             }}
-            IconComponent={() => <ArrowDropDownIcon sx={{ fontSize: 100 }} />}
+            IconComponent={() => <ArrowDropDownIcon sx={{ fontSize: 32 }} />}
           >
             <option value={0}>Home</option>
             <option value={1}>Travel</option>
