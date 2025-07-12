@@ -998,12 +998,13 @@ function RSVPForm({
                     )}
                   </div>
                 )}
-                <div className="btn-container" style={{ gap: "2rem" }}>
+                <div id="rsvp-form-submit-container" className="btn-container" style={{ gap: "2rem" }}>
                   <button
                     className="btn-rsvp-sm btn-alt"
                     style={{ flexGrow: 1, width: "10%" }}
                     onClick={handleReset}
                     disabled={submitRsvpsMutation.isPending}
+                    id="reset-rsvp-form-btn"
                   >
                     Reset
                   </button>

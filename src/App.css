@@ -706,13 +706,31 @@ button.status-menu-btn:hover {
         width: 100% !important;
     }
 
+    #rsvp-form-continue-btn {
+        padding: 1rem 0rem;
+    }
+
+    #rsvp-form-submit-container {
+        flex-direction: column;
+        margin: 0;
+    }
+
+    #rsvp-form-submit-container button {
+        width: 60% !important;
+        flex-grow: 0 !important;
+    }
+
+    #reset-rsvp-form-btn {
+        display: none;
+    }
+
     .btn-rsvp {
-        padding: 1rem 1.5rem;
+        padding: 1rem;
         font-size: 2rem;
     }
 
     .btn-rsvp-sm {
-        font-size: 1.55rem;
+        font-size: 1.5rem;
         padding: .5rem 1.25rem;
     }
 
@@ -731,6 +749,26 @@ button.status-menu-btn:hover {
     #status-menu-grid {
         padding: 1rem 1rem;
     }
+
+    #rsvp-now-btn {
+        padding: 1rem 4rem;
+        font-size: 2rem;
+    }
+
+    #rsvp-form-continue-btn {
+        padding: 1rem 0rem;
+    }
+
+    .btn-rsvp {
+        padding: 1rem;
+        font-size: 2rem;
+    }
+
+    .btn-rsvp-sm {
+        font-size: 1.5rem;
+        padding: .5rem 1.25rem;
+    }
+
 }
 
 /* Large devices (desktops, 901px and above) */
