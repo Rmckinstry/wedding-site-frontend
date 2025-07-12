@@ -2,7 +2,7 @@ const faqData = [
     {
         question: "Are kids allowed at the wedding?",
         answer: "Yes, kids are allowed to help celebrate this special day. We do kindly suggest that all infants and toddlers not be present at the ceremony area so that all of the focus is on the bride and groom. There are several areas around the property that you can use."
-    },    
+    },
     {
         question: "How do I RSVP?",
         answer: "RSVP's will be sent out in July, and you can RSVP on this site when they go out."

@@ -7,10 +7,10 @@ function TravelPage() {
         <div id="venue-container" className="flex-col">
           <h2 className="title">Venue</h2>
           <div id="venue-info" className="info-container contain-text-center">
-            <p className="primary-text">Heartwood Hall</p>
+            <p className="primary-text font-med-lg">Heartwood Hall</p>
             <a
               href="https://maps.app.goo.gl/YdQgCvsSVR2bzDCv6"
-              className="secondary-text"
+              className="secondary-text font-med"
               target="_blank"
               rel="noreferrer"
             >
@@ -23,15 +23,15 @@ function TravelPage() {
           <div id="transportation-container" className="flex-col">
             <h2 className="title">Transportation</h2>
             <div className="info-container contain-text-center">
-              <p className="primary-text">Memphis International Airport</p>
-              <p className="secondary-text">(Recommended)</p>
+              <p className="primary-text font-med-lg">Memphis International Airport</p>
+              <p className="secondary-text font-med">(Recommended)</p>
             </div>
             <div className="info-container contain-text-center">
-              <p className="primary-text">Nashville International Airport</p>
-              <p className="secondary-text">(Note: 3 hour drive to Memphis.)</p>
+              <p className="primary-text font-med-lg">Nashville International Airport</p>
+              <p className="secondary-text font-med">(Note: 3 hour drive to Memphis.)</p>
             </div>
             <div className="info-container contain-text-center">
-              <p className="primary-text">Memphis Airport Rental Cars</p>
+              <p className="primary-text font-med-lg">Memphis Airport Rental Cars</p>
               <div className="btn-container">
                 <a
                   href="https://flymemphis.com/ground-transportation/"
@@ -50,24 +50,26 @@ function TravelPage() {
           <div id="lodging-container" className="flex-col">
             <h2 className="title">Lodging</h2>
             <div className="info-container contain-text-center">
-              <p className="primary-text">Courtyard Memphis Collierville</p>
+              <p className="primary-text font-med-lg">Courtyard Memphis Collierville</p>
               <div className="info-container contain-text-center">
                 <a
                   href="https://maps.app.goo.gl/QBmsoeupeWr9yDH87"
                   target="_blank"
-                  className="secondary-text"
+                  className="secondary-text font-med"
                   rel="noreferrer"
                 >
                   4640 Merchants Park Cir, Collierville, TN 38017
                 </a>
-                <p className="secondary-text">(901) 850-9390</p>
+                <p className="secondary-text font-med">(901) 850-9390</p>
               </div>
-              <p className="detail-text" style={{ margin: "0px", textAlign: "center" }}>
-                To receive the “Kail-McKinstry Wedding Block” rate, use the button below.
-              </p>
-              <p className="detail-text" style={{ margin: "0px", textAlign: "center" }}>
-                If the block is out of stock, please let us know!
-              </p>
+              <div className="detail-text">
+                <p className="font-sm" style={{ margin: "0px", textAlign: "center" }}>
+                  To receive the “Kail-McKinstry Wedding Block” rate, use the button below.
+                </p>
+                <p className="font-sm" style={{ margin: "0px", textAlign: "center" }}>
+                  If the block is out of stock, please let us know!
+                </p>
+              </div>
               <div className="btn-container">
                 <a
                   href="https://www.marriott.com/event-reservations/reservation-link.mi?id=1736975742584&key=GRP&guestreslink2=true&app=resvlink"
@@ -78,9 +80,9 @@ function TravelPage() {
                   Block Rate
                 </a>
               </div>
-              <div>
-                <p className="detail-text">The Courtyard Memphis is located in the Carriage Crossing Outdoor Mall.</p>
-                <p className="detail-text">
+              <div className="detail-text">
+                <p className="font-sm">The Courtyard Memphis is located in the Carriage Crossing Outdoor Mall.</p>
+                <p className="font-sm">
                   The mall has several restaurants, bars, and shops all in walking distance of the hotel for you to
                   enjoy.
                 </p>
