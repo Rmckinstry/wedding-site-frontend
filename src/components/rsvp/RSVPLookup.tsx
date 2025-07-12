@@ -267,9 +267,7 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
     <div id="rsvp-lookup-container">
       {!showConfirmation ? (
         <div className="flex-col flex-col-lg">
-          <p className="font-med contain-text-center">
-            Lookup your name to access your / your groups RSVP Guest Portal.
-          </p>
+          <p className="font-med contain-text-center">Lookup your name to access your RSVP Guest Portal.</p>
           <Autocomplete
             open={openPopper}
             onOpen={() => {
@@ -301,7 +299,7 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
               }
             }}
             disablePortal
-            sx={{ width: "27rem" }}
+            sx={{ width: "30rem" }}
             renderInput={(params) => <TextField {...params} label="Enter Guest Name" />}
             forcePopupIcon={false}
           />
