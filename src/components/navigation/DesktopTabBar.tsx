@@ -15,9 +15,8 @@ function DesktopTabBar({ tabValue = 0, handleChange }) {
         >
           <Tab label="Home" className="custom-tab" />
           <Tab label="Travel" className="custom-tab" />
-          <Tab label="RSVP" className="custom-tab" />
-          <Tab label="Registry" className="custom-tab" />
           <Tab label="FAQ" className="custom-tab" />
+          <Tab label="Registry" className="custom-tab" />
         </Tabs>
       </div>
     </>

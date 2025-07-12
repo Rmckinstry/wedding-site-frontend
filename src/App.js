@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Footer from './components/Footer.tsx';
 import Header from './components/Header.tsx';
@@ -9,41 +9,51 @@ import Registry from './components/Registry.tsx';
 import theme from './theme/theme.tsx';
 import { ThemeProvider } from '@mui/material';
 import Navigation from './components/navigation/Navigation.tsx';
-import RSVPPage from './components/rsvp/RSVPPage.tsx';
-import { NavigationProvider, useNavigation } from './context/NavigationContext.tsx';
 
-function AppContent() {
+function App() {
 
-  const { tabValue } = useNavigation()
+  const [tabValue, setTabValue] = useState(0);
 
+  const handleScrollAction = () => {
+    const pageContainer = document.getElementById('page-container');
+    if (pageContainer) {
+      pageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const handleChange = (event, newValue) => {
+    if (newValue === undefined) {
+      // assume mobile
+      if (event.target.value !== tabValue) {
+        setTabValue(Number(event.target.value));
+        handleScrollAction();
+      }
+    } else {
+      if (newValue !== tabValue) {
+        setTabValue(newValue);
+        handleScrollAction();
+      }
+    }
+
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
         <Header />
         <div id="nav-container"> {/* Add the container div */}
-          <Navigation />
+          <Navigation tabValue={tabValue} handleChange={handleChange} />
         </div>
         <div id='page-container'>
           {tabValue === 0 && <HomePage />}
           {tabValue === 1 && <TravelPage />}
-          {tabValue === 2 && <RSVPPage />}
+          {tabValue === 2 && <FAQPage />}
           {tabValue === 3 && <Registry />}
-          {tabValue === 4 && <FAQPage />}
-
         </div>
         <Footer showText={tabValue > 0} />
       </div>
     </ThemeProvider>
   );
-}
-
-function App() {
-  return (
-    <NavigationProvider>
-      <AppContent />
-    </NavigationProvider>
-  )
 }
 
 export default App;
