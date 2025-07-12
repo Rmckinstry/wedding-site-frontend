@@ -486,6 +486,7 @@ button:hover {
     all: unset;
     color: var(--default-text);
     font-family: Cormorant Garamond, serif;
+    font-size: 1.5rem;
 }
 
 .btn-stripped:hover {

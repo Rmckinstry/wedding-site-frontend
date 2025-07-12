@@ -746,7 +746,7 @@ function RSVPStatusMenu({
                     }}
                     label="Add Child Full Name"
                     value={currentChild || ""}
-                    sx={{ width: "20rem" }}
+                    sx={{ width: "25rem" }}
                     onKeyDown={handleKeyDown}
                   ></TextField>
                   <Tooltip title="Add Child to Pending list">

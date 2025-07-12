@@ -724,10 +724,6 @@ function RSVPForm({
                   <p className="font-sm-med strong-text" style={{ marginBottom: "1rem" }}>
                     Add Child RSVPs
                   </p>
-                  <p className="font-xs contain-text-center">
-                    Child RSVPs are meant for kids <strong style={{ textDecoration: "underline" }}>15 years</strong> and
-                    younger.
-                  </p>
                   <p className="font-sm contain-text-center secondary-text">
                     <strong>
                       <span style={{ textDecoration: "underline" }}>Undecided?</span>
@@ -743,7 +739,7 @@ function RSVPForm({
                         value={child.name}
                         onChange={(e) => handleChildNameChange(e.target.value, index)}
                         label="Add First & Last Name"
-                        sx={{ width: "20rem" }}
+                        sx={{ width: "60%" }}
                       />
                     </div>
                   );
@@ -755,7 +751,6 @@ function RSVPForm({
                       handleAddNewChild(designatedDependentGuest.guest_id);
                     }}
                     className="btn-rsvp-sm"
-                    style={{ fontSize: "1rem", padding: ".25rem 1.25rem" }}
                   >
                     Add Child
                   </button>
@@ -788,8 +783,10 @@ function RSVPForm({
                     Add Song Requests
                   </p>
                   <p className="font-sm contain-text-center secondary-text">
-                    <span style={{ textDecoration: "underline" }}>Undecided? </span>You can always add songs later after
-                    submitting your RSVP via the RSVP Portal!
+                    <strong>
+                      <span style={{ textDecoration: "underline" }}>Undecided?</span>{" "}
+                    </strong>
+                    {""}You can always add songs later after submitting your RSVP via the <strong>RSVP Portal</strong>!
                   </p>
                 </div>
 
@@ -865,7 +862,6 @@ function RSVPForm({
                                   songValidationErrors[rsvp.guestId]?.some((error) => error.title || error.artist)
                                 }
                                 className="btn-rsvp-sm"
-                                style={{ fontSize: "1rem", padding: ".25rem 1.25rem" }}
                               >
                                 Add Song
                               </button>
@@ -991,7 +987,7 @@ function RSVPForm({
                         </p>
                         <p className="font-sm secondary-text">
                           <strong>Note: </strong>It is <strong>required</strong> to add these RSVPs prior to the
-                          deadline for your children/dpendents to be{" "}
+                          deadline for your children/dependents to be{" "}
                           <span style={{ textDecoration: "underline" }}>counted</span>
                         </p>
                       </div>
