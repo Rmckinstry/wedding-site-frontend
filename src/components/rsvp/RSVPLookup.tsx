@@ -302,6 +302,18 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
             sx={{ width: "30rem" }}
             renderInput={(params) => <TextField {...params} label="Enter Guest Name" />}
             forcePopupIcon={false}
+            slotProps={{
+              paper: {
+                sx: {
+                  "& .MuiAutocomplete-listbox": {
+                    fontSize: "1.5rem",
+                  },
+                  "& .MuiAutocomplete-option": {
+                    fontSize: "1.5rem",
+                  },
+                },
+              },
+            }}
           />
           <div className="btn-container">
             <button disabled={!selectedGuest} className="btn-rsvp" onClick={() => setShowConfirmation(true)}>
