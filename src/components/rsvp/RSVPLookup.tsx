@@ -306,10 +306,10 @@ function RSVPLookup({ data, handleGroupSelect }: { data: Guest[]; handleGroupSel
               paper: {
                 sx: {
                   "& .MuiAutocomplete-listbox": {
-                    fontSize: "1.5rem",
+                    fontSize: "1.75rem",
                   },
                   "& .MuiAutocomplete-option": {
-                    fontSize: "1.5rem",
+                    fontSize: "1.75rem",
                   },
                 },
               },
