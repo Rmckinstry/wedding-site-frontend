@@ -172,11 +172,14 @@ const theme = createTheme({
 
     MuiFormLabel: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           color: "var(--default-text)",
           fontSize: "1.25rem",
           fontFamily: "Cormorant Garamond",
-        },
+          [theme.breakpoints.down("md")]: {
+            fontSize: "1.75rem",
+          },
+        }),
       },
     },
 
@@ -196,9 +199,39 @@ const theme = createTheme({
     MuiInputBase: {
       styleOverrides: {
         input: {
-          // This targets the actual <input> element within MuiInputBase
           fontSize: "16px",
         },
+      },
+    },
+
+    MuiMobileStepper: {
+      styleOverrides: {
+        root: {
+          position: "unset",
+        },
+        progress: {
+          width: "100%",
+        },
+      },
+    },
+
+    MuiAutocomplete: {
+      styleOverrides: {
+        // This targets the paper component used for the dropdown
+        paper: ({ theme }) => ({
+          "& .MuiAutocomplete-listbox": {
+            [theme.breakpoints.down("md")]: {
+              // Apply for md and sm breakpoints
+              fontSize: "1.75rem",
+            },
+          },
+          "& .MuiAutocomplete-option": {
+            [theme.breakpoints.down("md")]: {
+              // Apply for md and sm breakpoints
+              fontSize: "1.75rem",
+            },
+          },
+        }),
       },
     },
   },

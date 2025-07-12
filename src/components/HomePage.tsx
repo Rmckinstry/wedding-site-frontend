@@ -15,6 +15,7 @@ function HomePage() {
             }}
             className="btn-rsvp"
             style={{ padding: "1rem 2rem" }}
+            id="rsvp-now-btn"
           >
             RSVP Now
           </button>

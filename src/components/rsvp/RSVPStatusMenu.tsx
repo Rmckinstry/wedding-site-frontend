@@ -1,6 +1,14 @@
 /* eslint-disable array-callback-return */
 import { TextField, Tooltip } from "@mui/material";
-import { CustomResponseType, ErrorType, GroupData, Guest, RSVP, SongRequestError } from "../../utility/types";
+import {
+  AdditionalGuestBodyType,
+  CustomResponseType,
+  ErrorType,
+  GroupData,
+  Guest,
+  RSVP,
+  SongRequestError,
+} from "../../utility/types";
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import Error from "../utility/Error.tsx";
@@ -11,14 +19,8 @@ import EmailIcon from "@mui/icons-material/Email";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import Success from "../utility/Success.tsx";
-import { isValidInput } from "../../utility/util.ts";
+import { isValidInput, isValidName } from "../../utility/util.ts";
 
-type additionalPost = {
-  additionalGuests: string[];
-  guestId: number;
-  groupId: number;
-  additionalType: "plus_one" | "dependent";
-};
 //#region grid option
 const GridOption = ({
   optionName,
@@ -440,10 +442,12 @@ function RSVPStatusMenu({
   groupData,
   groupRSVPs,
   refreshData,
+  handleScroll,
 }: {
   groupData: GroupData;
   groupRSVPs: RSVP[];
   refreshData: () => void;
+  handleScroll: () => void;
 }) {
   const [plusOneEnabled, setPlusOneEnabled] = useState<boolean>(false);
   const [dependentsEnabled, setDependentsEnabled] = useState<boolean>(false);
@@ -453,6 +457,10 @@ function RSVPStatusMenu({
 
   const [currentChild, setCurrentChild] = useState<string>("");
   const [childrenNames, setChildrenNames] = useState<string[]>([]);
+
+  const isChildrenInvalid = !isValidName(currentChild);
+
+  const everyAttendanceNo = groupRSVPs.every((rsvp) => rsvp.attendance === false);
 
   // song seperator code
   const separator = "\u00A7";
@@ -488,6 +496,10 @@ function RSVPStatusMenu({
     if (key === "dependent") handleChildReset();
     // if (key === "email") handleEmailReset();
     setMenuState(key);
+
+    if (key === "main") {
+      handleScroll();
+    }
   };
 
   //#region additional guest logic
@@ -528,19 +540,25 @@ function RSVPStatusMenu({
     groupId: number,
     additionalType: "plus_one" | "dependent"
   ) => {
-    const postData: additionalPost = {
-      additionalGuests: typeof plusOneName === "string" ? [plusOneName] : plusOneName,
-      guestId: guestId,
+    const postData: AdditionalGuestBodyType = {
       groupId: groupId,
-      additionalType: additionalType,
+      additional: [],
     };
+
+    if (typeof plusOneName === "object") {
+      plusOneName.forEach((name) => {
+        postData.additional.push({ name: name, type: additionalType, guestId: guestId });
+      });
+    } else {
+      postData.additional.push({ name: plusOneName, type: additionalType, guestId: guestId });
+    }
     additionalGuestMutation.mutate({ postData: postData, type: additionalType });
   };
 
   const additionalGuestMutation = useMutation<
     CustomResponseType,
     ErrorType,
-    { postData: additionalPost; type: "plus_one" | "dependent" }
+    { postData: AdditionalGuestBodyType; type: "plus_one" | "dependent" }
   >({
     mutationFn: async ({ postData, type }) => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/rsvps/additional`, {
@@ -588,8 +606,12 @@ function RSVPStatusMenu({
             {dependentsEnabled && (
               <GridOption optionName={"Add Child"} menuKey={"dependent"} handleMenuClick={handleMenuClick} />
             )}
-            <GridOption optionName={"Song Requests"} menuKey={"song"} handleMenuClick={handleMenuClick} />
-            <GridOption optionName={"Add/Edit Email"} menuKey={"email"} handleMenuClick={handleMenuClick} />
+            {!everyAttendanceNo && (
+              <GridOption optionName={"Song Requests"} menuKey={"song"} handleMenuClick={handleMenuClick} />
+            )}
+            {!everyAttendanceNo && (
+              <GridOption optionName={"Add/Edit Email"} menuKey={"email"} handleMenuClick={handleMenuClick} />
+            )}
             <GridOption optionName={"RSVP Confirmation"} menuKey={"overview"} handleMenuClick={handleMenuClick} />
           </div>
         )}
@@ -711,7 +733,9 @@ function RSVPStatusMenu({
                         </p>
                       );
                     })}
-                    <p style={{ marginTop: "1rem" }}>Press 'Submit' to finalize 'Pending' RSVPs."</p>
+                    <p style={{ marginTop: "1rem", textDecoration: "underline", fontWeight: "700", color: "darkred" }}>
+                      Press 'Submit' to finalize 'Pending' RSVPs."
+                    </p>
                   </div>
                 )}
 
@@ -722,20 +746,33 @@ function RSVPStatusMenu({
                     }}
                     label="Add Child Full Name"
                     value={currentChild || ""}
-                    sx={{ width: "20rem" }}
+                    sx={{ width: "25rem" }}
                     onKeyDown={handleKeyDown}
                   ></TextField>
                   <Tooltip title="Add Child to Pending list">
                     <button
                       className="btn-stripped"
                       onClick={handleChildAdd}
-                      disabled={currentChild === "" || isDuplicate()}
+                      disabled={currentChild === "" || isDuplicate() || isChildrenInvalid}
                     >
                       Add Child
                     </button>
                   </Tooltip>
                 </div>
-                {isDuplicate() && <p style={{ color: "red" }}>Name is already pending or submitted.</p>}
+                {isDuplicate() && (
+                  <p style={{ color: "darkred", marginTop: "1rem" }}>Name is already pending or submitted.</p>
+                )}
+                {isChildrenInvalid && <p style={{ color: "darkred" }}>Must be first and last name.</p>}
+
+                {childrenNames.length !== 0 && (
+                  <p className="font-sm">
+                    <strong style={{ textDecoration: "underline" }}>Please Note:</strong> While kids are allowed to help
+                    celebrate our special day we kindly ask all infants/toddlers to{" "}
+                    <span style={{ textDecoration: "underline" }}>not be</span> present at the ceremony. There are
+                    several areas around the property for one of your guests to accompany them. They are of course
+                    welcome afterwards for the cocktail hour and reception. For more information visit the 'FAQ' tab.
+                  </p>
+                )}
 
                 <div className="btn-container">
                   <Tooltip enterDelay={500} title="Reset all 'Pending' child RSVPs">
@@ -751,7 +788,7 @@ function RSVPStatusMenu({
 
                   <Tooltip enterDelay={500} title="Submit Pending Child RSVPs">
                     <button
-                      disabled={childrenNames.length === 0}
+                      disabled={childrenNames.length === 0 || isChildrenInvalid}
                       onClick={() => {
                         const validParent = groupData.guests.find((guest) => guest.has_dependents === true);
                         handleAdditionalSubmit(
@@ -763,7 +800,7 @@ function RSVPStatusMenu({
                       }}
                       className="btn-rsvp-sm"
                     >
-                      Submit
+                      Submit RSVPs
                     </button>
                   </Tooltip>
                 </div>
@@ -812,16 +849,24 @@ function RSVPStatusMenu({
           </div>
         )}
         {menuState === "overview" && (
-          <div id="overview-status-container" className="status-menu-card" style={{ width: "70%" }}>
+          <div
+            id="overview-status-container"
+            className="status-menu-card"
+            style={{ width: "80%", padding: "2rem 3rem" }}
+          >
             <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
               Confirmation Menu
             </p>
-            <div id="overview-staus-container" className="flex-col-start">
+            <div id="overview-status-container" className="flex-col-start">
               {groupRSVPs.map((rsvp) => {
                 const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
                 if (guest) {
                   return (
-                    <div className="guest-status-container" style={{ width: "stretch" }} key={guest.guest_id}>
+                    <div
+                      className="guest-status-container"
+                      style={{ width: "100%", boxSizing: "border-box" }}
+                      key={guest.guest_id}
+                    >
                       <div className="overview-guest-info flex-col-start" style={{ gap: "1rem" }}>
                         <div className="guest-name flex-row-start flex-row-gap">
                           <p className="font-sm strong-text" style={{ textDecoration: "underline" }}>
@@ -847,7 +892,7 @@ function RSVPStatusMenu({
                           </div>
                         )}
                       </div>
-                      {rsvp.spotify && rsvp.spotify.split(separator).length > 0 ? (
+                      {rsvp.spotify && rsvp.spotify.split(separator).length > 0 && (
                         <div className="overview-guest-song">
                           <p className="font-sm strong-text" style={{ textDecoration: "underline" }}>
                             Requested Songs
@@ -862,12 +907,13 @@ function RSVPStatusMenu({
                               </p>
                             ))}
                         </div>
-                      ) : (
+                      )}
+                      {!everyAttendanceNo && (
                         <p className="overview-guest-no-song font-xs">
                           No songs yet. This can be done in the 'Song Request' menu.
                         </p>
                       )}
-                      {rsvp.attendance && guest.plus_one_allowed && (
+                      {!everyAttendanceNo && rsvp.attendance && guest.plus_one_allowed && (
                         <p>
                           Plus one <strong>available</strong> for {guest.name}. This can be added in the 'Plus One'
                           menu.
@@ -878,22 +924,37 @@ function RSVPStatusMenu({
                 }
                 return null;
               })}
-              {/* has dependents message */}
-              {groupData.guests.some((guest) => guest.has_dependents) && (
-                <div className="font-sm">
-                  <p>
-                    One or more guests in this group are able to add child RSVPs. These can be added in the 'Add Child
-                    Menu'.
-                  </p>
-                  <p>
-                    <strong>Note:</strong> It is required to add these RSVPs for your children to be{" "}
-                    <span style={{ textDecoration: "underline" }}>counted</span>. If you do not see their name on this
-                    confirmation screen it means they haven't been added and counted.
+              {/* has dependents message - no children added yet */}
+              {!everyAttendanceNo &&
+                groupData.guests.some((guest) => guest.has_dependents) &&
+                groupData.guests.every((guest) => guest.additional_guest_type !== "dependent") && (
+                  <div className="font-sm">
+                    <p>
+                      One or more guests in this group are able to add child RSVPs. These can be added in the 'Add Child
+                      Menu'.
+                    </p>
+                    <p style={{ marginTop: "1rem" }}>
+                      <strong>Note:</strong> It is <strong>required</strong> to add these RSVPs for your children to be{" "}
+                      <span style={{ textDecoration: "underline" }}>counted</span>. If you do not see their name on this
+                      confirmation screen it means they <span style={{ textDecoration: "underline" }}>haven't</span>{" "}
+                      been added and counted.
+                    </p>
+                  </div>
+                )}
+              {/* has dependents message - yes children added */}
+              {!everyAttendanceNo && groupData.guests.some((guest) => guest.additional_guest_type === "dependent") && (
+                <div>
+                  <p className="font-sm">
+                    <strong style={{ textDecoration: "underline" }}>Please Note:</strong> While kids are allowed to help
+                    celebrate our special day we kindly ask all infants/toddlers to{" "}
+                    <span style={{ textDecoration: "underline" }}>not be</span> present at the ceremony. There are
+                    several areas around the property for one of your guests to accompany them. They are of course
+                    welcome afterwards for the cocktail hour and reception. For more information visit the 'FAQ' tab.
                   </p>
                 </div>
               )}
               {/* no email message */}
-              {groupData.guests.some((guest) => !guest.email && !guest.additional_guest_type) && (
+              {!everyAttendanceNo && groupData.guests.some((guest) => !guest.email && !guest.additional_guest_type) && (
                 <div className="font-sm">
                   <p>
                     At least one attending guest in your group does not have an email associated with their RSVP. While
@@ -915,7 +976,7 @@ function RSVPStatusMenu({
                 className="btn-rsvp-sm"
                 style={{ padding: ".25rem 3rem", marginTop: "2rem" }}
               >
-                Back
+                Back to RSVP Portal
               </button>
             </Tooltip>
           </div>

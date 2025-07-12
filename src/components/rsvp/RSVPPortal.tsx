@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import RSVPForm from "./RSVPForm.tsx";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import RSVPStatusMenu from "./RSVPStatusMenu.tsx";
@@ -8,6 +8,7 @@ import Loading from "../utility/Loading.tsx";
 
 function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string }) {
   const queryClient = useQueryClient();
+  const portalRef = useRef<HTMLDivElement>(null);
 
   //GET call to check if there any RSVPs assigned to the groupID
   const groupRSVPs = useQuery<RSVP[], ErrorType>({
@@ -34,7 +35,7 @@ function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string
     },
   });
 
-  // seperate GroupData query from lookup because this instance gets updated when info is changed
+  // separate GroupData query from lookup because this instance gets updated when info is changed
   const groupData = useQuery<GroupData, ErrorType>({
     queryKey: ["groupData"],
     queryFn: async () => {
@@ -73,16 +74,27 @@ function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string
     return <Error errorInfo={groupData.error} tryEnabled={true} handleRetry={refreshData} />;
   }
 
+  const resetScroll = () => {
+    portalRef.current?.scrollIntoView({ block: "start", behavior: "auto" });
+  };
+
   // possible location for the flashing bug
   return (
-    <div id="rsvp-portal-container">
+    <div ref={portalRef} id="rsvp-portal-container">
       <p className="strong-text font-med contain-text-center" style={{ marginBottom: "2rem" }}>
         {groupName}'s RSVP Portal
       </p>
       {groupRSVPs.data.length > 0 && (
-        <RSVPStatusMenu groupData={groupData.data} groupRSVPs={groupRSVPs.data} refreshData={refreshData} />
+        <RSVPStatusMenu
+          groupData={groupData.data}
+          groupRSVPs={groupRSVPs.data}
+          refreshData={refreshData}
+          handleScroll={resetScroll}
+        />
       )}
-      {groupRSVPs.data.length === 0 && <RSVPForm groupData={groupData.data} sendRefresh={refreshData} />}
+      {groupRSVPs.data.length === 0 && (
+        <RSVPForm groupData={groupData.data} sendRefresh={refreshData} handleScroll={resetScroll} />
+      )}
     </div>
   );
 }

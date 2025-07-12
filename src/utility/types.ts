@@ -1,7 +1,7 @@
 export type Group = {
-    group_name: string;
-    group_id: number
-}
+  group_name: string;
+  group_id: number;
+};
 
 export type GroupData = {
   group_name: string;
@@ -27,28 +27,49 @@ export type RSVP = {
   spotify: string;
   created_at: string;
   updated_at: string | null;
-}
+};
 
 export type ErrorType = {
-  status : number,
-  message : string,
-  error? : string
-}
+  status: number;
+  message: string;
+  error?: string;
+};
 
 export type RSVPResponseType = {
-  status? : number,
-  message? : string,
-  data? : RSVP[]
-}
+  status?: number;
+  message?: string;
+  data?: {
+    createdRSVPs: RSVP[];
+    additionalGuests: AdditionalGuestResponseType[];
+  };
+};
+
+export type AdditionalGuestResponseType = {
+  guestInfo: Guest[];
+  rsvpInfo: RSVP[];
+};
 
 export type CustomResponseType = {
-  status? : number,
-  message? : string,
-  data? : any[]
-}
+  status?: number;
+  message?: string;
+  data?: any[];
+};
 
 export type SongRequestError = {
   title: boolean;
   artist: boolean;
   message: string;
+};
+
+export type AdditionalGuestType = "plus_one" | "dependent";
+
+export type AdditionalGuest = {
+  name: string;
+  type: AdditionalGuestType;
+  guestId: number;
+};
+
+export type AdditionalGuestBodyType = {
+  groupId: number;
+  additional: AdditionalGuest[];
 };
