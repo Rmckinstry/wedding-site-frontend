@@ -362,6 +362,12 @@ function RSVPForm({
     });
   };
 
+  const handleDeleteChild = (index: number) => {
+    setChildrenRsvps((prevChildrenRsvps) => {
+      return prevChildrenRsvps.filter((_, idx) => idx !== index);
+    });
+  };
+
   const handleSongRequestChange = (guestId: number, index: number, key: string, value: string) => {
     setRsvps((prev) =>
       prev.map((rsvp) => {
@@ -734,13 +740,24 @@ function RSVPForm({
                 </div>
                 {childrenRsvps.map((child, index) => {
                   return (
-                    <div key={index}>
+                    <div key={index} className="flex-row-start" style={{ gap: "1rem" }}>
                       <TextField
                         value={child.name}
                         onChange={(e) => handleChildNameChange(e.target.value, index)}
                         label="Add First & Last Name"
                         sx={{ width: "60%" }}
                       />
+                      <Tooltip title="Remove Child">
+                        <button
+                          className="btn-stripped icon"
+                          aria-label="delete child"
+                          onClick={() => {
+                            handleDeleteChild(index);
+                          }}
+                        >
+                          <DeleteForeverIcon fontSize="large" />
+                        </button>
+                      </Tooltip>
                     </div>
                   );
                 })}
