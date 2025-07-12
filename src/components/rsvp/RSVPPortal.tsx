@@ -35,7 +35,7 @@ function RSVPPortal({ groupId, groupName }: { groupId: number; groupName: string
     },
   });
 
-  // seperate GroupData query from lookup because this instance gets updated when info is changed
+  // separate GroupData query from lookup because this instance gets updated when info is changed
   const groupData = useQuery<GroupData, ErrorType>({
     queryKey: ["groupData"],
     queryFn: async () => {

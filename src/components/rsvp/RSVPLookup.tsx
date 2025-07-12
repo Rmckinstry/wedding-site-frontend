@@ -14,7 +14,7 @@ function RSVPConfirmation({
   handleConfirmation: (confirmation: boolean, groupName: string, groupId: number) => void;
   anneMarieData: Guest[];
 }) {
-  //#region anne marie componet
+  //#region anne marie component
   const AnneMarieConfirmation = ({ anneMarieData }: { anneMarieData: Guest[] }) => {
     const anneMarieQueries = useQueries({
       queries: anneMarieData.map((g) => ({

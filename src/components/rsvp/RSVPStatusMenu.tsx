@@ -857,7 +857,7 @@ function RSVPStatusMenu({
             <p className="font-sm-med contain-text-center" style={{ textDecoration: "underline" }}>
               Confirmation Menu
             </p>
-            <div id="overview-staus-container" className="flex-col-start">
+            <div id="overview-status-container" className="flex-col-start">
               {groupRSVPs.map((rsvp) => {
                 const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
                 if (guest) {

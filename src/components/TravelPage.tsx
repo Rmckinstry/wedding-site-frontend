@@ -64,7 +64,7 @@ function TravelPage() {
               </div>
               <div className="detail-text">
                 <p className="font-sm" style={{ margin: "0px", textAlign: "center" }}>
-                  To receive the “Kail-Mckinstry Wedding Block” rate, use the button below.
+                  To receive the “Kail-McKinstry Wedding Block” rate, use the button below.
                 </p>
                 <p className="font-sm" style={{ margin: "0px", textAlign: "center" }}>
                   If the block is out of stock, please let us know!
@@ -83,7 +83,7 @@ function TravelPage() {
               <div className="detail-text">
                 <p className="font-sm">The Courtyard Memphis is located in the Carriage Crossing Outdoor Mall.</p>
                 <p className="font-sm">
-                  The mall has several restaraunts, bars, and shops all in walking distance of the hotel for you to
+                  The mall has several restaurants, bars, and shops all in walking distance of the hotel for you to
                   enjoy.
                 </p>
               </div>

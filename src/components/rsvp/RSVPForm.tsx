@@ -519,10 +519,10 @@ function RSVPForm({
   };
 
   //for debugging
-  useEffect(() => {
-    console.log("RSVP useEffect debugger");
-    console.log(rsvps);
-  }, [rsvps]);
+  // useEffect(() => {
+  //   console.log("RSVP useEffect debugger");
+  //   console.log(rsvps);
+  // }, [rsvps]);
 
   //#region template
   return (

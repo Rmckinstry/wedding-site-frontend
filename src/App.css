@@ -192,8 +192,9 @@ button:hover {
 }
 
 #registry-btn {
-    width: 12rem;
+    width: 22rem;
     height: 4rem;
+    font-size: 1.5rem;
 }
 
 #rsvp-form-container {
