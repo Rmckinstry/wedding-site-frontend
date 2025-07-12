@@ -576,6 +576,7 @@ button:hover {
     outline-color: var(--default-text-transparent);
     padding: .5rem 2rem;
     border-radius: .5rem;
+    width: 100%;
 }
 
 .confirmation-header {

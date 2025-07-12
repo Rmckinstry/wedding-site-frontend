@@ -760,9 +760,9 @@ function RSVPStatusMenu({
                   </Tooltip>
                 </div>
                 {isDuplicate() && (
-                  <p style={{ color: "red", marginTop: "1rem" }}>Name is already pending or submitted.</p>
+                  <p style={{ color: "darkred", marginTop: "1rem" }}>Name is already pending or submitted.</p>
                 )}
-                {isChildrenInvalid && <p style={{ color: "red" }}>Must be first and last name.</p>}
+                {isChildrenInvalid && <p style={{ color: "darkred" }}>Must be first and last name.</p>}
 
                 {childrenNames.length !== 0 && (
                   <p className="font-sm">
@@ -862,7 +862,7 @@ function RSVPStatusMenu({
                 const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
                 if (guest) {
                   return (
-                    <div className="guest-status-container" style={{ width: "stretch" }} key={guest.guest_id}>
+                    <div className="guest-status-container" style={{ width: "97%" }} key={guest.guest_id}>
                       <div className="overview-guest-info flex-col-start" style={{ gap: "1rem" }}>
                         <div className="guest-name flex-row-start flex-row-gap">
                           <p className="font-sm strong-text" style={{ textDecoration: "underline" }}>

@@ -698,7 +698,7 @@ function RSVPForm({
                     }
                   })}
                 {isPlusOneInvalid && (
-                  <p className="contain-text-center" style={{ color: "red" }}>
+                  <p className="contain-text-center" style={{ color: "darkred" }}>
                     All Plus One's must be a first & last name.
                   </p>
                 )}
@@ -756,7 +756,7 @@ function RSVPForm({
                   </button>
                 </div>
                 {isChildrenInvalid && (
-                  <p className="contain-text-center" style={{ color: "red", textDecoration: "underline" }}>
+                  <p className="contain-text-center" style={{ color: "darkred", textDecoration: "underline" }}>
                     All children names must be first & last.
                   </p>
                 )}
@@ -952,7 +952,7 @@ function RSVPForm({
                   <div id="rsvp-confirm-curr-kids-container" className="flex-col-start">
                     {childrenRsvps.map((children, index) => {
                       return (
-                        <div key={index} className="user-confirm-rsvp-container" style={{ width: "stretch" }}>
+                        <div key={index} className="user-confirm-rsvp-container">
                           <div className="flex-row-gap">
                             <p className="strong-text font-sm confirmation-header">Child: </p>
                             <p className="font-sm">{children.name}</p>
