@@ -862,7 +862,11 @@ function RSVPStatusMenu({
                 const guest = groupData.guests.find((guest) => guest.guest_id === rsvp.guest_id);
                 if (guest) {
                   return (
-                    <div className="guest-status-container" style={{ width: "97%" }} key={guest.guest_id}>
+                    <div
+                      className="guest-status-container"
+                      style={{ width: "100%", boxSizing: "border-box" }}
+                      key={guest.guest_id}
+                    >
                       <div className="overview-guest-info flex-col-start" style={{ gap: "1rem" }}>
                         <div className="guest-name flex-row-start flex-row-gap">
                           <p className="font-sm strong-text" style={{ textDecoration: "underline" }}>

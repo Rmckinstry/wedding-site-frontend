@@ -578,6 +578,7 @@ button:hover {
     padding: .5rem 2rem;
     border-radius: .5rem;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .confirmation-header {
