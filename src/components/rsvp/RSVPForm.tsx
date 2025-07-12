@@ -777,12 +777,17 @@ function RSVPForm({
                     All children names must be first & last.
                   </p>
                 )}
+                {isAddNewChildDisabled() && (
+                  <p className="contain-text-center" style={{ color: "darkred", textDecoration: "underline" }}>
+                    All inputs must be valid. You can always press the trash can and add children at a later time.
+                  </p>
+                )}
                 <div className="btn-container" style={{ gap: "2rem" }}>
                   <button className="btn-rsvp-sm" style={{ padding: ".5rem 10%", flexGrow: 1 }} onClick={handleBack}>
                     Back
                   </button>
                   <button
-                    disabled={isChildrenInvalid}
+                    disabled={isChildrenInvalid || isAddNewChildDisabled()}
                     className="btn-rsvp-sm"
                     style={{ padding: ".5rem 10%", flexGrow: 1 }}
                     onClick={handleNext}
