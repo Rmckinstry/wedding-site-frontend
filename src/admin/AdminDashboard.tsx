@@ -121,7 +121,6 @@ function AdminDashboard() {
   const handleGroupChange = (event) => {
     // Find the selected group object from the fetched data
     const selectedGroupByName = allGroupsQuery.data?.find((group) => group.group_name === event.target.value);
-    console.log(selectedGroupByName);
     setSelectedGroup(selectedGroupByName!);
   };
 
@@ -197,7 +196,7 @@ function AdminDashboard() {
     return <Error errorInfo={allRsvpsQuery.error} />;
   }
   return (
-    <div style={{ padding: " 10rem" }}>
+    <div style={{ padding: "0rem 10rem" }}>
       <h3 className="contain-text-center">Admin Dashboard</h3>
       <div
         id="admin-stat-quickview-container"
