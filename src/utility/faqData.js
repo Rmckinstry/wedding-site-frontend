@@ -5,7 +5,7 @@ const faqData = [
     },
     {
         question: "How do I RSVP?",
-        answer: "RSVP's are now live! You can access you/your groups RSVP Portal by selecting the 'RSVP' tab above."
+        answer: "RSVP's are now live! You can access you/your groups RSVP Portal by selecting the 'RSVP' tab above. RSVP by October 1st!"
     },
     {
         question: "Is there a dress code?",
