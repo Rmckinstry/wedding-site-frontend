@@ -114,6 +114,11 @@ button:hover {
     margin-bottom: 2.5rem;
 }
 
+#header-event-info-mobile,
+#header-event-time-mobile {
+    display: none;
+}
+
 #nav-container {
     position: sticky;
     top: 0;
@@ -716,8 +721,14 @@ button.status-menu-btn:hover {
     }
 
     #faq-data-desktop-container,
-    #nav-desktop-container {
+    #nav-desktop-container,
+    #header-event-info-desktop {
         display: none;
+    }
+
+    #header-event-info-mobile,
+    #header-event-time-mobile {
+        display: block;
     }
 
     #page-container {
@@ -815,6 +826,7 @@ button.status-menu-btn:hover {
     #faq-data-desktop-container {
         padding: 0 10%;
     }
+
 }
 
 @media (min-width: 1000px) {
@@ -843,8 +855,9 @@ button.status-menu-btn:hover {
     #faq-data-desktop-container {
         padding: 0 10rem;
     }
-  
+
     #page-container {
         margin: 1rem 15%;
     }
+
 }
