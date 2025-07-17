@@ -12,6 +12,10 @@ const faqData = [
         answer: "Semi formal / formal. Please no jeans, shorts, or tennis shoes (at least during the ceremony)."
     },
     {
+        question: "When does the wedding start?",
+        answer: "We ask all guests arrive to Heartwood Hall at 3:00PM."
+    },
+    {
         question: "Are there any hotel discounts available?",
         answer: "Yes. We have a group block rate with Courtyard Marriott in Collierville. Head over to the Travel tab and use the button. If the block rate is out of stock please let us know and we can get more added."
     },
