@@ -13,7 +13,7 @@ const faqData = [
     },
     {
         question: "When does the wedding start?",
-        answer: "We ask all guests arrive to Heartwood Hall at 3:00PM."
+        answer: "We ask that all guests arrive at Heartwood Hall at 3:00 PM."
     },
     {
         question: "Are there any hotel discounts available?",
