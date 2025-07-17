@@ -5,19 +5,19 @@ const faqData = [
     },
     {
         question: "How do I RSVP?",
-        answer: "RSVP's will be sent out in July, and you can RSVP on this site when they go out."
+        answer: "RSVP's are now live! You can access you/your groups RSVP Portal by selecting the 'RSVP' tab above."
     },
     {
         question: "Is there a dress code?",
-        answer: "Semi formal / formal. Please no jeans, shorts, or tennis shoes (at least during the ceremony)."
+        answer: "Semi formal / formal. Please no jeans, shorts, or tennis shoes. (Tennis shoes or your best dancing shoes allowed during the reception!)"
     },
     {
         question: "Are there any hotel discounts available?",
-        answer: "Yes. We have a group block rate with Courtyard Marriott in Collierville. Head over to the Travel tab and use the button. If the block rate is out of stock please let us know and we can get more added."
+        answer: "Yes. We have a group block rate with Courtyard Marriott in Collierville. Head over to the Travel tab and use the button. If the block rate is out of stock please let us know and we can get more added. Book by October 14th."
     },
     {
         question: "Can I add extra days to the block rate?",
-        answer: "For most cases yes. You can call the hotel at 901-850-9390 and ask for the sales manager, Ashley. It is a case by case basis, but the manager has told us it should be fine if a day or two are added."
+        answer: "For most cases yes. You can call the hotel at 901-850-9390 and ask for the sales manager, Ashley. It is a case by case basis, but the manager has told us it should be fine if a day or two are added at the beginning or end."
     },
     {
         question: "How do I access the wedding registry?",
