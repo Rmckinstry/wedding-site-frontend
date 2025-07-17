@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
-import { ErrorType, Group, Guest, RSVP } from "../utility/types";
+import { CustomResponseType, ErrorType, Group, Guest, RSVP } from "../utility/types";
 import Loading from "../components/utility/Loading.tsx";
 import Error from "../components/utility/Error.tsx";
 import {
@@ -14,6 +14,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export type NewGuest = {
   name: string;
@@ -25,6 +26,8 @@ export type NewGuest = {
 };
 
 function AdminDashboard() {
+  const navigate = useNavigate();
+
   const [acceptedRsvpsCount, setAcceptedRsvpsCount] = useState<number>(0);
   const [declinedRsvpsCount, setDeclinedRsvpsCount] = useState<number>(0);
   const [plusOneCount, setPlusOneCount] = useState<number>(0);
@@ -108,9 +111,11 @@ function AdminDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGroup]);
 
-  const refreshQuickview = () => {
+  // TODO probably needs to be split out
+  const refreshData = () => {
     allGuestsQuery.refetch();
     allRsvpsQuery.refetch();
+    allGroupsQuery.refetch();
   };
 
   const handleGroupChange = (event) => {
@@ -149,9 +154,36 @@ function AdminDashboard() {
   };
 
   const handleGuestAdd = () => {
-    console.log("New Guest");
-    console.log(newGuestData);
+    submitRsvpsMutation.mutate();
   };
+
+  const submitRsvpsMutation = useMutation<CustomResponseType, ErrorType>({
+    mutationFn: async () => {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/guests`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newGuestData),
+      });
+
+      if (!response.ok) {
+        const errorBody: ErrorType = await response.json();
+        throw errorBody;
+      }
+
+      return response.json() as Promise<CustomResponseType>;
+    },
+    onSuccess: (data) => {
+      refreshData();
+      setNewGuestData(initialNewGuestState);
+      console.log("Response from server:", data);
+    },
+    onError: (error: ErrorType) => {
+      console.log(error);
+      console.error("Error adding Guest:", error.message);
+    },
+  });
 
   //#region quickview loading
   if (allGuestsQuery.isLoading || allRsvpsQuery.isLoading) {
@@ -165,7 +197,7 @@ function AdminDashboard() {
     return <Error errorInfo={allRsvpsQuery.error} />;
   }
   return (
-    <div style={{ padding: "0 10rem" }}>
+    <div style={{ padding: " 10rem" }}>
       <h3 className="contain-text-center">Admin Dashboard</h3>
       <div
         id="admin-stat-quickview-container"
@@ -196,96 +228,124 @@ function AdminDashboard() {
         </div>
       </div>
       <div style={{ width: "100%", height: "2px", color: "var(--default-text-transparent)" }}></div>
-      <button onClick={refreshQuickview}>Refresh</button>
-
-      {/* temporary - this will be moved to a menu system */}
-      <div>
-        <FormControl sx={{ minWidth: "13rem" }}>
-          {/* Add a minWidth for better display */}
-          <InputLabel id="group-select-label">Groups</InputLabel>
-          {/* TODO - replace with autocomplete */}
-          <Select
-            labelId="group-select-label"
-            id="group-select"
-            value={selectedGroup?.group_name || ""}
-            label="Groups"
-            onChange={handleGroupChange}
-          >
-            {/* Map over the fetched groups to create MenuItem components */}
-            {allGroupsQuery.data?.map((group) => (
-              <MenuItem key={group.id} value={group.group_name}>
-                {group.group_name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </div>
-      {selectedGroup !== null ? (
-        <div id="admin-group editor">
-          {/* for now just add guest - more will be added later (edit guest, delete guest */}
-          <div id="admin-group-editor-guest-list">
-            <p>Guests:</p>
-            {allGuestsQuery.data
-              ?.filter((guest) => {
-                return guest.group_id === selectedGroup.id;
-              })
-              .map((guest) => {
-                return <p>{guest.name}</p>;
-              })}
-          </div>
-          <div id="admin-group-editor-guest-add" style={{ marginTop: "20px" }}>
-            <h3>Add New Guest to **{selectedGroup.group_name}**</h3>
-            <FormGroup>
-              <TextField
-                label="Guest Name"
-                variant="outlined"
-                name="name" // Important for generic handler
-                value={newGuestData.name}
-                onChange={handleNewGuestInputChange}
-                size="small"
-                fullWidth
-                margin="dense"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={newGuestData.hasDependents}
-                    onChange={handleNewGuestInputChange}
-                    name="hasDependents" // Important for generic handler
-                  />
-                }
-                label="Has Dependents"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={newGuestData.plusOneAllowed}
-                    onChange={handleNewGuestInputChange}
-                    name="plusOneAllowed" // Important for generic handler
-                  />
-                }
-                label="Plus One Allowed"
-              />
-              <TextField
-                label="Song Requests"
-                variant="outlined"
-                name="songRequests" // Important for generic handler
-                value={newGuestData.songRequests}
-                onChange={handleNumberInputChange} // Use specific handler for numbers
-                type="number" // Only allow number input
-                size="small"
-                fullWidth
-                margin="dense"
-              />
-            </FormGroup>
-            <Button variant="contained" onClick={handleGuestAdd} sx={{ marginTop: 2 }}>
-              Add Guest
-            </Button>
-          </div>
+      <div className="">
+        {/* temporary - this will be moved to a menu system */}
+        <div id="admin-groups-select-container" className="flex-col" style={{ padding: "1rem" }}>
+          <FormControl sx={{ minWidth: "20rem" }}>
+            {/* Add a minWidth for better display */}
+            <InputLabel id="group-select-label">Groups</InputLabel>
+            {/* TODO - replace with autocomplete */}
+            <Select
+              labelId="group-select-label"
+              id="group-select"
+              value={selectedGroup?.group_name || ""}
+              label="Groups"
+              onChange={handleGroupChange}
+            >
+              {/* Map over the fetched groups to create MenuItem components */}
+              {allGroupsQuery.data?.map((group) => (
+                <MenuItem key={group.id} value={group.group_name}>
+                  {group.group_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </div>
-      ) : (
-        <p>Select Group Name to edit group</p>
-      )}
+        {selectedGroup !== null ? (
+          <div id="admin-group editor" className="flex-row" style={{ gap: "20%", alignItems: "baseline" }}>
+            {/* for now just add guest - more will be added later (edit guest, delete guest */}
+            <div id="admin-group-editor-guest-list">
+              <p className="font-med strong underline">Guests:</p>
+              {allGuestsQuery.data
+                ?.filter((guest) => {
+                  return guest.group_id === selectedGroup.id;
+                })
+                .map((guest) => {
+                  return (
+                    <p className="font-sm-med" key={guest.guest_id}>
+                      - {guest.name}
+                    </p>
+                  );
+                })}
+            </div>
+            <div
+              id="admin-group-editor-guest-add"
+              style={{
+                marginTop: "20px",
+                padding: "1rem",
+                outlineStyle: "solid",
+                outlineColor: "var(--default-text-transparent)",
+                borderRadius: "1rem",
+              }}
+              className="flex-col-start"
+            >
+              <p className="font-med strong underline">Add New Guest to {selectedGroup.group_name}</p>
+              <FormGroup>
+                <TextField
+                  label="Guest Name"
+                  variant="outlined"
+                  name="name" // Important for generic handler
+                  value={newGuestData.name}
+                  onChange={handleNewGuestInputChange}
+                  size="small"
+                  fullWidth
+                  margin="dense"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={newGuestData.hasDependents}
+                      onChange={handleNewGuestInputChange}
+                      name="hasDependents" // Important for generic handler
+                    />
+                  }
+                  label="Has Dependents"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={newGuestData.plusOneAllowed}
+                      onChange={handleNewGuestInputChange}
+                      name="plusOneAllowed" // Important for generic handler
+                    />
+                  }
+                  label="Plus One Allowed"
+                />
+                <TextField
+                  label="Song Requests"
+                  variant="outlined"
+                  name="songRequests" // Important for generic handler
+                  value={newGuestData.songRequests}
+                  onChange={handleNumberInputChange} // Use specific handler for numbers
+                  type="number" // Only allow number input
+                  size="small"
+                  fullWidth
+                  margin="dense"
+                />
+              </FormGroup>
+              <Button
+                disabled={submitRsvpsMutation.isPending || newGuestData.name === ""}
+                variant="contained"
+                onClick={handleGuestAdd}
+                sx={{ marginTop: 2 }}
+              >
+                Add Guest
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <p className="contain-text-center strong font-sm">Select Group Name to edit group</p>
+        )}
+      </div>
+      <div className="btn-container" style={{ marginTop: "2rem" }}>
+        <button
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          Back to main site
+        </button>
+      </div>
     </div>
   );
 }
