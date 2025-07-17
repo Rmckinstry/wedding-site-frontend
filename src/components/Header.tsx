@@ -11,7 +11,7 @@ function Header() {
             BAILEY & RYAN
           </h1>
           <p id="header-event-info" className="font-med-lg">
-            November 15, 2025 • Rossville, TN
+            November 15, 2025, 3:00 PM • Rossville, TN
           </p>
         </div>
       </div>

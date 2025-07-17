@@ -1,5 +1,9 @@
 const faqData = [
     {
+        question: "When does the wedding start?",
+        answer: "We ask that all guests arrive at Heartwood Hall at 3:00 PM."
+    },
+    {
         question: "Are kids allowed at the wedding?",
         answer: "Yes, children are certainly welcome to help us celebrate our special day! For the ceremony, we kindly ask that infants and toddlers, accompanied by an adult, be in one of the other convenient areas around the property. This will allow for full focus on the bride and groom during this special moment. More information can be found on the FAQ tab of our website."
     },
@@ -10,10 +14,6 @@ const faqData = [
     {
         question: "Is there a dress code?",
         answer: "Semi formal / formal. Please no jeans, shorts, or tennis shoes (at least during the ceremony)."
-    },
-    {
-        question: "When does the wedding start?",
-        answer: "We ask that all guests arrive at Heartwood Hall at 3:00 PM."
     },
     {
         question: "Are there any hotel discounts available?",
