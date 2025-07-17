@@ -2,7 +2,7 @@ const faqData = [
     {
         question: "Are kids allowed at the wedding?",
         answer: "Yes, children are certainly welcome to help us celebrate our special day! For the ceremony, we kindly ask that infants and toddlers, accompanied by an adult, be in one of the other convenient areas around the property. This will allow for full focus on the bride and groom during this special moment. More information can be found on the FAQ tab of our website."
-    },    
+    },
     {
         question: "How do I RSVP?",
         answer: "RSVP's will be sent out in July, and you can RSVP on this site when they go out."
