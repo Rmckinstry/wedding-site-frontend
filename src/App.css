@@ -391,6 +391,10 @@ button:hover {
     margin: 0px;
 }
 
+.underline {
+    text-decoration: underline;
+}
+
 .info-container {
     display: flex;
     flex-direction: column;
@@ -646,6 +650,12 @@ button.status-menu-btn:hover {
 
 .icon:hover {
     transform: scale(1.1);
+}
+
+.quickview-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* Media Queries */
