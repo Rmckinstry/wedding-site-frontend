@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CustomResponseType, ErrorType } from "../utility/types";
-import Error from "../components/utility/Error.tsx";
+import { CustomResponseType, ErrorType } from "../../utility/types.ts";
+import Error from "../utility/Error.tsx";
 
 function AdminLogin() {
   const [username, setUsername] = useState("");

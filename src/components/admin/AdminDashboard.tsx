@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
-import { CustomResponseType, ErrorType, Group, Guest, RSVP } from "../utility/types";
-import Loading from "../components/utility/Loading.tsx";
-import Error from "../components/utility/Error.tsx";
+import { CustomResponseType, ErrorType, Group, Guest, RSVP } from "../../utility/types";
+import Loading from "../utility/Loading.tsx";
+import Error from "../utility/Error.tsx";
 import {
   Button,
   Checkbox,

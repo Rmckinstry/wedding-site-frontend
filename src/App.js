@@ -11,8 +11,8 @@ import { ThemeProvider } from '@mui/material';
 import Navigation from './components/navigation/Navigation.tsx';
 import RSVPPage from './components/rsvp/RSVPPage.tsx';
 import { NavigationProvider, useNavigation } from './context/NavigationContext.tsx';
-import AdminDashboard from './admin/AdminDashboard.tsx';
-import AdminLogin from './admin/AdminLogin.tsx';
+import AdminLogin from './components/admin/AdminLogin.tsx';
+import AdminDashboard from './components/admin/AdminDashboard.tsx';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 
 
