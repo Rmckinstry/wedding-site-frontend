@@ -9,7 +9,7 @@ export type GroupData = {
 };
 
 export type Guest = {
-  added_by_guest_id: null | string;
+  added_by_guest_id: null | number;
   additional_guest_type: null | string;
   email: string;
   group_id: number;

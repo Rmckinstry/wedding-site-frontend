@@ -97,13 +97,9 @@ function AdminDashboard() {
     return <Error errorInfo={allRsvpsQuery.error} />;
   }
   return (
-    <div style={{ padding: "0rem 10rem" }}>
+    <div id="admin-container" className="flex-col flex-col-lg">
       <h3 className="contain-text-center">Admin Dashboard</h3>
-      <div
-        id="admin-quickview-container"
-        className="flex-row"
-        style={{ justifyContent: "space-between", padding: "2rem" }}
-      >
+      <div id="admin-quickview-container" className="flex-row">
         <div className="quickview-item">
           <p className="font-sm-med strong-text underline">Total Guests</p>
           <p className="font-sm">{allGuestsQuery.data?.length}</p>
@@ -127,7 +123,7 @@ function AdminDashboard() {
           <p className="font-sm strong-text">Children : {dependentCount}</p>
         </div>
       </div>
-      <div id="admin-content-container">
+      <div id="admin-content-container" style={{ width: "100%" }}>
         {adminState === "group" && (
           <AdminGroupEditor
             groupData={allGroupsQuery.data!}
@@ -148,28 +144,35 @@ function AdminDashboard() {
           />
         )}
         {adminState === "menu" && (
-          <div id="admin-action-selector-container">
-            <button
-              onClick={() => {
-                setAdminState("rsvp-viewer");
-              }}
-            >
-              RSVP Viewer
-            </button>
-            <button
-              onClick={() => {
-                setAdminState("group");
-              }}
-            >
-              Group Editor
-            </button>
-            <button>Guest Editor</button>
-            <button>RSVP Editor</button>
+          <div id="admin-action-selector-container" className="flex-col flex-col-lg">
+            <p className="font-sm-med underline">Select Admin Menu</p>
+            <div className="flex-row-gap">
+              <button
+                className="btn-rsvp"
+                onClick={() => {
+                  setAdminState("rsvp-viewer");
+                }}
+              >
+                RSVP Viewer
+              </button>
+              <button
+                className="btn-rsvp"
+                onClick={() => {
+                  setAdminState("group");
+                }}
+              >
+                Group Editor
+              </button>
+              {/* unimplemented */}
+              {/* <button>Guest Editor</button> */}
+              {/* <button>RSVP Editor</button> */}
+            </div>
           </div>
         )}
       </div>
-      <div className="btn-container" style={{ marginTop: "2rem" }}>
+      <div className="btn-container">
         <button
+          className="btn-rsvp btn-alt"
           onClick={() => {
             navigate("/");
           }}

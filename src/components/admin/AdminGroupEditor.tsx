@@ -115,7 +115,8 @@ function AdminGroupEditor({
     },
   });
   return (
-    <div id="admin-group-editor">
+    <div id="admin-group-editor" className="flex-col flex-col-lg">
+      <p className="font-sm-med strong underline">Group Editor</p>
       <div id="admin-groups-select-container" className="flex-col" style={{ padding: "1rem" }}>
         <FormControl sx={{ minWidth: "20rem" }}>
           <InputLabel id="group-select-label">Groups</InputLabel>
@@ -137,34 +138,23 @@ function AdminGroupEditor({
         </FormControl>
       </div>
       {selectedGroup !== null ? (
-        <div className="flex-row" style={{ gap: "20%", alignItems: "baseline" }}>
-          {/* for now just add guest - more will be added later (edit guest, delete guest */}
-          <div id="admin-group-editor-guest-list">
-            <p className="font-med strong underline">Guests:</p>
+        <div id="admin-group-editor-container">
+          <div id="admin-group-editor-guest-list" className=" admin-group-editor-item">
+            <p className="font-med strong underline contain-text-center">Guests:</p>
             {guestData
               .filter((guest) => {
                 return guest.group_id === selectedGroup.id;
               })
               .map((guest) => {
                 return (
-                  <p className="font-sm-med" key={guest.guest_id}>
+                  <p className="font-sm-med" key={guest.guest_id} style={{ marginBottom: "1rem" }}>
                     - {guest.name}
                   </p>
                 );
               })}
           </div>
-          <div
-            id="admin-group-editor-guest-add"
-            style={{
-              marginTop: "20px",
-              padding: "1rem",
-              outlineStyle: "solid",
-              outlineColor: "var(--default-text-transparent)",
-              borderRadius: "1rem",
-            }}
-            className="flex-col-start"
-          >
-            <p className="font-med strong underline">Add New Guest to {selectedGroup.group_name}</p>
+          <div id="admin-group-editor-guest-add" className="flex-col-start admin-group-editor-item">
+            <p className="font-med strong underline contain-text-center">Add New Guest to {selectedGroup.group_name}</p>
             <FormGroup>
               <TextField
                 label="Guest Name"
@@ -222,7 +212,9 @@ function AdminGroupEditor({
         <p className="contain-text-center strong font-sm">Select Group Name to edit group</p>
       )}
       <div className="btn-container">
-        <button onClick={handleMenuClick}>Admin Menu</button>{" "}
+        <button className="btn-rsvp" onClick={handleMenuClick}>
+          Admin Menu
+        </button>{" "}
       </div>
     </div>
   );
