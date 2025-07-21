@@ -5,6 +5,7 @@ import Loading from "../utility/Loading.tsx";
 import Error from "../utility/Error.tsx";
 import { useNavigate } from "react-router-dom";
 import AdminGroupEditor from "./AdminGroupEditor.tsx";
+import AdminRSVPViewer from "./AdminRSVPViewer.tsx";
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -137,8 +138,24 @@ function AdminDashboard() {
             }}
           />
         )}
+        {adminState === "rsvp-viewer" && (
+          <AdminRSVPViewer
+            guestData={allGuestsQuery.data!}
+            rsvpData={allRsvpsQuery.data!}
+            handleMenuClick={() => {
+              setAdminState("menu");
+            }}
+          />
+        )}
         {adminState === "menu" && (
           <div id="admin-action-selector-container">
+            <button
+              onClick={() => {
+                setAdminState("rsvp-viewer");
+              }}
+            >
+              RSVP Viewer
+            </button>
             <button
               onClick={() => {
                 setAdminState("group");
@@ -146,6 +163,8 @@ function AdminDashboard() {
             >
               Group Editor
             </button>
+            <button>Guest Editor</button>
+            <button>RSVP Editor</button>
           </div>
         )}
       </div>
