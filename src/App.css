@@ -285,6 +285,38 @@ button:hover {
     margin-bottom: 2rem;
 }
 
+#admin-container {
+    padding: 1rem 10rem;
+}
+
+#admin-quickview-container {
+    width: 100%;
+    box-sizing: border-box;
+
+    outline-style: solid;
+    outline-width: 3px;
+    outline-color: var(--default-text-transparent);
+    border-radius: 1rem;
+
+    align-items: start;
+    justify-content: space-between;
+    padding: 2rem;
+}
+
+#admin-group-editor-container {
+    width: 100%;
+    display: flex;
+
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+#rsvp-viewer-container {
+    align-items: start;
+    justify-content: space-evenly;
+    margin-top: 1rem;
+}
+
 /* classes */
 .App {
     padding: 0 7rem;
@@ -663,6 +695,24 @@ button.status-menu-btn:hover {
     align-items: center;
 }
 
+.admin-group-editor-item {
+    width: 37rem;
+    outline-style: solid;
+    outline-color: var(--default-text-transparent);
+    border-radius: 1rem;
+
+    padding: 1rem;
+}
+
+.viewer-item {
+    width: 40%;
+    outline-style: solid;
+    outline-width: 3px;
+    outline-color: #6464401c;
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
 /* Media Queries */
 
 /* Small devices (phones, 600px and below) */
@@ -779,6 +829,24 @@ button.status-menu-btn:hover {
         font-size: 1.5rem;
         padding: .5rem 1.25rem;
     }
+
+    /* admin */
+    #admin-container {
+        padding: 1rem 0rem;
+    }
+
+    #rsvp-viewer-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 2rem;
+        gap: 2rem;
+    }
+
+    .viewer-item {
+        width: 80%;
+    }
+
 
 }
 
