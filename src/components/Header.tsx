@@ -10,8 +10,14 @@ function Header() {
           <h1 id="header-name" className="contain-text-center">
             BAILEY & RYAN
           </h1>
-          <p id="header-event-info" className="font-med-lg">
+          <p id="header-event-info-desktop" className="font-med-lg">
+            November 15, 2025, 3:00 PM • Rossville, TN
+          </p>
+          <p id="header-event-info-mobile" className="font-med-lg">
             November 15, 2025 • Rossville, TN
+          </p>
+          <p id="header-event-time-mobile" className="font-med">
+            3:00 PM
           </p>
         </div>
       </div>
