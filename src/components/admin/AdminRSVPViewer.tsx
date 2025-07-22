@@ -1,5 +1,7 @@
 import React from "react";
 import { Guest, RSVP } from "../../utility/types";
+import { convertUtcToCst } from "../../utility/util.ts";
+
 function AdminRSVPViewer({
   guestData,
   rsvpData,
@@ -52,11 +54,11 @@ function AdminRSVPViewer({
                       )}
                       <div className="flex-row-start" style={{ gap: "1rem" }}>
                         <p className="font-sm strong-text">Created At:</p>
-                        <p className="font-sm">{rsvp.created_at}</p>
+                        <p className="font-sm">{convertUtcToCst(rsvp.created_at) + "CST"}</p>
                       </div>
                       <div className="flex-row-start" style={{ gap: "1rem" }}>
                         <p className="font-sm strong-text">Updated At:</p>
-                        <p className="font-sm">{rsvp.updated_at ? rsvp.updated_at : "N/A"}</p>
+                        <p className="font-sm">{rsvp.updated_at ? convertUtcToCst(rsvp.updated_at) + "CST" : "N/A"}</p>
                       </div>
                     </div>
                   );
@@ -81,11 +83,11 @@ function AdminRSVPViewer({
                       </div>
                       <div className="flex-row-start" style={{ gap: "1rem" }}>
                         <p className="font-sm strong-text">Created At:</p>
-                        <p className="font-sm">{rsvp.created_at}</p>
+                        <p className="font-sm">{convertUtcToCst(rsvp.created_at) + "CST"}</p>
                       </div>
                       <div className="flex-row-start" style={{ gap: "1rem" }}>
                         <p className="font-sm strong-text">Updated At:</p>
-                        <p className="font-sm">{rsvp.updated_at ? rsvp.updated_at : "N/A"}</p>
+                        <p className="font-sm">{rsvp.updated_at ? convertUtcToCst(rsvp.updated_at) + "CST" : "N/A"}</p>
                       </div>
                     </div>
                   );

@@ -18,3 +18,24 @@ export const isValidName = (input: string): boolean => {
 
   return nameRegex.test(trimmedInput) && hasSpace;
 };
+
+export function convertUtcToCst(utcDateTimeString: string): string {
+  const date = new Date(utcDateTimeString);
+
+  // Explicitly type the options object as Intl.DateTimeFormatOptions
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: "America/Chicago",
+    year: "numeric", // Now TypeScript knows this 'numeric' is the *literal* string
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  };
+
+  const cstFormatter = new Intl.DateTimeFormat("en-US", options);
+  const cstDateTime = cstFormatter.format(date);
+
+  return cstDateTime;
+}
