@@ -18,35 +18,7 @@ function TravelPage() {
             </a>
           </div>
         </div>
-
         <div id="travel-grid-container">
-          <div id="transportation-container" className="flex-col">
-            <h2 className="title">Transportation</h2>
-            <div className="info-container contain-text-center">
-              <p className="primary-text font-med-lg">Memphis International Airport</p>
-              <p className="secondary-text font-med">(Recommended)</p>
-            </div>
-            <div className="info-container contain-text-center">
-              <p className="primary-text font-med-lg">Nashville International Airport</p>
-              <p className="secondary-text font-med">(Note: 3 hour drive to Memphis.)</p>
-            </div>
-            <div className="info-container contain-text-center">
-              <p className="primary-text font-med-lg">Memphis Airport Rental Cars</p>
-              <div className="btn-container">
-                <a
-                  href="https://flymemphis.com/ground-transportation/"
-                  target="_blank"
-                  className="btn-link"
-                  rel="noreferrer"
-                >
-                  Rental Cars
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div id="travel-divider">{/* divider */}</div>
-
           <div id="lodging-container" className="flex-col">
             <h2 className="title">Lodging</h2>
             <div className="info-container contain-text-center">
@@ -86,6 +58,31 @@ function TravelPage() {
                   The mall has several restaurants, bars, and shops all in walking distance of the hotel for you to
                   enjoy.
                 </p>
+              </div>
+            </div>
+          </div>
+          <div id="travel-divider">{/* divider */}</div>
+          <div id="transportation-container" className="flex-col">
+            <h2 className="title">Transportation</h2>
+            <div className="info-container contain-text-center">
+              <p className="primary-text font-med-lg">Memphis International Airport</p>
+              <p className="secondary-text font-med">(Recommended)</p>
+            </div>
+            <div className="info-container contain-text-center">
+              <p className="primary-text font-med-lg">Nashville International Airport</p>
+              <p className="secondary-text font-med">(Note: 3 hour drive to Memphis.)</p>
+            </div>
+            <div className="info-container contain-text-center">
+              <p className="primary-text font-med-lg">Memphis Airport Rental Cars</p>
+              <div className="btn-container">
+                <a
+                  href="https://flymemphis.com/ground-transportation/"
+                  target="_blank"
+                  className="btn-link"
+                  rel="noreferrer"
+                >
+                  Rental Cars
+                </a>
               </div>
             </div>
           </div>

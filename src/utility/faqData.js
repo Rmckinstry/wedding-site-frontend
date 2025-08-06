@@ -5,7 +5,7 @@ const faqData = [
     },
     {
         question: "Are kids allowed at the wedding?",
-        answer: "Yes, children are certainly welcome to help us celebrate our special day! For the ceremony, we kindly ask that infants and toddlers, accompanied by an adult, be in one of the other convenient areas around the property. This will allow for full focus on the bride and groom during this special moment. Areas include the shaded wrap porch and cocktail hour patio & the reception barn - both 1 - 2 min walking distance from the ceremony area."
+        answer: "Yes, children are certainly welcome to help us celebrate our special day! For the ceremony, we kindly ask that infants and toddlers, accompanied by an adult, be in one of the other convenient areas around the property. This will allow for full focus on the bride and groom during this special moment. Areas include the shaded porch and the covered reception barn porch full on couches and porch swings - both 1 - 2 min walking distance from the ceremony area."
     },
     {
         question: "How do I RSVP?",
