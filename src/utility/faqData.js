@@ -9,7 +9,7 @@ const faqData = [
     },
     {
         question: "How do I RSVP?",
-        answer: "RSVP's are now live! You can access you/your groups RSVP Portal by selecting the 'RSVP' tab above. RSVP by October 1st!"
+        answer: "RSVP's are now live! You can access you/your groups RSVP Portal by selecting the 'RSVP' tab above. RSVP deadline is October 1st!"
     },
     {
         question: "Is there a dress code?",
@@ -17,7 +17,7 @@ const faqData = [
     },
     {
         question: "Are there any hotel discounts available?",
-        answer: "Yes. We have a group block rate with Courtyard Marriott in Collierville. Head over to the Travel tab and use the button. If the block rate is out of stock please let us know and we can get more added. Book by October 14th."
+        answer: "Yes. We have a $129/night group block rate with Courtyard Marriott in Collierville. Head over to the Travel tab and use the button. If the block rate is out of stock please let us know and we can get more added. Book by October 14th."
     },
     {
         question: "Can I add extra days to the block rate?",
