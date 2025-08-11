@@ -57,8 +57,7 @@ h3,
 h4,
 p,
 a,
-select,
-li {
+select {
     color: var(--default-text);
     font-family: Cormorant Garamond, serif;
 }

@@ -539,7 +539,11 @@ function RSVPForm({
     return (
       <Dialog onClose={handleClose} open={open}>
         <DialogTitle>Child & Ceremony Rule</DialogTitle>
-        <div id="child-popup-container" className="font-sm">
+        <div
+          id="child-popup-container"
+          className="font-sm"
+          style={{ color: "var(--default-text)", padding: "1rem", fontFamily: "Cormorant Garamond, serif" }}
+        >
           <p>
             For the ceremony, we kindly ask that infants and toddlers, accompanied by an adult, be in one of the other
             convenient areas around the property. This will allow for full focus on the bride and groom during this
