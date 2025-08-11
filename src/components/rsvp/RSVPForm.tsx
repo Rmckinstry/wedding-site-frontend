@@ -59,7 +59,7 @@ function RSVPForm({
   const [anyAdditionalSubbmited, setAnyAdditionalSubbmited] = useState<boolean>(false);
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const featureEnabled = false;
+  const featureEnabled = true;
 
   // tracking if every guest has responded to rsvp form step 1
   const isRSVPStepValid = rsvps.every((rsvp) => rsvp.attendance !== "");
@@ -539,10 +539,28 @@ function RSVPForm({
     return (
       <Dialog onClose={handleClose} open={open}>
         <DialogTitle>Child & Ceremony Rule</DialogTitle>
-        <div>
-          <p>Rule Info here</p>
+        <div id="child-popup-container" className="font-sm">
+          <p>
+            For the ceremony, we kindly ask that infants and toddlers, accompanied by an adult, be in one of the other
+            convenient areas around the property. This will allow for full focus on the bride and groom during this
+            special moment. Areas include:
+          </p>
+          <ul>
+            <li>The shaded & covered porch at the house.</li>
+            <li>
+              The shaded & covered porch & patio at the reception barn. This has plenty of couches, porch swings and
+              tables.
+            </li>
+            <li>If sitting isn't your thing they do have a large property, with a lake, tree swing, etc.</li>
+          </ul>
+          <p>
+            Both locations are about 1-2 min walking distance from the ceremony & cocktail area. We do recognize that
+            this will pose an inconvenience and please know that we really do appreciate it.
+          </p>
           <div className="btn-container">
-            <button onClick={handleClose}>Close</button>
+            <button className="btn-rsvp-sm" onClick={handleClose}>
+              Close
+            </button>
           </div>
         </div>
       </Dialog>
