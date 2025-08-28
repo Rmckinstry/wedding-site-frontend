@@ -317,6 +317,10 @@ button:hover {
     margin-top: 1rem;
 }
 
+#admin-not-responded {
+    margin: 3rem;
+}
+
 /* classes */
 .App {
     padding: 0 7rem;
@@ -845,6 +849,11 @@ button.status-menu-btn:hover {
 
     .viewer-item {
         width: 80%;
+    }
+
+    #admin-not-responded {
+        margin: 0;
+        margin-top: 2rem;
     }
 
 
