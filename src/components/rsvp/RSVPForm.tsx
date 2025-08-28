@@ -7,6 +7,8 @@ import {
   ToggleButton,
   Tooltip,
   MobileStepper,
+  Dialog,
+  DialogTitle,
 } from "@mui/material";
 import { AdditionalGuest, ErrorType, GroupData, RSVPResponseType, SongRequestError } from "../../utility/types";
 import { useMutation } from "@tanstack/react-query";
@@ -55,6 +57,9 @@ function RSVPForm({
   const [songInputsCount, setSongInputsCount] = useState<{ [guestId: string]: number }>({});
   const [directToRegistry, setDirectToRegistry] = useState<boolean>(false);
   const [anyAdditionalSubbmited, setAnyAdditionalSubbmited] = useState<boolean>(false);
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const featureEnabled = true;
 
   // tracking if every guest has responded to rsvp form step 1
   const isRSVPStepValid = rsvps.every((rsvp) => rsvp.attendance !== "");
@@ -518,6 +523,62 @@ function RSVPForm({
     }));
   };
 
+  //#region confirmation dialog
+  interface SimpleDialogProps {
+    open: boolean;
+    onClose: () => void;
+  }
+
+  function SimpleDialog(props: SimpleDialogProps) {
+    const { onClose, open } = props;
+
+    const handleClose = () => {
+      onClose();
+    };
+
+    return (
+      <Dialog onClose={handleClose} open={open}>
+        <DialogTitle>Child & Ceremony Rule</DialogTitle>
+        <div
+          id="child-popup-container"
+          className="font-sm"
+          style={{ color: "var(--default-text)", padding: "1rem", fontFamily: "Cormorant Garamond, serif" }}
+        >
+          <p>
+            For the ceremony, we kindly ask that infants and toddlers, accompanied by an adult, be in one of the other
+            convenient areas around the property. This will allow for full focus on the bride and groom during this
+            special moment. Areas include:
+          </p>
+          <ul>
+            <li>The shaded & covered porch at the house.</li>
+            <li>
+              The shaded & covered porch & patio at the reception barn. This has plenty of couches, porch swings and
+              tables.
+            </li>
+            <li>If sitting isn't your thing they do have a large property, with a lake, tree swing, etc.</li>
+          </ul>
+          <p>
+            Both locations are about 1-2 min walking distance from the ceremony & cocktail area. We do recognize that
+            this will pose an inconvenience and please know that we really do appreciate it.
+          </p>
+          <div className="btn-container">
+            <button className="btn-rsvp-sm" onClick={handleClose}>
+              Close
+            </button>
+          </div>
+        </div>
+      </Dialog>
+    );
+  }
+
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
+
   //for debugging
   // useEffect(() => {
   //   console.log("RSVP useEffect debugger");
@@ -654,6 +715,13 @@ function RSVPForm({
                     </div>
                   );
                 })}
+                {/* feature enabled is set to false until feature is ready */}
+                {groupData.guests.some((guest) => guest.has_dependents) && featureEnabled && (
+                  <button className="btn-stripped" style={{ fontSize: "1.25rem" }} onClick={handleDialogOpen}>
+                    <span className="underline">Click here</span> for information about the child card you received.
+                  </button>
+                )}
+                <SimpleDialog open={dialogOpen} onClose={handleDialogClose} />
                 <button id="rsvp-form-continue-btn" disabled={!isRSVPStepValid} onClick={handleNext}>
                   Continue
                 </button>

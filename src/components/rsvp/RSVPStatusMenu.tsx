@@ -908,7 +908,7 @@ function RSVPStatusMenu({
                             ))}
                         </div>
                       )}
-                      {!everyAttendanceNo && (
+                      {!everyAttendanceNo && rsvp.spotify.length === 0 && (
                         <p className="overview-guest-no-song font-xs">
                           No songs yet. This can be done in the 'Song Request' menu.
                         </p>
