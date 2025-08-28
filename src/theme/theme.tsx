@@ -49,6 +49,13 @@ const theme = createTheme({
         },
       },
     },
+    MuiAccordionDetails: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "var(--base-background)",
+        },
+      },
+    },
     MuiTypography: {
       styleOverrides: {
         root: {

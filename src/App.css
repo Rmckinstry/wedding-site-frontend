@@ -180,12 +180,12 @@ button:hover {
 #travel-grid-container {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
-    align-items: center;
+    align-items: start;
     margin-bottom: 2rem;
 }
 
 #travel-divider {
-    height: 90%;
+    height: 100%;
     width: 1px;
     background-color: var(--default-text);
     margin: 0 2rem;
@@ -708,7 +708,7 @@ button.status-menu-btn:hover {
     width: 40%;
     outline-style: solid;
     outline-width: 3px;
-    outline-color: #6464401c;
+    outline-color: #6464400c;
     padding: 1rem;
     border-radius: 1rem;
 }
