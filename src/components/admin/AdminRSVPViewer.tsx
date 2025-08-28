@@ -122,7 +122,7 @@ function AdminRSVPViewer({
           </Accordion>
         </div>
       </div>
-      <div className="flex-row" style={{ margin: "3rem" }}>
+      <div id="admin-not-responded" className="flex-row">
         <div className="viewer-item">
           <Accordion>
             <AccordionSummary expandIcon={<ArrowDownwardIcon />}>
