@@ -39,7 +39,7 @@ function TravelPage() {
                   To receive the “Kail-McKinstry Wedding Block” rate, use the button below.
                 </p>
                 <p className="font-sm" style={{ margin: "0px", textAlign: "center" }}>
-                  If the block is out of stock ($129/night), please let us know! Book by October 14th!
+                  If the block is out of stock ($129/night), please let us know! Book by October 13th!
                 </p>
               </div>
               <div className="btn-container">
