@@ -38,9 +38,12 @@ function TravelPage() {
                 <p className="font-sm" style={{ margin: "0px", textAlign: "center" }}>
                   To receive the “Kail-McKinstry Wedding Block” rate, use the button below.
                 </p>
-                <p className="font-sm underline strong-text" style={{ margin: "0px", textAlign: "center" }}>
-                  If the block is out of stock ($129/night), please let call the number above and ask for Ashley. Book
-                  by October 21st!
+                <p
+                  className="font-sm underline strong-text"
+                  style={{ margin: "0px", textAlign: "center", color: "red" }}
+                >
+                  If the block is out of stock ($129/night), please let call the number above and ask for Ashley - she
+                  can help add the rate for you. Book by October 21st!
                 </p>
               </div>
               <div className="btn-container">
