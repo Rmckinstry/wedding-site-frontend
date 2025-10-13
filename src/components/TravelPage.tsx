@@ -54,10 +54,9 @@ function TravelPage() {
                 </a>
               </div>
               <div className="detail-text">
-                <p className="font-sm">The Courtyard Memphis is located in the Carriage Crossing Outdoor Mall.</p>
                 <p className="font-sm">
-                  The mall has several restaurants, bars, and shops all in walking distance of the hotel for you to
-                  enjoy.
+                  The Courtyard Memphis is located in the Carriage Crossing Outdoor Mall. It has several restaurants,
+                  bars, and shops all in walking distance of the hotel
                 </p>
               </div>
             </div>
