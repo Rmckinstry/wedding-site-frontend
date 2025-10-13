@@ -17,7 +17,7 @@ const faqData = [
     },
     {
         question: "Are there any hotel discounts available?",
-        answer: "Yes. We have a $129/night group block rate with Courtyard Marriott in Collierville. Head over to the Travel tab and use the button. If the block rate is out of stock please let us know and we can get more added. Book by October 13th."
+        answer: "Yes. We have a $129/night group block rate with Courtyard Marriott in Collierville. Head over to the Travel tab and use the button. If the block rate is out of stock please before you book call 901-850-9390 and ask for Ashley, she can modify the rate to make sure you are added to the block. Book by October 21st."
     },
     {
         question: "Can I add extra days to the block rate?",
