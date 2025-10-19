@@ -226,7 +226,6 @@ const SongEditForm = ({
           })}
         </div>
       )}
-
       {submittedSongs.length !== guest.song_requests && (
         <>
           {songSubmitMutation.isPending || songSubmitMutation.isError || songSubmitMutation.isSuccess ? (
@@ -246,48 +245,53 @@ const SongEditForm = ({
               )}
             </div>
           ) : (
-            <div className="flex-col-start">
-              {emptySongs.map((song, index) => {
-                const [title, artist] = song ? song.split(" - ") : ["", ""];
-                const errors = songValidationErrors[index] || {
-                  title: false,
-                  artist: false,
-                  message: "",
-                };
-                return (
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}
-                    key={index}
-                  >
-                    <TextField
-                      onChange={(e) => handleSongRequestChange(index, "title", e.target.value)}
-                      value={title || ""}
-                      id="song-request-title"
-                      label="Song Title"
-                      error={errors.title}
-                      helperText={errors.title ? errors.message : ""}
-                      variant="standard"
-                      sx={{ width: "17rem" }}
-                    />
-                    <TextField
-                      onChange={(e) => handleSongRequestChange(index, "artist", e.target.value)}
-                      value={artist || ""}
-                      id="song-request-artist"
-                      label="Song Artist"
-                      error={errors.artist}
-                      helperText={errors.artist ? errors.message : ""}
-                      variant="standard"
-                      sx={{ width: "17rem" }}
-                    />
-                  </div>
-                );
-              })}
-              <div className="btn-container">
-                <button className="btn-rsvp-sm" disabled={isSongMenuInvalid} onClick={handleSongSubmit}>
-                  Submit Song Requests For {guest.name}
-                </button>
-              </div>
-            </div>
+            /* DISABLING SINCE WEDDING IS CLOSE */
+            // <div className="flex-col-start">
+            //   {emptySongs.map((song, index) => {
+            //     const [title, artist] = song ? song.split(" - ") : ["", ""];
+            //     const errors = songValidationErrors[index] || {
+            //       title: false,
+            //       artist: false,
+            //       message: "",
+            //     };
+            //     return (
+            //       <div
+            //         style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}
+            //         key={index}
+            //       >
+            //         <TextField
+            //           onChange={(e) => handleSongRequestChange(index, "title", e.target.value)}
+            //           value={title || ""}
+            //           id="song-request-title"
+            //           label="Song Title"
+            //           error={errors.title}
+            //           helperText={errors.title ? errors.message : ""}
+            //           variant="standard"
+            //           sx={{ width: "17rem" }}
+            //         />
+            //         <TextField
+            //           onChange={(e) => handleSongRequestChange(index, "artist", e.target.value)}
+            //           value={artist || ""}
+            //           id="song-request-artist"
+            //           label="Song Artist"
+            //           error={errors.artist}
+            //           helperText={errors.artist ? errors.message : ""}
+            //           variant="standard"
+            //           sx={{ width: "17rem" }}
+            //         />
+            //       </div>
+            //     );
+            //   })}
+            //   <div className="btn-container">
+            //     <button className="btn-rsvp-sm" disabled={isSongMenuInvalid} onClick={handleSongSubmit}>
+            //       Submit Song Requests For {guest.name}
+            //     </button>
+            //   </div>
+            // </div>
+            <p className="font-sm-med contain-text-center secondary-text">
+              Song Requests are closed, if you have any must have's the DJ is your guy to see at the wedding! See you
+              there!
+            </p>
           )}
         </>
       )}
@@ -910,7 +914,8 @@ function RSVPStatusMenu({
                       )}
                       {!everyAttendanceNo && rsvp.spotify.length === 0 && (
                         <p className="overview-guest-no-song font-xs">
-                          No songs yet. This can be done in the 'Song Request' menu.
+                          No songs requested. Song Requests are closed, if you have any must have's the DJ is your guy
+                          to see at the wedding! See you there!
                         </p>
                       )}
                       {!everyAttendanceNo && rsvp.attendance && guest.plus_one_allowed && (
