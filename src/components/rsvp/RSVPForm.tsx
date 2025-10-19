@@ -866,7 +866,7 @@ function RSVPForm({
               </div>
             )}
             {/* Song Request Card */}
-            {activeStep === 3 && (
+            {/* {activeStep === 3 && (
               <div id="song-request-card-container" className="rsvp-card">
                 <div id="song-request-header" className="flex-col">
                   <p className="font-sm-med strong-text" style={{ marginBottom: "1rem" }}>
@@ -976,6 +976,33 @@ function RSVPForm({
                   </button>
                 </div>
               </div>
+            )} */}
+            {/* Song Request Card - DISABLED */}
+            {activeStep === 3 && (
+              <div id="song-request-card-container" className="rsvp-card">
+                <div id="song-request-header" className="flex-col">
+                  <p className="font-sm-med strong-text" style={{ marginBottom: "1rem" }}>
+                    Song Requests
+                  </p>
+                  <p className="font-sm-med contain-text-center secondary-text">
+                    Song Requests are closed, if you have any must have's the DJ is your guy to see at the wedding! See
+                    you there!
+                  </p>
+                </div>
+                <div className="btn-container" style={{ gap: "2rem" }}>
+                  <button className="btn-rsvp-sm" style={{ padding: ".5rem 10%", flexGrow: 1 }} onClick={handleBack}>
+                    Back
+                  </button>
+                  <button
+                    disabled={isSongTabInvalid}
+                    className="btn-rsvp-sm"
+                    style={{ padding: ".5rem 10%", flexGrow: 1 }}
+                    onClick={handleNext}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
             )}
             {/* Confirmation Card */}
             {activeStep === 4 && (
@@ -1016,11 +1043,12 @@ function RSVPForm({
                             ))}
                         </div>
                       )}
-                      {rsvp.attendance && !hasSongs && (
+                      {/* DISABLING SINCE WEDDING IS CLOSE */}
+                      {/* {rsvp.attendance && !hasSongs && (
                         <p className="font-sm secondary-text">
                           No songs requested yet! This can be done after you submit your RSVP via the RSVP Portal.
                         </p>
-                      )}
+                      )} */}
                       {rsvp.attendance && guest?.plus_one_allowed && rsvp.additionalGuests.length > 0 && (
                         <div className="flex-row-gap">
                           <p className="strong-text font-sm confirmation-header">Plus One: </p>
