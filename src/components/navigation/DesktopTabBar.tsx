@@ -14,6 +14,7 @@ function DesktopTabBar({ tabValue = 0, handleChange }) {
           allowScrollButtonsMobile
         >
           <Tab label="Home" className="custom-tab" />
+          <Tab label="Day of Info" className="custom-tab" />
           <Tab label="Travel" className="custom-tab" />
           {/* <Tab label="RSVP" className="custom-tab" /> */}
           <Tab label="Registry" className="custom-tab" />

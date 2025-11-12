@@ -8,7 +8,7 @@ function HomePage() {
     <>
       <div id="home-page-container" className="flex-col">
         <img src={HomeImage} alt={"Proposal in Italy"} id="home-page-image" />
-        <div className="btn-container" style={{ paddingBottom: "0" }}>
+        {/* <div className="btn-container" style={{ paddingBottom: "0" }}>
           <button
             onClick={() => {
               navigateTo(2);
@@ -19,7 +19,7 @@ function HomePage() {
           >
             RSVP Now
           </button>
-        </div>
+        </div> */}
         <div id="home-page-info-container" className="flex-row">
           <div className="flex-col font-lg home-footer">
             <p>November</p>

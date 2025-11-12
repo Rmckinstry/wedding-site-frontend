@@ -14,6 +14,7 @@ import { NavigationProvider, useNavigation } from './context/NavigationContext.t
 import AdminLogin from './components/admin/AdminLogin.tsx';
 import AdminDashboard from './components/admin/AdminDashboard.tsx';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import DayOf from './components/DayOf.tsx';
 
 
 function UserLayout() {
@@ -29,11 +30,12 @@ function UserLayout() {
         </div>
         <div id='page-container'>
           {tabValue === 0 && <HomePage />}
-          {tabValue === 1 && <TravelPage />}
+          {tabValue === 1 && <DayOf />}
+          {tabValue === 2 && <TravelPage />}
           {/* {tabValue === 2 && <RSVPPage />} */}
-          {tabValue === 2 && <Registry />}
-          {tabValue === 3 && <FAQPage />}
-          {tabValue === 4 && <AdminDashboard />}
+          {tabValue === 3 && <Registry />}
+          {tabValue === 4 && <FAQPage />}
+          {tabValue === 5 && <AdminDashboard />}
         </div>
         <Footer showText={tabValue > 0} />
       </div>
