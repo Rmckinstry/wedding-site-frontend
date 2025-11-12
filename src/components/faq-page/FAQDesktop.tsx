@@ -9,10 +9,10 @@ function FAQDesktop({ faq }) {
     <>
       <Accordion className="faq-desktop-container">
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <p className="faq-title-desktop font-sm">{faq.question}</p>
+          <p className="faq-title-desktop font-sm-med">{faq.question}</p>
         </AccordionSummary>
         <AccordionDetails>
-          <p className="faq-answer-desktop font-xs">{faq.answer}</p>
+          <p className="faq-answer-desktop font-sm">{faq.answer}</p>
         </AccordionDetails>
       </Accordion>
     </>

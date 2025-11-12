@@ -6,14 +6,14 @@ function DayOf() {
       </div>
       <div id="portal-horiz-divider"></div>
 
-      <div id="day-of-time-date-container" className="flex-col">
+      <div id="day-of-time-date-container" className="flex-col contain-text-center">
         <p className="font-med-lg strong-text">November 15, 2025</p>
         <p className="font-med">Gates open at 3:00 PM</p>
         <p className="font-med">
           Ceremony starts <span className="underline">promptly</span> at 3:30 PM
         </p>
       </div>
-      <div id="day-of-address-container" className="flex-col">
+      <div id="day-of-address-container" className="flex-col contain-text-center">
         <p className="font-med-lg strong-text">Heartwood Hall</p>
         <a
           href="https://maps.app.goo.gl/jxxs5PgddSEh2RC37"
@@ -25,7 +25,7 @@ function DayOf() {
         </a>
       </div>
       <div id="portal-horiz-divider"></div>
-      <div id="day-of-misc-container" className="flex-col font-sm-med">
+      <div id="day-of-misc-container" className="flex-col font-sm-med contain-text-center">
         <p>Parking is available at the venue.</p>
         <p>Visit the FAQ tab for more info.</p>
       </div>
