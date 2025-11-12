@@ -12,6 +12,7 @@ function DayOf() {
         <p className="font-med">
           Ceremony starts <span className="underline">promptly</span> at 3:30 PM
         </p>
+        <p className="font-med">Bride and Groom send off at 8:30 PM</p>
       </div>
       <div id="day-of-address-container" className="flex-col contain-text-center">
         <p className="font-med-lg strong-text">Heartwood Hall</p>
