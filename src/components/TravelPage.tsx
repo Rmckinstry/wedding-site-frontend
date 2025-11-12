@@ -9,7 +9,7 @@ function TravelPage() {
           <div id="venue-info" className="info-container contain-text-center">
             <p className="primary-text font-med-lg">Heartwood Hall</p>
             <a
-              href="https://maps.app.goo.gl/YdQgCvsSVR2bzDCv6"
+              href="https://maps.app.goo.gl/jxxs5PgddSEh2RC37"
               className="secondary-text font-med"
               target="_blank"
               rel="noreferrer"
