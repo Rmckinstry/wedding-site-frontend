@@ -23,9 +23,9 @@ function MobileSelectNav({ tabValue = 0, handleChange }) {
           >
             <option value={0}>Home</option>
             <option value={1}>Travel</option>
-            <option value={2}>RSVP</option>
-            <option value={3}>Registry</option>
-            <option value={4}>FAQ</option>
+            {/* <option value={2}>RSVP</option> */}
+            <option value={2}>Registry</option>
+            <option value={3}>FAQ</option>
           </NativeSelect>
         </FormControl>
       </div>
